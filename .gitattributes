@@ -1,3 +1,7 @@
+*.config linguist-language=nextflow
+*.nf.test linguist-language=nextflow
+modules/nf-core/** linguist-generated
+subworkflows/nf-core/** linguist-generated
 *.bt2 filter=lfs diff=lfs merge=lfs -text
 *.nhd filter=lfs diff=lfs merge=lfs -text
 *.nhi filter=lfs diff=lfs merge=lfs -text

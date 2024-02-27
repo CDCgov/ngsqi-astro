@@ -1,0 +1,5 @@
+prefix: tb
+skip:
+- github
+- ci
+- github_badges
