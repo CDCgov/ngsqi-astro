@@ -94,6 +94,12 @@ workflow REFERENCE_SAMPLESHEET{
 
 }
 
+workflow NEAT {
+
+    REFERENCE_SAMPLESHEET ( params.input )
+    NEAT_PAIRED_READS (REFERENCE_SAMPLESHEET.out.samples)
+}
+
 workflow BAMSURGEON {
 
     BAMFILE_SAMPLESHEET ( params.input )
