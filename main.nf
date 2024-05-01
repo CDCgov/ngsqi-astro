@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    tb/prototype
+    amr-metagenomics
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GitLab : https://git.biotech.cdc.gov/ngsqi-insilico/tb-prototype
+    GitLab : https://git.biotech.cdc.gov/ngsqi-insilico/amr-metagenomics
 ----------------------------------------------------------------------------------------
 */
 
@@ -54,13 +54,11 @@ include { INDEX_BAM_REFSEQ } from './modules/local/index'
 include { BAMSURGEON_SNV } from './modules/local/bamsurgeon'
 include { RANDOM_PAIRED_READS } from './modules/local/bbmap'
 include { DWGSIM_PAIRED_READS } from './modules/local/dwgsim'
+include { metaphlan } from './modules/local/metaphlan'
 
 //
-// WORKFLOW: Run main tb/prototype analysis pipeline
-//
-//workflow TB_PROTOTYPE {
-//    PROTOTYPE ()
-//}
+// WORKFLOW: Run main amr-metagenomics analysis pipeline
+
 
 workflow BAMFILE_SAMPLESHEET{
 
