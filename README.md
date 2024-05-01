@@ -1,6 +1,6 @@
 ## Introduction
 
-**tb/prototype** is a bioinformatics pipeline that generates simulated variants in Mycobacterium tuberculosis genome sequencing data.
+**amr-metagenomics** is a bioinformatics pipeline that performs taxonomic profiling, screens metagenomes and isolate genomes for determinants of antimicrobial resistance, simulates reads, and generates a bacterial HAI in silico reference dataset.
 
 
 
@@ -8,9 +8,15 @@
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. Determine variant types
-2. Create variants
-3. Validate ouput files
+1.	Input paired-end metagenomics reads (.fastq) and isolate data (.fna) with samplesheet
+2.	Perform pre-processing on metagenomics reads (FastQC, FastP, PHIX, Hostile*)
+3.	Screen metagenomes and isolate data for ARGs (AMRFinderPlus, Ariba, ABRICATE, RGI*)
+4.	Perform taxonomic profiling on metagenomics reads to identify microbial community composition (MetaPhlAn v4.1)
+5.	Integrate isolate data with taxonomic profiling results to link specific bacterial strains with their abundance in the metagenomics dataset
+6.	Simulate sequencing reads (NEAT or NGSNGS*)
+7.	Integrate in silico reads into empirical dataset
+8.	Perform taxonomic profiling on in silico dataset as quality control (MetaPhlAn v4.1)
+9.	Generate summary, visualizations and other output files (AMR: HARMONIZATION, TAXONOMY: Hclust2, etc.*)
 
 ## Usage
 
@@ -53,7 +59,7 @@ nextflow run main.nf \
 
 ## Credits
 
-tb/prototype was originally written by NGS QI In Silico team.
+amr-metagenomics was originally written by NGSQI In Silico team.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
