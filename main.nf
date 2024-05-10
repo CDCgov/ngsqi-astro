@@ -49,12 +49,12 @@ WorkflowMain.initialise(workflow, params, log)
 
 //include { PROTOTYPE } from './workflows/prototype'
 
-include { VARBEN } from './modules/local/varben'
-include { INDEX_BAM_REFSEQ } from './modules/local/index'
-include { BAMSURGEON_SNV } from './modules/local/bamsurgeon'
-include { RANDOM_PAIRED_READS } from './modules/local/bbmap'
-include { DWGSIM_PAIRED_READS } from './modules/local/dwgsim'
-
+//include { VARBEN } from './modules/local/varben'
+//include { INDEX_BAM_REFSEQ } from './modules/local/index'
+//include { BAMSURGEON_SNV } from './modules/local/bamsurgeon'
+//include { RANDOM_PAIRED_READS } from './modules/local/bbmap'
+//include { DWGSIM_PAIRED_READS } from './modules/local/dwgsim'
+include { NEAT_PAIRED_READS } from './modules/local/neat'
 //
 // WORKFLOW: Run main tb/prototype analysis pipeline
 //
@@ -98,25 +98,6 @@ workflow NEAT {
 
     REFERENCE_SAMPLESHEET ( params.input )
     NEAT_PAIRED_READS (REFERENCE_SAMPLESHEET.out.samples)
-}
-
-workflow BAMSURGEON {
-
-    BAMFILE_SAMPLESHEET ( params.input )
-    INDEX_BAM_REFSEQ ( BAMFILE_SAMPLESHEET.out.samples )
-    BAMSURGEON_SNV ( INDEX_BAM_REFSEQ.out.sample_reference )
-
-}
-
-workflow BBMAP {
-    REFERENCE_SAMPLESHEET ( params.input )
-    RANDOM_PAIRED_READS ( REFERENCE_SAMPLESHEET.out.samples )
-}
-
-workflow DWGSIM {
-
-    REFERENCE_SAMPLESHEET ( params.input )
-    DWGSIM_PAIRED_READS ( REFERENCE_SAMPLESHEET.out.samples )
 
 }
 
