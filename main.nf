@@ -1,16 +1,17 @@
 #!/usr/bin/env nextflow
 
 nextflow.enable.dsl=2
-include { FASTQC } from './modules/nf-core/modules/fastqc/main'
 include {metaphlan} from './modules/local/metaphlan.nf'
 
 params.outdir = 'results'  // default output directory
-params.reads = 'assets/data/*_{1,2}.fastq.gz'  // default input reads pattern
+params.samplesheet = 'samplesheet.csv'  // default samplesheet
 
 Channel
-    .fromFilePairs( params.reads, size: 2 )
-    .set { ch_reads }
+    .fromPath(params.samplesheet)
+    .splitCsv(header: true, sep: ',')
+    .map { row -> [row.sample, file(row.fastq_1), file(row.fastq_2)] }
+    .set { ch_samples }
 
 workflow {
-    metaphlan(ch_reads)
+    metaphlan(ch_samples)
 }
