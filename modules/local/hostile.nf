@@ -4,13 +4,13 @@ process HOSTILE {
     container './third_party/hostile.sif'
 
     input:
-    path(reads)
+    tuple val(sample_id), path(fastq1), path(fastq2), path(index)
 
     output:
-    path("*_hostile.fastq"), emit: hostile_reads
+    path("${sample_id}_hostile_output"), emit: hostile_output
 
     script:
     """
-    hostile -i $reads -o ${reads.baseName}_hostile.fastq
+    hostile clean --index $index --fastq1 $fastq1 --fastq2 $fastq2 --out-dir ${sample_id}_hostile_output
     """
 }
