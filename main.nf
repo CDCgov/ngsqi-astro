@@ -1,7 +1,6 @@
 #!/usr/bin/env nextflow
 
 nextflow.enable.dsl=2
-include {metaphlan} from './modules/local/metaphlan.nf'
 include {FASTQC} from './modules/local/fastqc.nf'
 include {FASTP} from './modules/local/fastp.nf'
 include {BBDUK} from './modules/local/bbduk.nf'
@@ -16,7 +15,6 @@ Channel
     .set { ch_reads }
 
 workflow {
-    metaphlan(ch_reads)
     FASTQC(ch_reads)
     FASTP(ch_reads)
     BBDUK(ch_reads)
