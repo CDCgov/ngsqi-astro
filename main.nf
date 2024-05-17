@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 nextflow.enable.dsl=2
-include {metaphlan} from './modules/local/metaphlan.nf'
+include {metaphlan} from './modules/local/metaphlan'
 
 params.outdir = 'results'  // default output directory
 params.samplesheet = 'samplesheet.csv'  // default samplesheet

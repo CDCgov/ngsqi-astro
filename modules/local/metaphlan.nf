@@ -6,7 +6,7 @@ process metaphlan {
 
 label 'process_single'
 
-container "./third_party/metaphlan.sif"
+container "/scicomp/home-pure/tkq5/amr-metagenomics/third_party/metaphlan.sif"
 
     input:
     tuple val(sample), path(fastq_1), path(fastq_2)
@@ -16,11 +16,14 @@ container "./third_party/metaphlan.sif"
 
     script:
     """
+    echo $PATH
+    pwd
+
     metaphlan ${fastq_1},${fastq_2} \\
         --bowtie2out ${sample}_metagenome.bowtie2.bz2 \\
         --nproc ${task.cpus} \\
         --input_type fastq \\
         -o ${sample}.txt \\
-        --bowtie2db ./assets/databases/metaphlan_databases
+        --bowtie2db /scicomp/home-pure/tkq5/amr-metagenomics/assets/databases/metaphlan_databases
     """
 }
