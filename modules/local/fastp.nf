@@ -1,8 +1,5 @@
 #!/usr/bin/env nextflow
 
-Channel
-    .fromFilePairs('/assets/data/*_{1,2}.fastq.gz')
-    .set { reads_ch }
 
 process FASTP {
     container './third_party/fastp.sif'
