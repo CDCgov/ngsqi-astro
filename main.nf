@@ -1,30 +1,50 @@
 #!/usr/bin/env nextflow
 
 nextflow.enable.dsl=2
-include {FASTQC} from './modules/local/fastqc.nf'
-include {FASTP} from './modules/local/fastp.nf'
-include {BBDUK} from './modules/local/bbduk.nf'
-include {HOSTILE} from './modules/local/hostile.nf'
 
+include {PREPROCESSING} from './subworkflows/local/preprocessing.nf'
+params.reads = './samplesheet.csv'
 params.outdir = 'results'  // default output directory
-params.reads = 'assets/data/*_{1,2}.fastq.gz'  // default input reads pattern
-params.ref = "./assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401" // add this line
+params.hostile_ref = "./assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
+params.ref = "./assets/references/phiX.fasta"
 
 Channel
     .fromFilePairs( params.reads, size: 2 )
-    .set { ch_reads }
+    .set { reads: ch_reads }
 
 Channel
     .fromPath('./assets/references/phiX.fasta')
-    .set { ch_ref } // changed refGenome to ch_ref
+    .set { ch_ref } 
 
 Channel
-    .fromPath(params.ref) 
+    .fromPath(params.hostile_ref) 
     .set { ch_hostile_ref } 
 
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    VALIDATE & PRINT PARAMETER SUMMARY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+WorkflowMain.initialise(workflow, params, log)
+
+//
+// WORkFLOW: iSAMR: in Silico AMR Metagenomics Workflow
+//
+println """\
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    iSAMR: in Silico AMR Metagenomics Workflow
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         """
+         .stripIndent()
+
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    RUN ALL WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
 workflow {
-    FASTQC(ch_reads)
-    FASTP(ch_reads)
-    BBDUK(ch_reads, ch_ref)
-    HOSTILE(ch_reads, ch_hostile_ref)
+    PREPROCESSING(ch_reads, ch_ref, ch_hostile_ref)
 }
