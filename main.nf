@@ -54,7 +54,7 @@ WorkflowMain.initialise(workflow, params, log)
 //include { BAMSURGEON_SNV } from './modules/local/bamsurgeon'
 //include { RANDOM_PAIRED_READS } from './modules/local/bbmap'
 //include { DWGSIM_PAIRED_READS } from './modules/local/dwgsim'
-include { NEAT_PAIRED_READS } from './modules/local/neat'
+include { NEAT_PAIRED_READS } from './modules/local/neat-genreads'
 //
 // WORKFLOW: Run main tb/prototype analysis pipeline
 //
