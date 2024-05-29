@@ -30,8 +30,8 @@ workflow PREPROCESSING {
     main:
     FASTQC(ch_reads)
     FASTP(ch_reads)
-    BBDUK(FASTP.out.collect { it[1] }, ch_ref)
-    HOSTILE(BBDUK.out.collect { it[1] }, ch_hostile_ref)
+    BBDUK(FASTP.out)
+    HOSTILE(BBDUK.out, ch_hostile_ref)
    
     emit:
     ch_reads
