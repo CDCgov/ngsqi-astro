@@ -24,15 +24,10 @@ container "./third_party/metaphlan.sif"
 
 
     script:
-    """
-    echo "Printing the PATH:"
-    echo $PATH
-    echo "Checking the location of metaphlan:"
-    which metaphlan
-
+    """  
     metaphlan ${reads[0]},${reads[1]} \\
         --bowtie2out ${sample}_metagenome.bowtie2.bz2 \\
-        --nproc ${task.cpus} \\
+        --nproc 5 \\
         --input_type fastq \\
         -o ${sample}.txt \\
         --bowtie2db ./assets/databases/metaphlan_databases

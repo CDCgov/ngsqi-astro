@@ -19,6 +19,7 @@ process HOSTILE {
     input:
     tuple val(sample), path(reads)
     path ref
+    path hostile_ref
 
     output:
     path("hostile"), emit: hostile_output
@@ -28,3 +29,4 @@ process HOSTILE {
     hostile clean --index ${ref} --fastq1 ${reads[0]} --fastq2 ${reads[1]} --out-dir hostile
     """
 }
+
