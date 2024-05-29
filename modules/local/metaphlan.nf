@@ -16,12 +16,9 @@ container "/scicomp/home-pure/tkq5/amr-metagenomics/third_party/metaphlan.sif"
 
     script:
     """
-    echo $PATH
-    pwd
-
     metaphlan ${fastq_1},${fastq_2} \\
         --bowtie2out ${sample}_metagenome.bowtie2.bz2 \\
-        --nproc ${task.cpus} \\
+        --nproc 5 \\
         --input_type fastq \\
         -o ${sample}.txt \\
         --bowtie2db /scicomp/home-pure/tkq5/amr-metagenomics/assets/databases/metaphlan_databases
