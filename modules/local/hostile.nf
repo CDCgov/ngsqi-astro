@@ -1,6 +1,7 @@
 #!/usr/bin/env nextflow
 
 workflow {
+   
     Channel
         .fromFilePairs( params.reads, size: 2 )
         .set { ch_reads }
