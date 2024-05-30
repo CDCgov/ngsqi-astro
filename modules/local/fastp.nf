@@ -2,6 +2,7 @@
 
 
 process FASTP {
+   
     container './third_party/fastp.sif'
    
     input:
