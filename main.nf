@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 nextflow.enable.dsl=2
-include {metaphlan} from './modules/local/metaphlan'
+include { TAXONOMY } from './subworkflows/local/taxonomy.nf'
 
 params.outdir = 'results'  // default output directory
 params.samplesheet = 'samplesheet.csv'  // default samplesheet
@@ -13,5 +13,5 @@ Channel
     .set { ch_samples }
 
 workflow {
-    metaphlan(ch_samples)
+    TAXONOMY(ch_samples)
 }
