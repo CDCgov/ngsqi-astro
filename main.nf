@@ -73,9 +73,6 @@ workflow BAMFILE_SAMPLESHEET{
     .map { row -> tuple(row.sample, file(row.BAM), file(row.refseq)) }
     .set { samples }
 
-    emit:
-    samples  // channel: [ val(sampleid), bamfile, reference genome ]
-
 }
 
 workflow REFERENCE_SAMPLESHEET{
