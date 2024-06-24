@@ -1,129 +1,17 @@
 #!/usr/bin/env nextflow
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    tb/prototype
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GitLab : https://git.biotech.cdc.gov/ngsqi-insilico/tb-prototype
-----------------------------------------------------------------------------------------
-*/
 
-nextflow.enable.dsl = 2
+nextflow.enable.dsl=2
+include { TAXONOMY } from './subworkflows/local/taxonomy.nf'
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+params.outdir = 'results'  // default output directory
+params.samplesheet = 'samplesheet.csv'  // default samplesheet
 
-//params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
+Channel
+    .fromPath(params.samplesheet)
+    .splitCsv(header: true, sep: ',')
+    .map { row -> [row.sample, file(row.fastq_1), file(row.fastq_2)] }
+    .set { ch_samples }
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE & PRINT PARAMETER SUMMARY
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-include { validateParameters; paramsHelp } from 'plugin/nf-validation'
-
-// Print help message if needed
-if (params.help) {
-    def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-    def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-    def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GRCh37 -profile docker"
-    log.info logo + paramsHelp(command) + citation + NfcoreTemplate.dashedLine(params.monochrome_logs)
-    System.exit(0)
+workflow {
+    TAXONOMY(ch_samples)
 }
-
-// Validate input parameters
-if (params.validate_params) {
-    validateParameters()
-}
-
-WorkflowMain.initialise(workflow, params, log)
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOW FOR PIPELINE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//include { PROTOTYPE } from './workflows/prototype'
-
-include { VARBEN } from './modules/local/varben'
-include { INDEX_BAM_REFSEQ } from './modules/local/index'
-include { BAMSURGEON_SNV } from './modules/local/bamsurgeon'
-include { RANDOM_PAIRED_READS } from './modules/local/bbmap'
-include { DWGSIM_PAIRED_READS } from './modules/local/dwgsim'
-
-//
-// WORKFLOW: Run main tb/prototype analysis pipeline
-//
-//workflow TB_PROTOTYPE {
-//    PROTOTYPE ()
-//}
-
-workflow BAMFILE_SAMPLESHEET{
-
-    take:
-    samplesheet // file: /path/to/samplesheet.csv
-
-    main:
-    Channel.fromPath ( samplesheet )
-    .splitCsv ( header:true,sep:',' ) 
-    .map { row -> tuple(row.sample, file(row.BAM), file(row.refseq)) }
-    .set { samples }
-
-    emit:
-    samples  // channel: [ val(sampleid), bamfile, reference genome ]
-
-}
-
-workflow REFERENCE_SAMPLESHEET{
-
-    take:
-    samplesheet // file: /path/to/samplesheet.csv
-
-    main:
-    Channel.fromPath ( samplesheet )
-    .splitCsv ( header:true,sep:',' ) 
-    .map { row -> tuple(row.sample, file(row.refseq)) }
-    .set { samples }
-
-    emit:
-    samples  // channel: [ val(sampleid), reference genome ]
-
-}
-
-workflow BAMSURGEON {
-
-    BAMFILE_SAMPLESHEET ( params.input )
-    INDEX_BAM_REFSEQ ( BAMFILE_SAMPLESHEET.out.samples )
-    BAMSURGEON_SNV ( INDEX_BAM_REFSEQ.out.sample_reference )
-
-}
-
-workflow BBMAP {
-    REFERENCE_SAMPLESHEET ( params.input )
-    RANDOM_PAIRED_READS ( REFERENCE_SAMPLESHEET.out.samples )
-}
-
-workflow DWGSIM {
-
-    REFERENCE_SAMPLESHEET ( params.input )
-    DWGSIM_PAIRED_READS ( REFERENCE_SAMPLESHEET.out.samples )
-
-}
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN ALL WORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
