@@ -14,24 +14,6 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-//include { validateParameters; paramsHelp } from 'plugin/nf-validation'
-
-// Print help message if needed
-//if (params.help) {
-//    def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-//    def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-//    def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GRCh37 -profile docker"
-//    log.info logo + paramsHelp(command) + citation + NfcoreTemplate.dashedLine(params.monochrome_logs)
-//    System.exit(0)
-//}
-
-// Validate input parameters
-//if (params.validate_params) {
-//    validateParameters()
-//}
-
-//WorkflowMain.initialise(workflow, params, log)
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOW FOR PIPELINE
@@ -44,31 +26,9 @@ include { fastaisolatepull } from './modules/local/pull_isolate_fasta'
 include { taxonpullallisolates } from './modules/local/pull_taxon'
 include { refseqpullallisolates } from './modules/local/pull_reference'
 include { fastareferencepull } from './modules/local/pull_reference_fasta'
-
-
-//include { PROTOTYPE } from './workflows/prototype'
-//include { VARBEN } from './modules/local/varben'
-//include { INDEX_BAM_REFSEQ } from './modules/local/index'
-//include { BAMSURGEON_SNV } from './modules/local/bamsurgeon'
-//include { RANDOM_PAIRED_READS } from './modules/local/bbmap'
-//include { DWGSIM_PAIRED_READS } from './modules/local/dwgsim'
-//include { NEAT_PAIRED_READS } from './modules/local/neat-genreads'
-//
-// WORKFLOW: Run main tb/prototype analysis pipeline
-//
-//workflow TB_PROTOTYPE {
-//    PROTOTYPE ()
-//}
-
-// Define the CSV file path
-//csv_file = file('/scicomp/home-pure/xvp4/isolate_reference_samplesheet.csv')
-
-// Read the CSV file and split into columns
-//Channel
-//    .fromPath(csv_file)
-//    .splitCsv(header: true)
-//    .map { row -> [row.RefSeq_ID, row.refseq] } // Extract columns and add 'status'
-//    .set { csvChannel }
+include { ragtagscaffold } from './modules/local/ragtag_scaffold.nf'
+include { ragtagpatch } from './modules/local/ragtag_patch.nf'
+include { NEAT_PAIRED_READS } from './modules/local/neat-genreads'
 
 // Define workflow
 workflow {
@@ -84,35 +44,15 @@ workflow sequence1 {
 workflow sequence2 {
     taxon_isolates = taxonpullallisolates(params.input2, params.script3)
     refseq_isolates = refseqpullallisolates(taxon_isolates, params.script4)
-    fasta_reference = fastareferencepull(refseq_isolates, params.script2)
+    (out1, out2) = refseq_isolates
+    fastareferencepull(out2, params.script2)
+    out1
+        .ifEmpty { Channel.empty() }
+        .splitCsv(header: true, sep: ',')
+        .view { row -> println "${row.RefSeq_ID} - ${row.refseq} - ${row.Species_Name} - ${row.Accession_Number}" }
+        .set { parsed_data }
+    rag_tag_step1=ragtagscaffold(parsed_data, fastareferencepull)
+    rag_tag_step2=ragtagpatch(rag_tag_step1,parsed_data)
+    NEAT_PAIRED_READS(rag_tag_step2,parsed_data)
 }
 
-
-workflow BAMFILE_SAMPLESHEET{
-
-    take:
-    samplesheet // file: /path/to/samplesheet.csv
-
-    main:
-    Channel.fromPath ( samplesheet )
-    .splitCsv ( header:true,sep:',' ) 
-    .map { row -> tuple(row.sample, file(row.BAM), file(row.refseq)) }
-    .set { samples }
-
-}
-
-
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN ALL WORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
