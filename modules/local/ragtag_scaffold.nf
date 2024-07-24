@@ -1,20 +1,22 @@
-process  RAGTAG_SCAFFOLD {
+process ragtagscaffold {
 
-    publishDir "${params.outdir}/ragtag_scaffold", mode: 'copy'
+    publishDir "${params.outdir}", mode: 'copy'
 
     label 'process_single'
 
+    container "/scicomp/home-pure/xvp4/amr-metagenomics/third_party/ragtag.sif"
+
     input:
-        tuple val(Accession_Number), val(RefSeq_ID)
+    tuple val(RefSeq_ID), val(refseq), val(Species_Name), val(Accession_Number)
+    file "isolate_genome_assemblies_with_species.csv"
 
     output:
-        /scicomp/home-pure/xvp4/
+    path "scaff_*"
 
     script:
     """
-    cd /ragtag_scaffold
-    ragtag.py scaffold -C /scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/test/read_sim/sra_API_test/${Accession_Number}.fa /scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/test/read_sim/sra_API_test/${RefSeq_ID}.fa -o ${RefSeq_ID}
-
+    ls ${params.outdir}/isolate_genome_assemblies_with_species.csv
+    ragtag.py scaffold -C /scicomp/home-pure/xvp4/amr-metagenomics/results/${Accession_Number}.fa /scicomp/home-pure/xvp4/amr-metagenomics/results/${RefSeq_ID}.fa -o "scaff_${RefSeq_ID}_${Accession_Number}"
     """
  
 }
