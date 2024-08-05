@@ -1,4 +1,4 @@
-process  NEAT_PAIRED_READS {
+process  neatpaired {
 
     publishDir "${params.outdir}", mode: 'copy'
 
