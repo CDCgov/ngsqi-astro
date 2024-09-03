@@ -1,20 +1,19 @@
 #!/usr/bin/env nextflow
 
-
 process FASTP {
-   
     container './third_party/fastp.sif'
-   
+
     input:
-    tuple val(sample_id), file(reads)
-    
+    tuple val(sample_id), path(fastq_1), path(fastq_2)
+
     output:
-    path("${sample_id}_R1_fastp.fastq.gz"), emit: trimmed_reads1
-    path("${sample_id}_R2_fastp.fastq.gz"), emit: trimmed_reads2
-  
+    tuple val(sample_id), path("${fastq_1.baseName.replace('.fastq', '')}_trim.fq.gz"), path("${fastq_2.baseName.replace('.fastq', '')}_trim.fq.gz"), emit: trimmed_reads
+
     script:
+    def prefix1 = fastq_1.baseName.replace('.fastq', '')
+    def prefix2 = fastq_2.baseName.replace('.fastq', '')
     """
-    fastp -i ${reads[0]} -I ${reads[1]} -o ${sample_id}_R1_fastp.fastq.gz -O ${sample_id}_R2_fastp.fastq.gz
+    echo "Running fastp on ${fastq_1} and ${fastq_2}"
+    fastp -i ${fastq_1} -I ${fastq_2} -o ${prefix1}_trim.fq.gz -O ${prefix2}_trim.fq.gz
     """
 }
-

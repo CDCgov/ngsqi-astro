@@ -1,38 +1,32 @@
 #!/usr/bin/env nextflow
-nextflow.enable.dsl=2
 
-/*
-========================================================================================
-    Preprocessing/QC Subworkflow
-========================================================================================
+include { FASTQC } from '../../modules/local/fastqc.nf'
+include { FASTP } from '../../modules/local/fastp.nf'
+include { BBDUK } from '../../modules/local/bbduk.nf'
+include { HOSTILE } from '../../modules/local/hostile.nf'
 
-/*
-========================================================================================
-  Include Modules
-========================================================================================
-*/
-include {FASTQC} from '../../modules/local/fastqc.nf'
-include {FASTP} from '../../modules/local/fastp.nf'
-include {BBDUK} from '../../modules/local/bbduk.nf'
-include {HOSTILE} from '../../modules/local/hostile.nf'
-
-/*
-========================================================================================
- Worklow PREPROCESSING
-========================================================================================
-*/
 workflow PREPROCESSING {
     take:
-    ch_reads
-    ch_ref
-    ch_hostile_ref
+    ch_reads // channel: [ val(sampleID), [reads] ]
+    ch_ref // channel: PHIX.fasta
+    ch_hostile_ref // channel: hostile reference
 
     main:
     FASTQC(ch_reads)
+
     FASTP(ch_reads)
-    BBDUK(FASTP.out)
-    HOSTILE(BBDUK.out, ch_hostile_ref)
-   
+    ch_trimmed = FASTP.out.trimmed_reads
+
+    BBDUK(ch_trimmed, ch_ref)
+    ch_decon = BBDUK.out.decon_reads
+
+    HOSTILE(ch_decon, ch_hostile_ref)
+    ch_clean = HOSTILE.out.clean_reads
+
     emit:
-    ch_reads
+    FASTQC.out.reports
+    FASTP.out.trimmed_reads
+    BBDUK.out.decon_reads
+    HOSTILE.out.clean_reads
 }
+
