@@ -2,48 +2,21 @@
 
 nextflow.enable.dsl=2
 
+//include { custom_dumpsoftwareversions } from './modules/nf-core/custom/dumpsoftwareversions
 include {PREPROCESSING} from './subworkflows/local/preprocessing.nf'
-params.reads = './samplesheet.csv'
-params.outdir = 'results'  // default output directory
-params.hostile_ref = "./assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
-params.ref = "./assets/references/phiX.fasta"
+
+params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
+params.ref = "$projectDir/assets/references/phiX.fasta"
+params.samplesheet = 'samplesheet.csv'  // default samplesheet
 
 Channel
-    .fromFilePairs( params.reads, size: 2 )
-    .set { reads: ch_reads }
+    .fromPath(params.samplesheet)
+    .splitCsv(header: true, sep: ',')
+    .map { row -> [row.sample_id, file(row.fastq_1), file(row.fastq_2)] }
+    .set { ch_reads }
 
-Channel
-    .fromPath('./assets/references/phiX.fasta')
-    .set { ch_ref } 
-
-Channel
-    .fromPath(params.hostile_ref) 
-    .set { ch_hostile_ref } 
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE & PRINT PARAMETER SUMMARY
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-WorkflowMain.initialise(workflow, params, log)
-
-//
-// WORkFLOW: iSAMR: in Silico AMR Metagenomics Workflow
-//
-println """\
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    iSAMR: in Silico AMR Metagenomics Workflow
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         """
-         .stripIndent()
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN ALL WORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ch_hostile_ref = params.hostile_ref
+ch_ref = params.ref
 
 workflow {
     PREPROCESSING(ch_reads, ch_ref, ch_hostile_ref)
