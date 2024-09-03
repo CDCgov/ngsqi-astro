@@ -2,7 +2,7 @@
 
 nextflow.enable.dsl=2
 
-//include { custom_dumpsoftwareversions } from './modules/nf-core/custom/dumpsoftwareversions
+//include { custom_dumpsoftwareversions } from './modules/nf-core/custom/dumpsoftwareversions/main
 include {PREPROCESSING} from './subworkflows/local/preprocessing.nf'
 
 params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
