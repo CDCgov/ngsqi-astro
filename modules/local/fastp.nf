@@ -4,11 +4,11 @@ process FASTP {
     container './third_party/fastp.sif'
 
     input:
-    tuple val(sample_id), path(fastq_1), path(fastq_2)
+    tuple val(sample), path(fastq_1), path(fastq_2)
 
     output:
-    tuple val(sample_id), path("${fastq_1.baseName.replace('.fastq', '')}_trim.fq.gz"), path("${fastq_2.baseName.replace('.fastq', '')}_trim.fq.gz"), emit: trimmed_reads
-    tuple val(sample_id), path('*.html'), emit: html
+    tuple val(sample), path("${fastq_1.baseName.replace('.fastq', '')}_trim.fq.gz"), path("${fastq_2.baseName.replace('.fastq', '')}_trim.fq.gz"), emit: trimmed_reads
+    tuple val(sample), path('*.html'), emit: html
 
     script:
     def baseName = fastq_1.baseName.replaceAll(/_[12].*$/, '')
