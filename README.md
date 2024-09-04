@@ -13,7 +13,7 @@
 3.	Screen metagenomes and isolate data for ARGs (AMRFinderPlus, Ariba, ABRICATE, RGI*)
 4.	Perform taxonomic profiling on metagenomics reads to identify microbial community composition (MetaPhlAn v4.1)
 5.	Integrate isolate data with taxonomic profiling results to link specific bacterial strains with their abundance in the metagenomics dataset
-6.	Simulate sequencing reads (NEAT or NGSNGS*)
+6.	Simulate sequencing reads (NEAT)
 7.	Integrate in silico reads into empirical dataset
 8.	Perform taxonomic profiling on in silico dataset as quality control (MetaPhlAn v4.1)
 9.	Generate summary, visualizations and other output files (AMR: HARMONIZATION, TAXONOMY: Hclust2, etc.*)
@@ -34,10 +34,11 @@ First, prepare a samplesheet with your input data that looks as follows:
 
 ```csv
 sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+Sample1,amr-metagenomics/assets/data/ERR4678562_1.fastq.gz,amr-metagenomics/assets/data/ERR4678562_2.fastq.gz
+Sample2,amr-metagenomics/assets/data/ERR4678563_1.fastq.gz,amr-metagenomics/assets/data/ERR4678563_2.fastq.gz
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
+Each row represents a pair of fastq files (paired end metagenomics reads).
 
 -->
 
@@ -47,9 +48,10 @@ Now, you can run the pipeline using:
 
 ```bash
 nextflow run main.nf \
-   -profile entry_point,<docker/singularity/.../institute> \
-   --input samplesheet.csv \
-   --outdir <OUTDIR>
+--input samplesheet.csv \
+-profile singularity \
+--outdir <OUTDIR>
+
 ```
 
 > **Warning:**
