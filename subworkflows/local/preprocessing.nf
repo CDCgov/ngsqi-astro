@@ -27,6 +27,6 @@ workflow PREPROCESSING {
     FASTQC.out.reports
     FASTP.out.trimmed_reads
     BBDUK.out.decon_reads
-    HOSTILE.out.clean_reads
+    reads = ch_clean
 }
 
