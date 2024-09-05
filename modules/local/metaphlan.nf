@@ -1,7 +1,5 @@
 #!/usr/bin/env nextflow
 
-params.outdir = 'results'  // default output directory
-
 process metaphlan {
 
 label 'process_single'
