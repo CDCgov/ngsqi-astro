@@ -6,7 +6,7 @@ process HOSTILE {
     path(hostile_ref)
 
     output:
-    tuple val(sample_id), path("*_clean.fastq.gz"), path("*_clean.fastq.gz"), emit: clean_reads
+    tuple val(sample_id), path("*_clean.fastq.gz"), emit: clean_reads
     tuple val(sample_id), path("${decon_1.baseName.replaceAll(/_[12].*$/, '')}.hostile.log"), emit: log
     
     script:

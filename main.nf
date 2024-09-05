@@ -20,7 +20,14 @@ Channel
 ch_hostile_ref = params.hostile_ref
 ch_ref = params.ref
 
+
+
 workflow {
     PREPROCESSING(ch_reads, ch_ref, ch_hostile_ref)
-    TAXONOMY(ch_reads)
+    processed_reads = PREPROCESSING.out.reads
+    
+    processed_reads
+    .view()
+    
+    TAXONOMY(processed_reads)
 }
