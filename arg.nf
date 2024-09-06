@@ -45,7 +45,6 @@ workflow AMR {
     //HARMRGI.out
 }
 workflow {
-    // Assuming your channel is named output.out
     Channel
         fromPath('HARMABRICATE.out/*')
         .map {file -> [file.baseName.split('_')[0], file]}
