@@ -4,7 +4,7 @@ process metaphlan {
 
 label 'process_high'
 
-container "~/third_party/metaphlan.sif"
+container "./third_party/metaphlan.sif"
 
     input:
     tuple val(sample), path(fastq_1), path(fastq_2)
