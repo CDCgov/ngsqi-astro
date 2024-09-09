@@ -15,6 +15,7 @@ process heatmaps {
     script:
     """
     ml Python/3
+    pip install hclust2
 
     # Validate input data
     python3 ~/amr-metagenomics/third_party/validate_data.py "${merged_species}" 0.0
@@ -28,7 +29,7 @@ process heatmaps {
     cat "${merged_phylum}"
 
     # Run clustering
-    python3 ~/amr-metagenomics/third_party/hclust2.py \
+    hclust2.py \
         -i "${merged_species}" \
         -o "${merged_species}.png" \
         --ftop 10 \
@@ -43,7 +44,7 @@ process heatmaps {
         --minv 0.1 \
         --dpi 300
 
-    python3 ~/amr-metagenomics/third_party/hclust2.py \
+    hclust2.py \
         -i "${merged_phylum}" \
         -o "${merged_phylum}.png" \
         --ftop 10 \
