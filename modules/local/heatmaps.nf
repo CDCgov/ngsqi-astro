@@ -17,7 +17,6 @@ process heatmaps {
     ml Python/3
     pip install hclust2
 
-    # Run clustering
     hclust2.py \
         -i "${merged_species}" \
         -o "${merged_species}.png" \
@@ -33,7 +32,6 @@ process heatmaps {
         --minv 0.1 \
         --dpi 300
 
-<<<<<<< HEAD
     hclust2.py \
         -i "${merged_phylum}" \
         -o "${merged_phylum}.png" \
@@ -48,7 +46,5 @@ process heatmaps {
         --max_slabel_len 100 \
         --minv 0.1 \
         --dpi 300
-=======
->>>>>>> dev/taxonomy
     """
 }
