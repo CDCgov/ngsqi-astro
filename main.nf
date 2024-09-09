@@ -204,7 +204,7 @@ Channel
  
 workflow {
  
-    databases = ['card', 'plasmidfinder', 'resfinder']
+    databases = ["card", "plasmidfinder", "resfinder"]
     AMR(ch_samples, databases)
    
    
