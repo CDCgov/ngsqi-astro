@@ -8,20 +8,20 @@
 */
 
  
-include {ABRICATE} from '/scicomp/home-pure/uql9/amr-metagenomics/abricatemod.nf'
-include {HARMABRICATE} from '/scicomp/home-pure/uql9/amr-metagenomics/harm_abricate.nf'
-include {AMRFinder} from '/scicomp/home-pure/uql9/amr-metagenomics/amrfinderplus.nf'
-include {HARMAmrfinder} from '/scicomp/home-pure/uql9/amr-metagenomics/harm_amrfinder.nf'
-include {HARMRGI} from '/scicomp/home-pure/uql9/amr-metagenomics/harm_rgi.nf'
-include {RGI} from '/scicomp/home-pure/uql9/amr-metagenomics/rgimod.nf'
-include {CATFILES} from '/scicomp/home-pure/uql9/amr-metagenomics/join_files.nf'
+include {ABRICATE} from '../../modules/local/abricatemod.nf'
+include {HARMABRICATE} from '../../modules/local/harm_abricate.nf'
+include {AMRFinder} from '../../modules/local/amrfinderplus.nf'
+include {HARMAmrfinder} from '../../modules/local/harm_amrfinder.nf'
+include {HARMRGI} from '../../modules/local/harm_rgi.nf'
+include {RGI} from '../../modules/local/rgimod.nf'
+include {CATFILES} from '../../modules/local/join_files.nf'
  
    
 workflow AMR {
    
     take: 
     ch_samples // input from sample sheet
-    databases   // array containg databases
+    databases   // array containing databases
  
  
     main:
