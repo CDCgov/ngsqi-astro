@@ -11,10 +11,10 @@
 include {ABRICATE} from '../../modules/local/abricatemod.nf'
 include {HARMABRICATE} from '../../modules/local/harm_abricate.nf'
 include {AMRFinder} from '../../modules/local/amrfinderplus.nf'
-include {HARMAmrfinder} from '../../modules/local/harm_amrfinder.nf'
-include {HARMRGI} from '../../modules/local/harm_rgi.nf'
-include {RGI} from '../../modules/local/rgimod.nf'
-include {CATFILES} from '../../modules/local/join_files.nf'
+//include {HARMAmrfinder} from '../../modules/local/harm_amrfinder.nf'
+//include {HARMRGI} from '../../modules/local/harm_rgi.nf'
+//include {RGI} from '../../modules/local/rgimod.nf'
+//include {CATFILES} from '../../modules/local/join_files.nf'
  
    
 workflow AMR {
@@ -27,7 +27,7 @@ workflow AMR {
     main:
     ABRICATE(ch_samples, databases)
     HARMABRICATE(ABRICATE.out)
-    CATFILES(HARMABRICATE.out)
+    //CATFILES(HARMABRICATE.out)
     //AMRFinder(ch_samples)
     //HARMAmrfinder(AMRFinder.out)
     //RGI(ch_samples)
@@ -37,7 +37,7 @@ workflow AMR {
     emit:
     ABRICATE.out
     HARMABRICATE.out
-    CATFILES.out
+    //CATFILES.out
     
     //AMRFinder.out
     //HARMAmrfinder.out

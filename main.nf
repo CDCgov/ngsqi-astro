@@ -189,7 +189,7 @@ Channel
  */
 
 // This main.nf file is a work in progress. Please no judgment
-include {AMR} from '/scicomp/home-pure/uql9/amr-metagenomics/arg.nf'
+include {AMR} from './subworkflows/local/arg.nf'
  
 params.outdir = 'arg_results' //default directory
 params.isolate_csv = '/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate_reference_samplesheet.csv' //samplesheet
