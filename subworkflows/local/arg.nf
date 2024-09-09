@@ -11,6 +11,7 @@
 include {ABRICATE} from '../../modules/local/abricatemod.nf'
 include {HARMABRICATE} from '../../modules/local/harm_abricate.nf'
 include {AMRFinder} from '../../modules/local/amrfinderplus.nf'
+//include {CONCATENATE_REPORTS} from '../../modules/local/concatenate_reports.nf'
 //include {HARMAmrfinder} from '../../modules/local/harm_amrfinder.nf'
 //include {HARMRGI} from '../../modules/local/harm_rgi.nf'
 //include {RGI} from '../../modules/local/rgimod.nf'
@@ -25,8 +26,12 @@ workflow AMR {
  
  
     main:
+
     ABRICATE(ch_samples, databases)
-    HARMABRICATE(ABRICATE.out)
+    HARMABRICATE(ABRICATE.out.report1, ABRICATE.out.report2, ABRICATE.out.report3, databases)
+
+    //CONCATENATE_REPORTS(HARMABRICATE.out.harmabr_report1, HARMABRICATE.out.harmabr_report2, HARMABRICATE.out.harmabr_report3, databases)
+
     //CATFILES(HARMABRICATE.out)
     //AMRFinder(ch_samples)
     //HARMAmrfinder(AMRFinder.out)
@@ -35,27 +40,19 @@ workflow AMR {
 
  
     emit:
-    ABRICATE.out
-    HARMABRICATE.out
+    ABRICATE.out.report1
+    ABRICATE.out.report2
+    ABRICATE.out.report3
+    HARMABRICATE.out.harmabr_report1
+   // HARMABRICATE.out.harmabr_report2
+   // HARMABRICATE.out.harmabr_report3
+   // CONCATENATE_REPORTS.out
     //CATFILES.out
     
     //AMRFinder.out
     //HARMAmrfinder.out
     //RGI.out
     //HARMRGI.out
-}
-
-// This workflow is designed to concatonate the output files from HARMABRICATE
-//Currently under construction 
-
-workflow {
-    Channel
-        fromPath('HARMABRICATE.out/*')
-        .map {file -> [file.baseName.split('_')[0], file]}
-        .groupTuple()
-        .set { grouped_files }
-
-    joinFiles(grouped_files)
 }
 
 
