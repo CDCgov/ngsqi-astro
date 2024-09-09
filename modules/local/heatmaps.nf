@@ -17,17 +17,6 @@ process heatmaps {
     ml Python/3
     pip install hclust2
 
-    # Validate input data
-    python3 ~/amr-metagenomics/third_party/validate_data.py "${merged_species}" 0.0
-    python3 ~/amr-metagenomics/third_party/validate_data.py "${merged_phylum}" 0.0
-
-    #Inspect input
-    echo "Contents of ${merged_species}:"
-    cat "${merged_species}"
-
-    echo "Contents of ${merged_phylum}:"
-    cat "${merged_phylum}"
-
     # Run clustering
     hclust2.py \
         -i "${merged_species}" \
