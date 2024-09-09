@@ -20,8 +20,8 @@ include {CATFILES} from '/scicomp/home-pure/uql9/amr-metagenomics/join_files.nf'
 workflow AMR {
    
     take: 
-    ch_samples
-    databases
+    ch_samples // input from sample sheet
+    databases   // array containg databases
  
  
     main:
@@ -44,8 +44,11 @@ workflow AMR {
     //RGI.out
     //HARMRGI.out
 }
+
+// This workflow is designed to concatonate the output files from HARMABRICATE
+//Currently under construction 
+
 workflow {
-    // Assuming your channel is named output.out
     Channel
         fromPath('HARMABRICATE.out/*')
         .map {file -> [file.baseName.split('_')[0], file]}
