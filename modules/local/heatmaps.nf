@@ -33,6 +33,7 @@ process heatmaps {
         --minv 0.1 \
         --dpi 300
 
+<<<<<<< HEAD
     hclust2.py \
         -i "${merged_phylum}" \
         -o "${merged_phylum}.png" \
@@ -47,5 +48,7 @@ process heatmaps {
         --max_slabel_len 100 \
         --minv 0.1 \
         --dpi 300
+=======
+>>>>>>> dev/taxonomy
     """
 }
