@@ -2,13 +2,13 @@ nextflow.enable.dsl=2
 
 process merge_abundance {
     input:
-    file profiles_list 
+    file profile_list 
 
     output:
     path("merged_output.txt"), emit: merged_output
     
     script:
-    def profiles_str = profiles_list.join(' ')
+    def profiles_str = profile_list.join(' ')
     """
     ml Python/3
 
