@@ -2,9 +2,9 @@
 
 process metaphlan {
 
-label 'process_single'
+label 'process_high'
 
-container "/scicomp/home-pure/tkq5/amr-metagenomics/third_party/metaphlan.sif"
+container "./third_party/metaphlan.sif"
 
     input:
     tuple val(sample), path(clean_reads)
@@ -16,7 +16,7 @@ container "/scicomp/home-pure/tkq5/amr-metagenomics/third_party/metaphlan.sif"
     """
     metaphlan ${clean_reads[0]},${clean_reads[1]} \\
         --bowtie2out ${sample}_metagenome.bowtie2.bz2 \\
-        --nproc 8 \\
+        --nproc 12 \\
         --input_type fastq \\
         -o ${sample}.txt \\
         --bowtie2db /scicomp/home-pure/tkq5/amr-metagenomics/assets/databases/metaphlan_databases
