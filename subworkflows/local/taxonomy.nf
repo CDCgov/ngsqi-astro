@@ -12,12 +12,12 @@ workflow TAXONOMY {
 
     main:
     metaphlan(ch_samples)
-    metaphlan.out.profiles.view()
+    metaphlan.out.profile.view()
     
     // Debugging: Print profiles
-    metaphlan.out.profiles.map { it[1] }.collect().view { "Profiles: ${it}" }
+    metaphlan.out.profile.map { it[1] }.collect().view { "Profiles: ${it}" }
     
-    merge_abundance(metaphlan.out.profiles.map { it[1] }.collect())
+    merge_abundance(metaphlan.out.profile.map { it[1] }.collect())
     
     // Debugging: Print merged output
     merge_abundance.out.merged_output.view { "Merged Output: ${it}" }
@@ -39,7 +39,7 @@ workflow TAXONOMY {
     heatmaps.out.phylum_visual.view { "Phylum Visual: ${it}" }
     
     emit:
-    metaphlan.out.profiles
+    metaphlan.out.profile
     merge_abundance.out.merged_output
     filter_abundance.out.phylum_output
     filter_abundance.out.species_output
