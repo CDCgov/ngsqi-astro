@@ -1,37 +1,24 @@
 #!/usr/bin/env nextflow
 
-params.outdir = 'results'  // default output directory
-params.reads = 'assets/data/*_{1,2}.fastq.gz'  // default input reads pattern
-
-Channel
-    .fromFilePairs( params.reads, size: 2 )
-    .set { ch_reads }
-
 process metaphlan {
 
-label 'process_single'
+label 'process_high'
 
 container "./third_party/metaphlan.sif"
 
-    tag "metaphlan_${sample}"
-    publishDir "${params.outdir}/metaphlan", mode: 'copy'
-
     input:
-    tuple val(sample), path(reads)
+    tuple val(sample), path(clean_reads)
 
     output:
     tuple val(sample), path("${sample}.txt"), emit: profile
 
-
     script:
-    """  
-    metaphlan ${reads[0]},${reads[1]} \\
+    """
+    metaphlan ${clean_reads[0]},${clean_reads[1]} \\
         --bowtie2out ${sample}_metagenome.bowtie2.bz2 \\
-        --nproc 5 \\
+        --nproc 12 \\
         --input_type fastq \\
         -o ${sample}.txt \\
-        --bowtie2db ./assets/databases/metaphlan_databases
-
+        --bowtie2db /scicomp/home-pure/tkq5/amr-metagenomics/assets/databases/metaphlan_databases
     """
 }
-
