@@ -6,9 +6,7 @@ workflow CONTIGS {
     reads
 
     main:
-    reads
-    .view()
-
+    
      MEGAHIT(reads)
      ch_contigs = MEGAHIT.out.contigs
 
