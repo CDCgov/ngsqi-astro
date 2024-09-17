@@ -7,16 +7,16 @@ process ragtagscaffold {
     container "/scicomp/home-pure/xvp4/amr-metagenomics/third_party/ragtag.sif"
 
     input:
-    tuple val(RefSeq_ID), val(refseq), val(Species_Name), val(Accession_Number)
-    file "isolate_genome_assemblies_with_species.csv"
+    tuple val(sample_id), val(added_copy_number), val(file_path), val(species_name), val(accession_numbers)
+    file "Species_ID_with_Accessions.csv"
 
     output:
     path "scaff_*"
 
     script:
     """
-    ls ${params.outdir}/isolate_genome_assemblies_with_species.csv
-    ragtag.py scaffold -C /scicomp/home-pure/xvp4/amr-metagenomics/results/${Accession_Number}.fa /scicomp/home-pure/xvp4/amr-metagenomics/results/${RefSeq_ID}.fa -o "scaff_${RefSeq_ID}_${Accession_Number}"
+    head ${params.outdir}/Species_ID_with_Accessions.csv
+    ragtag.py scaffold -C /scicomp/home-pure/xvp4/amr-metagenomics/results/${accession_numbers}.fa /scicomp/home-pure/xvp4/amr-metagenomics/results/${sample_id}_genomic.fna -o "scaff_${sample_id}_${accession_numbers}"
     """
  
 }
