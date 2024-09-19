@@ -8,16 +8,17 @@ include {heatmaps} from '../../modules/local/heatmaps.nf'
 
 workflow TAXONOMY {
     take:
-    ch_samples
+    ch_clean
+    ch_hclust2
 
     main:
-    metaphlan(ch_samples)
+    metaphlan(ch_clean)
     
     merge_abundance(metaphlan.out.profile.map { it[1] }.collect())
     
     filter_abundance(merge_abundance.out.merged_output)
 
-    heatmaps(filter_abundance.out.species_output, filter_abundance.out.phylum_output)
+    heatmaps(filter_abundance.out.species_output, filter_abundance.out.phylum_output, ch_hclust2)
     
     emit:
     metaphlan.out.profile

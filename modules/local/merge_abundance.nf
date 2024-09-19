@@ -1,6 +1,5 @@
-nextflow.enable.dsl=2
-
 process merge_abundance {
+    container "./third_party/metaphlan.sif"
     input:
     file profile_list 
 
@@ -10,9 +9,8 @@ process merge_abundance {
     script:
     def profiles_str = profile_list.join(' ')
     """
-    ml Python/3
-
-    python ~/amr-metagenomics/third_party/merge_metaphlan_tables.py ${profiles_str} > merged_output.txt
+    echo "Running: python3 ${projectDir}/third_party/merge_metaphlan_tables.py ${profiles_str} > merged_output.txt"
+    python3 ${projectDir}/third_party/merge_metaphlan_tables.py ${profiles_str} > merged_output.txt
 
     """
 }

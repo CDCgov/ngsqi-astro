@@ -4,12 +4,12 @@ nextflow.enable.dsl=2
 
 //include { custom_dumpsoftwareversions } from './modules/nf-core/custom/dumpsoftwareversions/main'
 include {PREPROCESSING} from './subworkflows/local/preprocessing.nf'
-include {CONTIGS} from './subworkflows/local/assembly.nf'
+//include {CONTIGS} from './subworkflows/local/assembly.nf'
 include { TAXONOMY } from './subworkflows/local/taxonomy.nf'
 
 params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
 params.ref = "$projectDir/assets/references/phiX.fasta"
-
+params.hclust2 = "$projectDir/third_party/hclust2.py"
 params.samplesheet = 'samplesheet.csv'  // default samplesheet
 
 Channel
@@ -23,11 +23,11 @@ Channel
 ch_hostile_ref = params.hostile_ref
 
 ch_ref = params.ref
-
+ch_hclust2 = params.hclust2
 
 
 workflow {
     PREPROCESSING(ch_reads, ch_ref, ch_hostile_ref)
-    CONTIGS(PREPROCESSING.out.reads)
-    TAXONOMY(PREPROCESSING.out.reads)
+    //CONTIGS(PREPROCESSING.out.reads)
+    TAXONOMY(PREPROCESSING.out.reads, ch_hclust2)
 }
