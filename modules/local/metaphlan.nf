@@ -7,14 +7,14 @@ label 'process_high'
 container "./third_party/metaphlan.sif"
 
     input:
-    tuple val(sample), path(clean_reads)
+    tuple val(sample), path(ch_clean_1), path(ch_clean_2)
 
     output:
     tuple val(sample), path("${sample}.txt"), emit: profile
 
     script:
     """
-    metaphlan ${clean_reads[0]},${clean_reads[1]} \\
+    metaphlan ${ch_clean_1},${ch_clean_2} \\
         --bowtie2out ${sample}_metagenome.bowtie2.bz2 \\
         --nproc 12 \\
         --input_type fastq \\
