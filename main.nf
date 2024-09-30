@@ -4,8 +4,11 @@ nextflow.enable.dsl=2
 
 // This main.nf file is a work in progress. Please no judgment
 include {AMR} from './subworkflows/local/arg.nf'
- 
+
+//set output directory 
 params.outdir = 'arg_results' //default directory
+
+//set path to correct samplesheet
 params.isolate_csv = '/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate_reference_samplesheet3.csv' //samplesheet
  
  
