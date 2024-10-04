@@ -2,19 +2,15 @@ process  neatpaired {
 
     publishDir "${params.outdir}", mode: 'copy'
 
-
-    label 'process_single'
-
     input:
-        path rag_tag_step1
-        tuple val(sample_id), val(added_copy_number), val(file_path), val(species_name), val(accession_numbers)
+    tuple val(sample_id), val(added_copy_number), path(file_path), val(accession), path(ref_file), path(scaff_dir), path(patch_dir)
 
     output:
-    path "simreads_*"
+    tuple val(sample_id), val(added_copy_number), path(file_path), val(accession), path("simreads_${sample_id}_${accession}_read1.fq.gz"), path("simreads_${sample_id}_${accession}_read2.fq.gz"), emit:neat_reads
 
     script:
     """
-    python /neat-genreads/gen_reads.py -r /scicomp/home-pure/xvp4/amr-metagenomics/results/patch_${sample_id}_${accession_numbers}/ragtag.patch.fasta -R 151 -c 100 --pe 300 30 --bam -o simreads_${sample_id}_${accession_numbers}
+    python /neat-genreads/gen_reads.py -r ${patch_dir}/ragtag.patch.fasta -R 151 -c 100 --pe 300 30 --bam -o "simreads_${sample_id}_${accession}"
     """
  
 }

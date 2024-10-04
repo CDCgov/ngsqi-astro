@@ -2,21 +2,19 @@ process ragtagscaffold {
 
     publishDir "${params.outdir}", mode: 'copy'
 
-    label 'process_single'
+    //label 'process_single'
 
     container "/scicomp/home-pure/xvp4/amr-metagenomics/third_party/ragtag.sif"
 
     input:
-    tuple val(sample_id), val(added_copy_number), val(file_path), val(species_name), val(accession_numbers)
-    file "Species_ID_with_Accessions.csv"
+    tuple val(sample_id), val(added_copy_number), path(file_path), val(species_name), val(accession), path(ref_file)
 
     output:
-    path "scaff_*"
+    tuple val(sample_id), val(added_copy_number), path(file_path), val(accession), path(ref_file), path("scaff_${sample_id}_${accession}"), emit:ragtag_scaff_dirs
 
     script:
     """
-    head ${params.outdir}/Species_ID_with_Accessions.csv
-    ragtag.py scaffold -C /scicomp/home-pure/xvp4/amr-metagenomics/results/${accession_numbers}.fa /scicomp/home-pure/xvp4/amr-metagenomics/results/${sample_id}_genomic.fna -o "scaff_${sample_id}_${accession_numbers}"
+    ragtag.py scaffold -C ${ref_file} ${file_path} -o "scaff_${sample_id}_${accession}"
     """
  
 }
