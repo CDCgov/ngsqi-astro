@@ -1,0 +1,68 @@
+from Bio import Entrez
+import sys
+import time
+import os
+import urllib.request
+
+def download_genome(accession):
+    Entrez.email = os.environ.get('NCBI_EMAIL', None)
+    Entrez.api_key = os.environ.get('NCBI_API_KEY', None)
+    
+    max_attempts = 5
+    for attempt in range(max_attempts):
+        try:
+            # First, we need to get the FTP path
+            handle = Entrez.esearch(db="assembly", term=accession)
+            record = Entrez.read(handle)
+            handle.close()
+
+            if not record['IdList']:
+                print(f"No assembly found for accession: {accession}", file=sys.stderr)
+                return None
+
+            assembly_id = record['IdList'][0]
+            time.sleep(1)  # Delay to respect NCBI's rate limits
+
+            # Now get the assembly summary
+            handle = Entrez.esummary(db="assembly", id=assembly_id)
+            summary = Entrez.read(handle)
+            handle.close()
+
+            ftp_path = summary['DocumentSummarySet']['DocumentSummary'][0]['FtpPath_GenBank']
+            if not ftp_path:
+                print(f"No FTP path found for accession: {accession}", file=sys.stderr)
+                return None
+
+            # Construct the full URL for the genomic FASTA file
+            file_url = f"{ftp_path}/{os.path.basename(ftp_path)}_genomic.fna.gz"
+
+            # Download the file
+            time.sleep(1)  # Delay to respect NCBI's rate limits
+            local_filename = f"{accession}_genomic.fna.gz"
+            urllib.request.urlretrieve(file_url, local_filename)
+
+            print(f"Successfully downloaded: {local_filename}", file=sys.stderr)
+            return local_filename
+
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed: {str(e)}", file=sys.stderr)
+            if attempt < max_attempts - 1:
+                sleep_time = min(60, 2 ** attempt + 1)  # Cap at 60 seconds
+                print(f"Retrying in {sleep_time} seconds...", file=sys.stderr)
+                time.sleep(sleep_time)
+            else:
+                raise
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python download_genome.py <accession>", file=sys.stderr)
+        sys.exit(1)
+
+    accession = sys.argv[1]
+    result = download_genome(accession)
+    
+    if result:
+        print(result)  # Print the filename to stdout for Nextflow to capture
+    else:
+        print(f"Failed to download genome for accession: {accession}", file=sys.stderr)
+        sys.exit(1)
