@@ -9,6 +9,8 @@ process FASTP {
     output:
     tuple val(sample), path("${fastq_1.baseName.replace('.fastq', '')}_trim.fq.gz"), path("${fastq_2.baseName.replace('.fastq', '')}_trim.fq.gz"), emit: trimmed_reads
     tuple val(sample), path('*.html'), emit: html
+    tuple val(sample), path('*.log'), emit: log
+    path "versions.yml", emit: versions
 
     script:
     def baseName = fastq_1.baseName.replaceAll(/_[12].*$/, '')
@@ -17,5 +19,13 @@ process FASTP {
     """
     echo "Running fastp on ${fastq_1} and ${fastq_2}"
     fastp -i ${fastq_1} -I ${fastq_2} -o ${prefix1}_trim.fq.gz -O ${prefix2}_trim.fq.gz --html ${baseName}.fastp.html
+    
+    2> ${baseName}.fastp.log
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        fastp: \$(fastp --version 2>&1 | sed -e "s/fastp //g")
+    END_VERSIONS
+
+
     """
 }
