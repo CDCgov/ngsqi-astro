@@ -6,6 +6,7 @@ process QUAST {
 
     output:
     tuple val(sample), path("${sample}.tsv"), emit: quast_report
+    //tuple val(sample), path("${sample}.contigs"), emit: quast_outputs
 
     script:
     """
