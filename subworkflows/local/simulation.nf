@@ -7,11 +7,12 @@ include { neatpaired } from '../../modules/local/neat-genreads.nf'
 workflow SIMULATION {
     take:
     ch_ref
+    ch_readlength
 
     main:
     ragtagscaffold(ch_ref)
     ragtagpatch(ragtagscaffold.out.ragtag_scaff_dirs)
-    neatpaired(ragtagpatch.out.ragtag_patch_dirs)
+    neatpaired(ragtagpatch.out.ragtag_patch_dirs, ch_readlength.first().view())
 
     ch_simreads=neatpaired.out.neat_reads
 

@@ -1,5 +1,5 @@
 process catmetagenomics {
-
+    
     publishDir "${params.outdir}", mode: 'copy'
 
     input:
@@ -8,12 +8,16 @@ process catmetagenomics {
     path(isolates_read2)
 
     output:
-    path("combined_isolates_metagenomics_${sample_id}_read1.fq.gz"), emit:catmetagenomics_read1
-    path("combined_isolates_metagenomics_${sample_id}_read2.fq.gz"), emit:catmetagenomics_read2
+    tuple val(sample_id), path("*_1_integrated.fastq.gz"), emit: catmetagenomics_read1
+    tuple val(sample_id), path("*_2_integrated.fastq.gz"), emit: catmetagenomics_read2
 
     script:
+    def baseName1 = read_1.toString().replaceAll(/_[12].*$/, '')
+    def baseName2 = read_2.toString().replaceAll(/_[12].*$/, '')
+    def cleanName1 = "${baseName1}_1_integrated.fastq.gz"
+    def cleanName2 = "${baseName2}_2_integrated.fastq.gz"
     """
-    cat ${isolates_read1} ${read_1} > ${sample_id}_simulated_1.fq.gz
-    cat ${isolates_read2} ${read_2} > ${sample_id}_simulated_2.fq.gz
+    cat "${isolates_read1}" "${read_1}" > "${cleanName1}"
+    cat "${isolates_read2}" "${read_2}" > "${cleanName2}"
     """
 }
