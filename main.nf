@@ -14,12 +14,12 @@ params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria
 params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
 params.samplesheet = 'samplesheet.csv'  // default samplesheet
-params.input_isolates = "$projectDir/data/isolates_input.csv"
+params.input_isolates = "$projectDir/data/isolates_input_26_copynumber.csv"
 params.input_metagenomics = "$projectDir/data/metagenomics_samplesheet.csv"
 params.downloadref_script = "$projectDir/scripts/download_ref.py"
 params.downloadgenome_script = "$projectDir/scripts/download_genome.py"
-params.ncbi_email = 'stow_emily@bah.com'
-params.ncbi_api_key = '86d3354165a563e0aa09f4ac42cb7852c608'
+params.ncbi_email = null
+params.ncbi_api_key = null
 
 
 Channel
@@ -51,7 +51,7 @@ workflow {
     CONTIGS(PREPROCESSING.out.reads)
     TAXONOMY(PREPROCESSING.out.reads, ch_hclust2)
     REFERENCE(input_data,params.downloadref_script,params.downloadgenome_script,params.ncbi_email,params.ncbi_api_key)
-    SIMULATION(REFERENCE.out.ch_ref)
+    SIMULATION(REFERENCE.out.ch_ref,PREPROCESSING.out.ch_readlength)
     INTEGRATE(SIMULATION.out.ch_simreads,PREPROCESSING.out.reads)
 }
 
