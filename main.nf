@@ -9,7 +9,7 @@ include {AMR} from './subworkflows/local/arg.nf'
 params.outdir = 'arg_results' //default directory
 
 //set path to correct samplesheet
-params.isolate_csv = '/scicomp/home-pure/tkq5/amr-metagenomics/samplesheet_contigs_2.5_CN.csv' //samplesheet
+params.isolate_csv = '/scicomp/home-pure/tkq5/amr-metagenomics/samplesheet_contigs_2_5_copynum.csv' //samplesheet
  
  
 Channel
