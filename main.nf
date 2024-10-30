@@ -13,14 +13,24 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftw
 params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
 params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
-params.samplesheet = 'samplesheet.csv'  // default samplesheet
+params.samplesheet = '/scicomp/home-pure/tkq5/amr-metagenomics/samplesheet_dataset2_5_copynum.csv'  // default samplesheet
+
+//Channel
+  //  .fromPath(params.samplesheet)
+    //.splitCsv(header: true, sep: ',')
+    //.map { row -> [row.sample, file(row.fastq_1), file(row.fastq_2)] }
+    //.set { ch_reads }
 
 Channel
     .fromPath(params.samplesheet)
     .splitCsv(header: true, sep: ',')
-    .map { row -> [row.sample, file(row.fastq_1), file(row.fastq_2)] }
+    .map { row ->
+        println "Row: ${row}"
+        [row.sample, file(row.fastq_1), file(row.fastq_2)]
+    }
     .set { ch_reads }
 
+ch_reads.view()
 
 
 ch_hostile_ref = params.hostile_ref

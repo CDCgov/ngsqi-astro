@@ -20,7 +20,7 @@ process heatmaps {
         --ftop 10 \
         --f_dist_f braycurtis \
         --s_dist_f braycurtis \
-        --cell_aspect_ratio 0.1 \
+        --cell_aspect_ratio 1 \
         --log_scale \
         --flabel_size 10 \
         --slabel_size 10 \
@@ -35,7 +35,7 @@ process heatmaps {
         --ftop 10 \
         --f_dist_f braycurtis \
         --s_dist_f braycurtis \
-        --cell_aspect_ratio 0.1 \
+        --cell_aspect_ratio 1 \
         --log_scale \
         --flabel_size 10 \
         --slabel_size 10 \
