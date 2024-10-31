@@ -31,7 +31,9 @@ workflow AMR {
 
     ABRICATE(ch_samples, databases)
     HARMABRICATE(ABRICATE.out.report1, ABRICATE.out.report2, ABRICATE.out.report3, databases)
-    AMRFinder(ch_samples)
+    AMRFINDERPLUS_UPDATE()
+    amrfinderplus_db = AMRFINDERPLUS_UPDATE.out.db
+    AMRFinder(ch_samples, amrfinderplus_db)
     HARMAmrfinder(AMRFinder.out)
     RGI(ch_samples)
     HARMRGI(RGI.out)
@@ -51,6 +53,7 @@ workflow AMR {
     ABRICATE.out.report2
     ABRICATE.out.report3
     HARMABRICATE.out.harmabr_report1
+    amrfinderplus_db
     AMRFinder.out
     HARMAmrfinder.out.hamr_amrfinder
     RGI.out
