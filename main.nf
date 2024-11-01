@@ -2,9 +2,9 @@
 nextflow.enable.dsl=2
 
 //include { custom_dumpsoftwareversions } from './modules/nf-core/custom/dumpsoftwareversions/main'
-include {AMR} from './subworkflows/local/arg.nf'
 include {PREPROCESSING} from './subworkflows/local/preprocessing.nf'
 include {CONTIGS} from './subworkflows/local/assembly.nf'
+include {AMR} from './subworkflows/local/arg.nf'
 //include {TAXONOMY} from './subworkflows/local/taxonomy.nf'
 //include {REFERENCE} from './subworkflows/local/reference.nf'
 //include {SIMULATION} from './subworkflows/local/simulation.nf'
@@ -15,7 +15,7 @@ params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
 params.samplesheet = 'samplesheet.csv'  // default samplesheet
 params.input_isolates = "$projectDir/data/isolates_input_26_copynumber.csv"
-params.input_metagenomics = "$projectDir/data/metagenomics_samplesheet.csv"
+//params.input_metagenomics = "$projectDir/data/metagenomics_samplesheet.csv"
 params.downloadref_script = "$projectDir/scripts/download_ref.py"
 params.downloadgenome_script = "$projectDir/scripts/download_genome.py"
 params.ncbi_email = null
@@ -46,16 +46,7 @@ Channel
     .map { row -> tuple(row.sample_id, row.added_copy_number, file(row.file_path), row.species_name) }
     .set { input_data }
 
-//Channel
-//    .fromPath(params.input_metagenomics)
-//   .splitCsv(header: true, sep: ',')
-//    .map { row -> tuple(row.sample_id, file(row.read_1), file(row.read_2)) }
-//    .set { input_meta }
 
- //   .map{row -> [row.sample, row.refseq] }
- //   .set{ ch_samples }
-
- 
 workflow {
     PREPROCESSING(ch_reads, ch_ref, ch_hostile_ref)
     CONTIGS(PREPROCESSING.out.reads)
@@ -65,7 +56,7 @@ workflow {
     //INTEGRATE(SIMULATION.out.ch_simreads,PREPROCESSING.out.reads)
 
     databases = ["card", "plasmidfinder", "resfinder"]
-    AMR(ch_samples, databases)
+    AMR(CONTIGS.out.decompress, databases)
    
    
 }
