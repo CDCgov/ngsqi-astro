@@ -1,8 +1,8 @@
 #!/usr/bin/env nextflow
-
 nextflow.enable.dsl=2
 
 //include { custom_dumpsoftwareversions } from './modules/nf-core/custom/dumpsoftwareversions/main'
+include {AMR} from './subworkflows/local/arg.nf'
 include {PREPROCESSING} from './subworkflows/local/preprocessing.nf'
 include {CONTIGS} from './subworkflows/local/assembly.nf'
 include {TAXONOMY} from './subworkflows/local/taxonomy.nf'
@@ -22,8 +22,15 @@ params.ncbi_email = null
 params.ncbi_api_key = null
 
 
+//set path to amrfinderplus directory
+params.amrfinderplus = "${baseDir}/assets/AMR_CDS.fasta" 
+
+//set path to correct samplesheet
+params.isolate_csv = '/scicomp/home-pure/tkq5/amr-metagenomics/samplesheet_contigs_2_5_copynum.csv' //samplesheet
+ 
+ 
 Channel
-    .fromPath(params.samplesheet)
+    .fromPath(params.isolate_csv)
     .splitCsv(header: true, sep: ',')
     .map { row -> [row.sample, file(row.fastq_1), file(row.fastq_2)] }
     .set { ch_reads }
@@ -45,7 +52,10 @@ Channel
 //    .map { row -> tuple(row.sample_id, file(row.read_1), file(row.read_2)) }
 //    .set { input_meta }
 
+ //   .map{row -> [row.sample, row.refseq] }
+ //   .set{ ch_samples }
 
+ 
 workflow {
     PREPROCESSING(ch_reads, ch_ref, ch_hostile_ref)
     CONTIGS(PREPROCESSING.out.reads)
@@ -53,6 +63,11 @@ workflow {
     REFERENCE(input_data,params.downloadref_script,params.downloadgenome_script,params.ncbi_email,params.ncbi_api_key)
     SIMULATION(REFERENCE.out.ch_ref,PREPROCESSING.out.ch_readlength)
     INTEGRATE(SIMULATION.out.ch_simreads,PREPROCESSING.out.reads)
+
+    databases = ["card", "plasmidfinder", "resfinder"]
+    AMR(ch_samples, databases)
+   
+   
 }
 
 
