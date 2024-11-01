@@ -56,7 +56,7 @@ workflow {
     //INTEGRATE(SIMULATION.out.ch_simreads,PREPROCESSING.out.reads)
 
     databases = ["card", "plasmidfinder", "resfinder"]
-    AMR(CONTIGS.out.decompress, databases)
+    AMR(CONTIGS.out.contigs, databases)
    
    
 }
