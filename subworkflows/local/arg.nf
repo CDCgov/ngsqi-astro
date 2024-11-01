@@ -23,28 +23,24 @@ include {HARMSUMMARY} from '../../modules/local/harm_summary.nf'
 workflow AMR {
    
     take: 
-    ch_samples // input from sample sheet
-    databases   // array containing databases
+    contigs
+    databases 
  
  
     main:
 
-    ABRICATE(ch_samples, databases)
+    ABRICATE(contigs, databases)
     HARMABRICATE(ABRICATE.out.report1, ABRICATE.out.report2, ABRICATE.out.report3, databases)
     AMRFINDERPLUS_UPDATE()
     amrfinderplus_db = AMRFINDERPLUS_UPDATE.out.db
-    AMRFinder(ch_samples, amrfinderplus_db)
+    AMRFinder(contigs, amrfinderplus_db)
     HARMAmrfinder(AMRFinder.out)
-    RGI(ch_samples)
+    RGI(contigs)
     HARMRGI(RGI.out)
     HARMSUMMARY( HARMABRICATE.out.harmabr_report1, HARMAmrfinder.out.hamr_amrfinder, HARMRGI.out.harmrgi_report)
-    //HARMSUMMARY( HARMABRICATE.out.harmabr_report1, HARMRGI.out.harmrgi_report)
 
-
-    // Collect all output TSV files into a single channel
     collectedReports = HARMSUMMARY.out.reports.collectFile(name: 'final_combined_report.tsv')
 
-    // Pass the collected reports to the CONCATENATE_REPORTS process
     CONCATENATE_REPORTS(collectedReports)
 
 
