@@ -13,22 +13,14 @@ include {AMR} from './subworkflows/local/arg.nf'
 params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
 params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
-params.samplesheet = 'samplesheet.csv'  // default samplesheet
+params.samplesheet = "$projectDir/samplesheet.csv"  // default samplesheet
 params.input_isolates = "$projectDir/data/isolates_input_26_copynumber.csv"
-//params.input_metagenomics = "$projectDir/data/metagenomics_samplesheet.csv"
 params.downloadref_script = "$projectDir/scripts/download_ref.py"
 params.downloadgenome_script = "$projectDir/scripts/download_genome.py"
 params.ncbi_email = null
 params.ncbi_api_key = null
-
-
-//set path to amrfinderplus directory
 params.amrfinderplus = "${baseDir}/assets/AMR_CDS.fasta" 
 
-//set path to correct samplesheet
-params.isolate_csv = '/scicomp/home-pure/tkq5/amr-metagenomics/samplesheet_contigs_2_5_copynum.csv' //samplesheet
- 
- 
 Channel
     .fromPath(params.samplesheet)
     .splitCsv(header: true, sep: ',')
