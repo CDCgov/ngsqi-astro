@@ -19,6 +19,6 @@ container "./third_party/metaphlan.sif"
         --nproc 12 \\
         --input_type fastq \\
         -o ${sample}.txt \\
-        --bowtie2db /scicomp/home-pure/tkq5/amr-metagenomics/assets/databases/metaphlan_databases
+        --bowtie2db /scicomp/home-pure/xvp4/amr-metagenomics/assets/databases/metaphlan_databases
     """
 }

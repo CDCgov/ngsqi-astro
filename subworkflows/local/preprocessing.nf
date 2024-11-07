@@ -17,6 +17,7 @@ workflow PREPROCESSING {
     FASTQC(ch_reads)
     ch_versions = ch_versions.mix(FASTQC.out.versions)
 
+    ch_readlength=FASTQC.out.read_length
 
     FASTP(ch_reads)
     ch_trimmed = FASTP.out.trimmed_reads
@@ -32,6 +33,7 @@ workflow PREPROCESSING {
     
     emit:
     FASTQC.out.reports
+    ch_readlength
     ch_trimmed
     ch_decon
     reads = ch_clean
