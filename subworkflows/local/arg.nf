@@ -64,6 +64,32 @@ workflow AMR {
 
 
 
+   // Run AMRfinderplus
+    if ( params.AMRFinder )
+     {
+    ch_amrfinderplus_db = Channel.empty()
+    ch_amrfinderplus_results = Channel.empty()
+
+    AMRFINDERPLUS_UPDATE ()
+    ch_amrfinderplus_db_update = AMRFINDERPLUS_UPDATE.out.db
+
+    AMRFinder (ch_samples, ch_amrfinderplus_db)
+    ch_amrfinderplus_results = AMRFinder.out.amrfinder_results
+     }
+
+    // Run RGI
+    if ( params.run_rgi ) 
+    {
+    ch_rgi_results = Channel.empty()
+
+    RGI (ch_samples)
+    ch_rgi_report = RGI.out.RGI_results
+
+    }
+
+
+
+    // Collect all output TSV files into a single channel
     collectedReports = HARMSUMMARY.out.reports.collectFile(name: 'final_combined_report.tsv')
 
     CONCATENATE_REPORTS(collectedReports)
