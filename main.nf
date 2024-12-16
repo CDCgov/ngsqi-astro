@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
-
 nextflow.enable.dsl=2
 
 include { PREPROCESSING } from './subworkflows/local/preprocessing.nf'
 //include { CONTIGS } from './subworkflows/local/assembly.nf'
+include {AMR} from './subworkflows/local/arg.nf'
 include { TAXONOMY } from './subworkflows/local/taxonomy.nf'
 //include { MULTIQC } from './modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
@@ -15,15 +15,15 @@ include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin
 params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
 params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
-params.samplesheet = 'samplesheet.csv'
+params.samplesheet = "$projectDir/samplesheet.csv"  // default samplesheet
 params.input_isolates = "$projectDir/data/isolates_input_26_copynumber.csv"
-params.input_metagenomics = "$projectDir/data/metagenomics_samplesheet.csv"
 params.downloadref_script = "$projectDir/scripts/download_ref.py"
 params.downloadgenome_script = "$projectDir/scripts/download_genome.py"
 params.multiqc_config = "$projectDir/assets/multiqc_config.yml"
 params.custom_multiqc_config = "$projectDir/assets/custom_multiqc_config.yml"
 params.ncbi_email = null
 params.ncbi_api_key = null
+params.amrfinderplus = "${baseDir}/assets/AMR_CDS.fasta" 
 
 Channel
     .fromPath(params.samplesheet)
@@ -92,6 +92,16 @@ workflow {
     // REFERENCE(input_data, params.downloadref_script, params.downloadgenome_script, params.ncbi_email, params.ncbi_api_key)
     // SIMULATION(REFERENCE.out.ch_ref, PREPROCESSING.out.ch_readlength)
     // INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
+    //ch_versions = ch_versions.mix(TAXONOMY.out.versions)
+    CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: 'collated_versions.yml'))
+    REFERENCE(input_data,params.downloadref_script,params.downloadgenome_script,params.ncbi_email,params.ncbi_api_key)
+    SIMULATION(REFERENCE.out.ch_ref,PREPROCESSING.out.ch_readlength)
+    INTEGRATE(SIMULATION.out.ch_simreads,PREPROCESSING.out.reads)
+
+    databases = ["card", "plasmidfinder", "resfinder"]
+    AMR(CONTIGS.out.contigs, databases)
+
+}
 
     /*
     ================================================================================
