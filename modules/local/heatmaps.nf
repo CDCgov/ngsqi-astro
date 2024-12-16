@@ -11,6 +11,7 @@ process heatmaps {
     output:
     path("merged_species.png"), emit: species_visual
     path("merged_phylum.png"), emit: phylum_visual
+    path "versions.yml", emit: versions
 
     script:
     """
@@ -43,5 +44,10 @@ process heatmaps {
         --max_slabel_len 100 \
         --minv 0.1 \
         --dpi 300
+    
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        hclust2: \$(hclust2 --version 2>&1 | sed -e "s/hclust2 //g")
+    END_VERSIONS
     """
 }

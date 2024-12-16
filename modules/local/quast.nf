@@ -6,6 +6,7 @@ process QUAST {
 
     output:
     tuple val(sample), path("${sample}.tsv"), emit: quast_report
+    path "versions.yml", emit: versions
     //tuple val(sample), path("${sample}.contigs"), emit: quast_outputs
 
     script:
@@ -14,6 +15,10 @@ process QUAST {
 
     ln -s ${sample}/report.tsv ${sample}.tsv
 
-
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version 2>&1 | sed 's/Python //g')
+        metaquast: \$(metaquast.py --version | sed "s/QUAST v//; s/ (MetaQUAST mode)//")
+    END_VERSIONS
     """
 }

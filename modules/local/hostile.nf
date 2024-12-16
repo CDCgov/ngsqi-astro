@@ -28,6 +28,5 @@ process HOSTILE {
     "${task.process}":
         hostile: \$(echo \$(hostile --version 2>&1))
     END_VERSIONS
-
     """
 }
