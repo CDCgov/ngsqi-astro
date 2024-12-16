@@ -19,5 +19,7 @@ workflow CONTIGS {
      versions = ch_versions
      ch_contigs
      QUAST.out.quast_report
+     contigs = ch_contigs
+     quast_report = QUAST.out.quast_report
     
 }
