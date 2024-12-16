@@ -12,13 +12,16 @@ workflow TAXONOMY {
     ch_hclust2
 
     main:
+    ch_versions = Channel.empty()
     metaphlan(ch_clean)
+    ch_versions = ch_versions.mix(metaphlan.out.versions)
     
     merge_abundance(metaphlan.out.profile.map { it[1] }.collect())
     
     filter_abundance(merge_abundance.out.merged_output)
 
     heatmaps(filter_abundance.out.species_output, filter_abundance.out.phylum_output, ch_hclust2)
+    ch_versions = ch_versions.mix(heatmaps.out.versions)
     
     emit:
     metaphlan.out.profile
@@ -27,4 +30,5 @@ workflow TAXONOMY {
     filter_abundance.out.species_output
     heatmaps.out.species_visual
     heatmaps.out.phylum_visual
+    versions = ch_versions
 }
