@@ -1,4 +1,4 @@
-process downloadref {
+process DOWNLOADREF {
     
     input:
     tuple val(sample_id), val(added_copy_number), path(file_path), val(species_name)

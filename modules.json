@@ -1,6 +1,6 @@
 {
-  "name": "tb/prototype",
-  "homePage": "https://github.com/tb/prototype",
+  "name": "amr-metagenomics",
+  "homePage": "https://github.com/amr-metagenomics",
   "repos": {
     "https://github.com/nf-core/modules.git": {
       "modules": {

@@ -1,4 +1,4 @@
-process catisolates {
+process CATISOLATES {
 
     publishDir "${params.outdir}", mode: 'copy'
 

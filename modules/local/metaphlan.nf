@@ -1,24 +1,35 @@
 #!/usr/bin/env nextflow
 
-process metaphlan {
-
+process METAPHLAN {
+tag "${meta.id}"
 label 'process_high'
 
 container "./third_party/metaphlan.sif"
 
     input:
-    tuple val(sample), path(ch_clean_1), path(ch_clean_2)
+    tuple val(meta), path(reads)
 
     output:
-    tuple val(sample), path("${sample}.txt"), emit: profile
+    tuple val(meta), path("*.txt"), emit: profile
+    path "versions.yml", emit: versions
 
     script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
     """
-    metaphlan ${ch_clean_1},${ch_clean_2} \\
-        --bowtie2out ${sample}_metagenome.bowtie2.bz2 \\
+    
+    metaphlan ${reads[0]},${reads[1]} \\
+        --bowtie2out ${prefix}_metagenome.bowtie2.bz2 \\
         --nproc 12 \\
         --input_type fastq \\
-        -o ${sample}.txt \\
-        --bowtie2db /scicomp/home-pure/xvp4/amr-metagenomics/assets/databases/metaphlan_databases
+        -o ${prefix}.txt \\
+        --bowtie2db ./assets/databases/metaphlan_databases/latest
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        metaphlan: \$(metaphlan --version 2>&1 | awk '{print \$3}')
+    END_VERSIONS
+
     """
 }
