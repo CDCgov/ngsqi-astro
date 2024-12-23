@@ -2,18 +2,21 @@ process QUAST {
     container 'https://depot.galaxyproject.org/singularity/quast:5.0.2--py37pl526hb5aa323_2'
     
     input:
-    tuple val(sample), path(contigs)
+    tuple val(meta), path(contigs)
 
     output:
-    tuple val(sample), path("${sample}.tsv"), emit: quast_report
+    tuple val(meta), path("${prefix}.tsv"), emit: tsv
+    //tuple val(sample), path("${sample}.tsv"), emit: quast_report
     path "versions.yml", emit: versions
     //tuple val(sample), path("${sample}.contigs"), emit: quast_outputs
 
     script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     metaquast.py --threads 5 --space-efficient --rna-finding --max-ref-number 0 -l "${sample}" "${contigs}" -o "${sample}"
 
-    ln -s ${sample}/report.tsv ${sample}.tsv
+    ln -s ${prefix}/report.tsv ${prefix}.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

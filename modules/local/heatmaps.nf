@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 
-process heatmaps {
+process HEATMAPS {
     label 'process_single'
 
     input:
@@ -45,9 +45,10 @@ process heatmaps {
         --minv 0.1 \
         --dpi 300
     
-    cat <<-END_VERSIONS > versions.yml
+    cat <<- 'END_VERSIONS' > versions.yml
     "${task.process}":
-        hclust2: \$(hclust2 --version 2>&1 | sed -e "s/hclust2 //g")
+        hclust2: 1.0.0
     END_VERSIONS
+
     """
 }

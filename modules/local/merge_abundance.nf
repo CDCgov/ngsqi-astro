@@ -1,4 +1,4 @@
-process merge_abundance {
+process MERGE_ABUNDANCE {
     container "./third_party/metaphlan.sif"
     input:
     file profile_list 
