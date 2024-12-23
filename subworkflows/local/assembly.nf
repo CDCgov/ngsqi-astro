@@ -1,4 +1,6 @@
-include { MEGAHIT } from '../../modules/local/megahit.nf'
+include { MEGAHIT } from '../../modules/nf-core/megahit/main' 
+//include { QUAST } from '../../modules/nf-core/quast/main' 
+//include { MEGAHIT } from '../../modules/local/megahit.nf'
 include { QUAST } from '../../modules/local/quast.nf'
 
 workflow CONTIGS {
@@ -18,8 +20,8 @@ workflow CONTIGS {
      emit:
      versions = ch_versions
      ch_contigs
-     QUAST.out.quast_report
+     QUAST.out.tsv
      contigs = ch_contigs
-     quast_report = QUAST.out.quast_report
+     quast_report = QUAST.out.tsv
     
 }

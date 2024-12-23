@@ -1,4 +1,4 @@
-process downloadgenome {
+process DOWNLOADGENOME {
    
     publishDir "${params.outdir}", mode: 'copy'
 
