@@ -1,4 +1,4 @@
-process catmetagenomics {
+process CATMETAGENOMICS {
     
     publishDir "${params.outdir}", mode: 'copy'
 
