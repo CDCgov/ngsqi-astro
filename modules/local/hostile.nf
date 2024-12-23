@@ -2,27 +2,27 @@ process HOSTILE {
     container './third_party/hostile.sif'
 
     input:
-    tuple val(sample), path(decon_1), path(decon_2)
+    tuple val(meta), path(reads)
     path(hostile_ref)
 
     output:
-    tuple val(sample), path("*_1_clean.fastq.gz"), path("*_2_clean.fastq.gz"), emit: clean_reads
+    tuple val(meta), path('*clean.fastq.gz'), emit: clean_reads
     //tuple val(sample), path("*_clean.fastq.gz"), emit: clean_reads
-    tuple val(sample), path("*.hostile.log"), emit: log
+    tuple val(meta), path("*.hostile.log"), emit: log
     path "versions.yml", emit: versions
     
     script:
-    def readNumber1 = decon_1.baseName.replaceAll(/.*_([12]).*/, '$1')
-    def readNumber2 = decon_2.baseName.replaceAll(/.*_([12]).*/, '$1')
-    def cleanName1 = "${sample}_1_clean.fastq.gz"
-    def cleanName2 = "${sample}_2_clean.fastq.gz"
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def cleanName1 = "${prefix}_1_clean.fastq.gz"
+    def cleanName2 = "${prefix}_2_clean.fastq.gz"
 
     """
-    hostile clean --index ${hostile_ref} --fastq1 ${decon_1} --fastq2 ${decon_2} > ${sample}.hostile.log
+    hostile clean --index ${hostile_ref} --fastq1 ${reads[0]} --fastq2 ${reads[1]} > ${prefix}.hostile.log
 
     #Rename the output files
-     mv ${sample}_${readNumber1}_phix.clean_${readNumber1}.fastq.gz ${cleanName1}
-     mv ${sample}_${readNumber2}_phix.clean_${readNumber2}.fastq.gz ${cleanName2}
+     mv ${prefix}_1.clean_1.fastq.gz ${cleanName1}
+     mv ${prefix}_2.clean_2.fastq.gz ${cleanName2}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
