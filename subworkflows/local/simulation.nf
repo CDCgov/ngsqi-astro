@@ -1,8 +1,8 @@
  // Modules for RagTag genome assembly
-include { ragtagscaffold } from '../../modules/local/ragtag_scaffold.nf'
-include { ragtagpatch } from '../../modules/local/ragtag_patch.nf'
+include { RAGTAGSCAFFOLD } from '../../modules/local/ragtag_scaffold.nf'
+include { RAGTAGPATCH } from '../../modules/local/ragtag_patch.nf'
 // Module for read simulation
-include { neatpaired } from '../../modules/local/neat-genreads.nf'
+include { NEATPAIRED } from '../../modules/local/neat-genreads.nf'
 
 workflow SIMULATION {
     take:
@@ -10,12 +10,19 @@ workflow SIMULATION {
     ch_readlength
 
     main:
-    ragtagscaffold(ch_ref)
-    ragtagpatch(ragtagscaffold.out.ragtag_scaff_dirs)
-    neatpaired(ragtagpatch.out.ragtag_patch_dirs, ch_readlength.first().view())
+    ch_versions = Channel.empty()
 
-    ch_simreads=neatpaired.out.neat_reads
+    RAGTAGSCAFFOLD(ch_ref)
+    ch_versions = ch_versions.mix(RAGTAGSCAFFOLD.out.versions)
+
+    RAGTAGPATCH(ragtagscaffold.out.ragtag_scaff_dirs)
+    ch_versions = ch_versions.mix(RAGTAGPATCH.out.versions)
+    
+    NEATPAIRED(ragtagpatch.out.ragtag_patch_dirs, ch_readlength.first().view())
+    ch_simreads= NEATPAIRED.out.neat_reads
+    ch_versions = ch_versions.mix(NEATPAIRED.out.versions)
 
     emit:
     ch_simreads
+    versions = ch_versions
 }

@@ -1,4 +1,4 @@
-process filter_abundance {
+process FILTER_ABUNDANCE {
     
     input:
     path("merged_output.txt")

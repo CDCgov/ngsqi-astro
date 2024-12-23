@@ -1,4 +1,4 @@
-process catcopynumber {
+process CATCOPYNUMBER {
 
     publishDir "${params.outdir}", mode: 'copy'
 

@@ -2,8 +2,8 @@
 nextflow.enable.dsl=2
 
 include { PREPROCESSING } from './subworkflows/local/preprocessing.nf'
-//include { CONTIGS } from './subworkflows/local/assembly.nf'
-include {AMR} from './subworkflows/local/arg.nf'
+include { CONTIGS } from './subworkflows/local/assembly.nf'
+//include {AMR} from './subworkflows/local/arg.nf'
 include { TAXONOMY } from './subworkflows/local/taxonomy.nf'
 //include { MULTIQC } from './modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
@@ -28,13 +28,15 @@ params.amrfinderplus = "${baseDir}/assets/AMR_CDS.fasta"
 Channel
     .fromPath(params.samplesheet)
     .splitCsv(header: true, sep: ',')
-    .map { row -> [row.sample, file(row.fastq_1), file(row.fastq_2)] }
+    .map { row ->
+        tuple([id: row.sample], [file(row.fastq_1), file(row.fastq_2)])
+    }
     .set { ch_reads }
+
 
 ch_hostile_ref = params.hostile_ref
 ch_ref = params.ref
 ch_hclust2 = params.hclust2
-//ch_versions = Channel.empty()
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
@@ -76,6 +78,16 @@ workflow {
     //CONTIGS(PREPROCESSING.out.reads)
     //ch_versions = ch_versions.mix(CONTIGS.out.versions)
     
+        /*
+    ================================================================================
+                                ARG Detection
+    ================================================================================
+    */
+
+    //databases = ["card", "plasmidfinder", "resfinder"]
+    //AMR(CONTIGS.out.contigs, databases)
+    //ch_versions = ch_versions.mix(AMR.out.versions)
+
     /*
     ================================================================================
                                Taxonomic Classification
@@ -91,17 +103,8 @@ workflow {
     */
     // REFERENCE(input_data, params.downloadref_script, params.downloadgenome_script, params.ncbi_email, params.ncbi_api_key)
     // SIMULATION(REFERENCE.out.ch_ref, PREPROCESSING.out.ch_readlength)
+   // ch_versions = ch_versions.mix(SIMULATION.out.versions)
     // INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
-    //ch_versions = ch_versions.mix(TAXONOMY.out.versions)
-    CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: 'collated_versions.yml'))
-    REFERENCE(input_data,params.downloadref_script,params.downloadgenome_script,params.ncbi_email,params.ncbi_api_key)
-    SIMULATION(REFERENCE.out.ch_ref,PREPROCESSING.out.ch_readlength)
-    INTEGRATE(SIMULATION.out.ch_simreads,PREPROCESSING.out.reads)
-
-    databases = ["card", "plasmidfinder", "resfinder"]
-    AMR(CONTIGS.out.contigs, databases)
-
-}
 
     /*
     ================================================================================
@@ -111,6 +114,7 @@ workflow {
     // Generate versions report
     ch_versions_unique = ch_versions.unique()
     CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions_unique.collectFile(name: 'collated_versions.yml'))
+        //CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: 'collated_versions.yml'))
     
     /*
     ================================================================================
