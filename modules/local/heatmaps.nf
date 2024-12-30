@@ -4,8 +4,8 @@ process HEATMAPS {
     label 'process_single'
 
     input:
-    path merged_species
-    path merged_phylum
+    path(merged_species)
+    path(merged_phylum)
     path(hclust2)
 
     output:
