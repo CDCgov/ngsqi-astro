@@ -12,7 +12,7 @@ process EXTRACT_READ_LENGTH {
     for zip in ${fastqc_zip}; do
         unzip -o "\$zip" -d ./
         unzip_dir=\$(basename "\$zip" .zip)
-        READ_LENGTH=\$(grep "Sequence length" ./\$unzip_dir/fastqc_data.txt | cut -f 2)
+        READ_LENGTH=\$(grep "Sequence length" ./\$unzip_dir/fastqc_data.txt | cut -f2 | sed 's/-.*//g')
         echo \${READ_LENGTH} >> read_length.txt
     done
     """
