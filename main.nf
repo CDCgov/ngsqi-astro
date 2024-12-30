@@ -75,8 +75,8 @@ workflow {
     ================================================================================
     */
     
-    //CONTIGS(PREPROCESSING.out.reads)
-    //ch_versions = ch_versions.mix(CONTIGS.out.versions)
+    CONTIGS(PREPROCESSING.out.reads)
+    ch_versions = ch_versions.mix(CONTIGS.out.versions)
     
         /*
     ================================================================================

@@ -1,5 +1,6 @@
+#!/usr/bin/env nextflow
+
 process FILTER_ABUNDANCE {
-    
     input:
     path("merged_output.txt")
 
@@ -9,7 +10,6 @@ process FILTER_ABUNDANCE {
 
     script:
     """
-    #!/bin/bash
     input_file="\$(realpath merged_output.txt)"
 
     # Skip the first line and extract the header from the second line
@@ -28,3 +28,4 @@ process FILTER_ABUNDANCE {
     grep -E 's__|clade' "\$input_file" | grep -v 't__' | grep -v 'clade_name' | sed -E 's/^.*s__//' | awk '{\$1=\$1; print}' OFS='\\t' >> merged_species.txt
     """
 }
+
