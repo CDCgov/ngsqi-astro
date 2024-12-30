@@ -5,7 +5,7 @@ process QUAST {
     tuple val(meta), path(contigs)
 
     output:
-    tuple val(meta), path("${prefix}.tsv"), emit: tsv
+    tuple val(meta), path("*.tsv"), emit: tsv
     //tuple val(sample), path("${sample}.tsv"), emit: quast_report
     path "versions.yml", emit: versions
     //tuple val(sample), path("${sample}.contigs"), emit: quast_outputs
@@ -14,9 +14,9 @@ process QUAST {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    metaquast.py --threads 5 --space-efficient --rna-finding --max-ref-number 0 -l "${sample}" "${contigs}" -o "${sample}"
+    metaquast.py --threads 5 --space-efficient --rna-finding --max-ref-number 0 -l "${prefix}" "${contigs}" -o "${prefix}"
 
-    ln -s ${prefix}/report.tsv ${prefix}.tsv
+    ln -s "${prefix}/report.tsv" "${prefix}.tsv"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

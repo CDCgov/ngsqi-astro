@@ -1,10 +1,10 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl=2
 
-include {METAPHLAN} from '../../modules/local/metaphlan.nf'
-include {MERGE_ABUNDANCE} from '../../modules/local/merge_abundance.nf'
-include {FILTER_ABUNDANCE} from '../../modules/local/filter_abundance.nf'
-include {HEATMAPS} from '../../modules/local/heatmaps.nf'
+include { METAPHLAN } from '../../modules/local/metaphlan.nf'
+include { MERGE_ABUNDANCE } from '../../modules/local/merge_abundance.nf'
+include { FILTER_ABUNDANCE } from '../../modules/local/filter_abundance.nf'
+include { HEATMAPS } from '../../modules/local/heatmaps.nf'
 
 workflow TAXONOMY {
     take:
@@ -15,8 +15,9 @@ workflow TAXONOMY {
     ch_versions = Channel.empty()
     METAPHLAN(ch_clean)
     ch_versions = ch_versions.mix(METAPHLAN.out.versions)
+    ch_profiles = METAPHLAN.out.profiles
     
-    MERGE_ABUNDANCE(METAPHLAN.out.profile.map { it[1] }.collect())
+    MERGE_ABUNDANCE(ch_profiles.map { it[1] }.collect())
     
     FILTER_ABUNDANCE(MERGE_ABUNDANCE.out.merged_output)
 
@@ -24,7 +25,7 @@ workflow TAXONOMY {
     ch_versions = ch_versions.mix(HEATMAPS.out.versions)
     
     emit:
-    METAPHLAN.out.profile
+    METAPHLAN.out.profiles  // Fix: Correct output channel name from profiles
     MERGE_ABUNDANCE.out.merged_output
     FILTER_ABUNDANCE.out.phylum_output
     FILTER_ABUNDANCE.out.species_output
@@ -32,3 +33,4 @@ workflow TAXONOMY {
     HEATMAPS.out.phylum_visual
     versions = ch_versions
 }
+

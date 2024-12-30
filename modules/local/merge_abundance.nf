@@ -1,16 +1,18 @@
+#!/usr/bin/env nextflow
+
 process MERGE_ABUNDANCE {
     container "./third_party/metaphlan.sif"
+
     input:
-    file profile_list 
+    path(profiles)
 
     output:
     path("merged_output.txt"), emit: merged_output
     
     script:
-    def profiles_str = profile_list.join(' ')
+    def profiles = profiles.join(' ')
     """
-    echo "Running: python3 ${projectDir}/third_party/merge_metaphlan_tables.py ${profiles_str} > merged_output.txt"
-    python3 ${projectDir}/third_party/merge_metaphlan_tables.py ${profiles_str} > merged_output.txt
-
+    echo "Running: python3 ${projectDir}/third_party/merge_metaphlan_tables.py ${profiles} > merged_output.txt"
+    python3 ${projectDir}/third_party/merge_metaphlan_tables.py ${profiles} > merged_output.txt
     """
 }

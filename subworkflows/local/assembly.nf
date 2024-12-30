@@ -5,12 +5,12 @@ include { QUAST } from '../../modules/local/quast.nf'
 
 workflow CONTIGS {
     take:
-    reads
+    ch_clean
 
     main:
     ch_versions = Channel.empty()
 
-     MEGAHIT(reads)
+     MEGAHIT(ch_clean)
      ch_contigs = MEGAHIT.out.contigs
      ch_versions = ch_versions.mix(MEGAHIT.out.versions)
 
