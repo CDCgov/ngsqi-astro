@@ -1,16 +1,14 @@
 #!/usr/bin/env nextflow
 
 process METAPHLAN {
-tag "${meta.id}"
-label 'process_high'
-
-container "./third_party/metaphlan.sif"
+    label 'process_high'
+    container "./third_party/metaphlan.sif"
 
     input:
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*.txt"), emit: profile
+    tuple val(meta), path("*.txt"), emit: profiles
     path "versions.yml", emit: versions
 
     script:
@@ -18,7 +16,6 @@ container "./third_party/metaphlan.sif"
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    
     metaphlan ${reads[0]},${reads[1]} \\
         --bowtie2out ${prefix}_metagenome.bowtie2.bz2 \\
         --nproc 12 \\
@@ -30,6 +27,6 @@ container "./third_party/metaphlan.sif"
     "${task.process}":
         metaphlan: \$(metaphlan --version 2>&1 | awk '{print \$3}')
     END_VERSIONS
-
     """
 }
+
