@@ -13,9 +13,9 @@ workflow REFERENCE {
     DOWNLOADREF(input_data, downloadref_script, ncbi_email, ncbi_api_key)
     DOWNLOADGENOME(DOWNLOADREF.out, downloadgenome_script, ncbi_email, ncbi_api_key)
     
-    DOWNLOADGENOME.out.gunzip.view { id, copy, species, accession, genome_file ->
-        "Sample: $id, CopyNum: $copy, Species: $species, Accession: $accession, Genome file: ${genome_file.name}"
-    }
+   // DOWNLOADGENOME.out.gunzip.view { id, copy, species, accession, genome_file ->
+   //     "Sample: $id, CopyNum: $copy, Species: $species, Accession: $accession, Genome file: ${genome_file.name}"
+   // }
 
     ch_ref = DOWNLOADGENOME.out.gunzip
 
