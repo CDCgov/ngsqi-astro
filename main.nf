@@ -7,16 +7,16 @@ include { CONTIGS } from './subworkflows/local/assembly.nf'
 include { TAXONOMY } from './subworkflows/local/taxonomy.nf'
 //include { MULTIQC } from './modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
-//include { REFERENCE } from './subworkflows/local/reference.nf'
-//include { SIMULATION } from './subworkflows/local/simulation.nf'
-//include { INTEGRATE } from './subworkflows/local/integrate.nf'
+include { REFERENCE } from './subworkflows/local/reference.nf'
+include { SIMULATION } from './subworkflows/local/simulation.nf'
+include { INTEGRATE } from './subworkflows/local/integrate.nf'
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 
 params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
 params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
 params.samplesheet = "$projectDir/samplesheet.csv"  // default samplesheet
-params.input_isolates = "$projectDir/data/isolates_input_26_copynumber.csv"
+params.input_isolates = "/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate_test.csv"
 params.downloadref_script = "$projectDir/scripts/download_ref.py"
 params.downloadgenome_script = "$projectDir/scripts/download_genome.py"
 params.multiqc_config = "$projectDir/assets/multiqc_config.yml"
@@ -101,10 +101,10 @@ workflow {
                                 Simulation & QC
     ================================================================================
     */
-    // REFERENCE(input_data, params.downloadref_script, params.downloadgenome_script, params.ncbi_email, params.ncbi_api_key)
-    // SIMULATION(REFERENCE.out.ch_ref, PREPROCESSING.out.ch_readlength)
-   // ch_versions = ch_versions.mix(SIMULATION.out.versions)
-    // INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
+    REFERENCE(input_data, params.downloadref_script, params.downloadgenome_script, params.ncbi_email, params.ncbi_api_key)
+    SIMULATION(REFERENCE.out.ch_ref, PREPROCESSING.out.ch_readlength)
+    ch_versions = ch_versions.mix(SIMULATION.out.versions)
+    INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
 
     /*
     ================================================================================
