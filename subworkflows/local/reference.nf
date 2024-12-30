@@ -12,7 +12,7 @@ workflow REFERENCE {
 
     main:
     DOWNLOADREF(input_data,downloadref_script,ncbi_email,ncbi_api_key)
-    DOWNLOADGENOME(downloadref.out,downloadgenome_script,ncbi_email,ncbi_api_key)
+    DOWNLOADGENOME(DOWNLOADREF.out,DOWNLOADGENOME,ncbi_email,ncbi_api_key)
     DOWNLOADGENOME.out.genome_data.view { id, copy, file_path, species, accession, genome_file ->
         "Sample: $id, Species: $species, Accession: $accession, Genome file: ${genome_file.name}"
     }
