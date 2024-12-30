@@ -5,7 +5,7 @@ process RAGTAGPATCH {
     container "${baseDir}/third_party/ragtag.sif"
 
     input:
-    tuple val(sample_id), val(added_copy_number), path(file_path), val(accession), path(ref_file), path(scaff_dir)
+    tuple val(sample_id), val(added_copy_number), path(file_path), val(species_name), val(accession), path(ref_file), path(scaff_dir)
     
     output:
     path "${scaff_dir}/ragtag.scaffold_no0.fasta", emit: no0_fasta

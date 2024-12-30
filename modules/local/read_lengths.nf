@@ -1,11 +1,14 @@
 #!/usr/bin/env nextflow
 
 process EXTRACT_READ_LENGTH {
+    publishDir "${params.outdir}", mode: 'copy'
+
     input:
     tuple val(meta), path(fastqc_zip)
 
     output:
-    tuple val(meta), path("*.txt"), emit: read_length
+    env(read_length), emit: read_length
+    path("*.txt"), emit: txt
 
     script:
     """
@@ -15,7 +18,9 @@ process EXTRACT_READ_LENGTH {
         READ_LENGTH=\$(grep "Sequence length" ./\$unzip_dir/fastqc_data.txt | cut -f2 | sed 's/-.*//g')
         echo \${READ_LENGTH} >> read_length.txt
     done
+
+    #only extract the first read length
+    read_length=\$(head -n 1 read_length.txt)
+    echo "Read length: \${read_length}"
     """
 }
-
-
