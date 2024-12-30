@@ -7,7 +7,7 @@ process MEGAHIT {
         'community.wave.seqera.io/library/megahit_pigz:87a590163e594224' }"
 
     input:
-    tuple val(meta), path(reads1), path(reads2)
+    tuple val(meta), path(reads)
 
     output:
     tuple val(meta), path("*.contigs.fa.gz")                            , emit: contigs
@@ -25,10 +25,11 @@ process MEGAHIT {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def reads_command = meta.single_end || !reads2 ? "-r ${reads1.join(',')}" : "-1 ${reads1.join(',')} -2 ${reads2.join(',')}"
+
     """
     megahit \\
-        ${reads_command} \\
+        -1 ${reads[0]} \\
+        -2 ${reads[1]} \\
         ${args} \\
         -t ${task.cpus} \\
         --out-prefix ${prefix}
