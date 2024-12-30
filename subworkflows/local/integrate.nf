@@ -23,9 +23,11 @@ workflow INTEGRATE {
     FASTQC_SIM(integrated_reads)
     ch_versions = ch_versions.mix(FASTQC_SIM.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_SIM.out.zip)
+    fastqc_zip = FASTQC_SIM.out.zip
 
     emit:
     integrated_reads
     versions = ch_versions
     multiqc = ch_multiqc_files
+    fastqc_zip
 }

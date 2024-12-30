@@ -14,7 +14,7 @@ process NEATPAIRED {
     echo "Read lengths: \${read_lengths}"
 
     python /neat-genreads/gen_reads.py \\
-    -r ${patch_dir}/ragtag.patch.fasta \\
+    -r ${patch_dir}/ragtag.patch.ctg.fasta \\
     -R \${read_lengths} \\
     -c 100 \\
     --pe 300 30 \\
