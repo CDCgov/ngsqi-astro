@@ -45,7 +45,7 @@ workflow PREPROCESSING {
     fastqc_zip = FASTQC_CLEAN.out.zip
 
     EXTRACT_READ_LENGTH(FASTQC_CLEAN.out.zip)
-    ch_readlength=EXTRACT_READ_LENGTH.out
+    ch_readlength=EXTRACT_READ_LENGTH.out.read_length
 
     emit:
     ch_trimmed
