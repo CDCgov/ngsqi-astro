@@ -1,4 +1,4 @@
-process RATAGSCAFFOLD {
+process RAGTAGSCAFFOLD {
 
     publishDir "${params.outdir}", mode: 'copy'
 
