@@ -62,13 +62,13 @@ GCA_016490125.3,1,/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metage
 ```
 Each row corresponds to the following information:
 
-sample_id: Sample ID or name
+* sample_id: Sample ID or name
 
-added_copy_number: Option to include a given number of copies of simulated genomes. If copy number variation is not desired, input '0'
+* added_copy_number: Option to include a given number of copies of simulated genomes. If copy number variation is not desired, input '0'
 
-file_path: Path to isolate genome file (.fna)
+* file_path: Path to isolate genome file (.fna)
 
-species_name: Name of isolate species
+* species_name: Name of isolate species
 
 ### Running ASTRO:
 Now, you can run the pipeline using:
