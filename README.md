@@ -1,4 +1,4 @@
-# :alien: ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization
+# :rocket: ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization
 
 ## Introduction
 
