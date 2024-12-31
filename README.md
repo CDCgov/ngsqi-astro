@@ -25,7 +25,7 @@
 > to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
 > with `-profile test` before running the workflow on actual data.
 
-# SET UP:
+### Set Up:
 
 First, prepare a samplesheet with your input metagenomic data that looks as follows:
 
@@ -48,13 +48,17 @@ GCA_018454105.3,1,/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metage
 GCA_016490125.3,1,/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate-genomes/GCA_016490125.3/GCA_016490125.3_PDT000725303.3_genomic.fna,Acinetobacter baumannii
 ```
 Each row corresponds to the following information:
+
 sample_id: Sample ID or name
+
 added_copy_number: Option to include a given number of copies of simulated genomes. If copy number variation is not desired, input '0'
+
 file_path: Path to isolate genome file (.fna)
+
 species_name: Name of isolate species
 
 -->
-# Running ASTRO:
+### Running ASTRO:
 Now, you can run the pipeline using:
 
 <!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
