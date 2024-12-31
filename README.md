@@ -25,8 +25,7 @@
 > to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
 > with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
+# SET UP:
 
 First, prepare a samplesheet with your input metagenomic data that looks as follows:
 
@@ -55,7 +54,7 @@ file_path: Path to isolate genome file (.fna)
 species_name: Name of isolate species
 
 -->
-
+# Running ASTRO:
 Now, you can run the pipeline using:
 
 <!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
@@ -64,8 +63,8 @@ Now, you can run the pipeline using:
 nextflow run main.nf \
 --input samplesheet.csv \
 --isolates isolate_samplesheet.csv \
--- ncbi_email < USER NCBI EMAIL > \
--- ncbi_api_key <API KEY> \
+--ncbi_email <USER NCBI EMAIL> \
+--ncbi_api_key <API KEY> \
 -profile singularity \
 --outdir <OUTDIR>
 
