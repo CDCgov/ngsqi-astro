@@ -8,15 +8,15 @@
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1.	Input paired-end metagenomics reads (.fastq) and isolate data (.fna) with samplesheet
-2.	Perform pre-processing on metagenomics reads (FastQC, FastP, PHIX, Hostile*)
-3.	Screen metagenomes and isolate data for ARGs (AMRFinderPlus, Ariba, ABRICATE, RGI*)
+1.	Input paired-end metagenomics reads (.fastq) and isolate data (.fna) with samplesheets
+2.	Perform pre-processing on metagenomics reads (FastQC, FastP, PHIX, Hostile)
+3.	Screen metagenomes for antimicrobial resistance genes (AMRFinderPlus, ABRICATE, RGI)
 4.	Perform taxonomic profiling on metagenomics reads to identify microbial community composition (MetaPhlAn v4.1)
-5.	Integrate isolate data with taxonomic profiling results to link specific bacterial strains with their abundance in the metagenomics dataset
-6.	Simulate sequencing reads (NEAT)
-7.	Integrate in silico reads into empirical dataset
-8.	Perform taxonomic profiling on in silico dataset as quality control (MetaPhlAn v4.1)
-9.	Generate summary, visualizations and other output files (AMR: HARMONIZATION, TAXONOMY: Hclust2, etc.*)
+6.	Simulate sequencing reads (NEAT, RAGTAG)
+7.	Integrate in silico reads with empirical metagenomes
+8.	Perform taxonomic profiling on in silico dataset (MetaPhlAn v4.1)
+9.   Perform ARG detection on in silico dataset 
+9.	Generate summary, visualizations and other output files (AMR: HARMONIZATION, TAXONOMY: Hclust2, etc.)
 
 ## Usage
 
@@ -28,7 +28,7 @@
 <!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
      Explain what rows and columns represent. For instance (please edit as appropriate):
 
-First, prepare a samplesheet with your input data that looks as follows:
+First, prepare a samplesheet with your input metagenomic data that looks as follows:
 
 `samplesheet.csv`:
 
@@ -40,6 +40,20 @@ Sample2,amr-metagenomics/assets/data/ERR4678563_1.fastq.gz,amr-metagenomics/asse
 
 Each row represents a pair of fastq files (paired end metagenomics reads).
 
+You will need to also prepare a samplesheet for isolate genomes to be used in simulation. 
+
+`isolate_samplesheet.csv`:
+```csv
+sample_id,added_copy_number,file_path,species_name
+GCA_018454105.3,1,/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate-genomes/GCA_018454105.3/GCA_018454105.3_PDT001044797.3_genomic.fna,Acinetobacter baumannii
+GCA_016490125.3,1,/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate-genomes/GCA_016490125.3/GCA_016490125.3_PDT000725303.3_genomic.fna,Acinetobacter baumannii
+```
+Each row corresponds to the following information:
+sample_id: Sample ID or name
+added_copy_number: Option to include a given number of copies of simulated genomes. If copy number variation is not desired, input '0'
+file_path: Path to isolate genome file (.fna)
+species_name: Name of isolate species
+
 -->
 
 Now, you can run the pipeline using:
@@ -49,6 +63,9 @@ Now, you can run the pipeline using:
 ```bash
 nextflow run main.nf \
 --input samplesheet.csv \
+--isolates isolate_samplesheet.csv \
+-- ncbi_email < USER NCBI EMAIL > \
+-- ncbi_api_key <API KEY> \
 -profile singularity \
 --outdir <OUTDIR>
 
