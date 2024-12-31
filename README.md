@@ -20,6 +20,7 @@ The three primary objectives of the ASTRO workflow entail:
 
 This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) and utilizes docker and singularity containers to modularize the workflow for optimal maintenance and reproducibility.
 
+Pipeline Summary:
 1.	Input paired-end metagenomics reads (.fastq) and isolate data (.fna) with samplesheets
 2.	Perform pre-processing on metagenomics reads (FastQC, FastP, PHIX, Hostile)
 3.	Screen metagenomes for antimicrobial resistance genes (AMRFinderPlus, ABRICATE, RGI)
