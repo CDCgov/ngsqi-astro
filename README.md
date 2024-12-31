@@ -1,4 +1,4 @@
-#ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization
+# ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization
 
 ## Introduction
 
