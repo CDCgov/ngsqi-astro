@@ -16,7 +16,6 @@ params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria
 params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
 params.samplesheet = "$projectDir/samplesheet.csv"  // default samplesheet
-params.input_isolates = "$projectDir/isolate_samplesheet.csv"
 params.downloadref_script = "$projectDir/scripts/download_ref.py"
 params.downloadgenome_script = "$projectDir/scripts/download_genome.py"
 params.multiqc_config = "$projectDir/assets/multiqc_config.yml"
@@ -41,7 +40,7 @@ ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 Channel
-    .fromPath(params.input_isolates)
+    .fromPath(params.isolates)
     .splitCsv(header: true, sep: ',')
     .map { row -> tuple(row.sample_id, row.added_copy_number, file(row.file_path), row.species_name) }
     .set { input_data }
