@@ -1,13 +1,8 @@
-#!/usr/bin/env nextflow
-
 include { FASTQC } from '../../modules/nf-core/fastqc/main' 
-//include { FASTQC } from '../../modules/local/fastqc.nf'
 include { FASTQC as FASTQC_CLEAN } from '../../modules/nf-core/fastqc/main'
 include { EXTRACT_READ_LENGTH } from '../../modules/local/read_lengths.nf'
-//include { FASTQC_CLEAN } from '../../modules/local/fastqc_clean.nf'
 include { FASTP } from '../../modules/local/fastp.nf'
 include { BBMAP_BBDUK as BBDUK } from '../../modules/nf-core/bbmap/bbduk/main'
-//include { BBDUK } from '../../modules/local/bbduk.nf'
 include { HOSTILE } from '../../modules/local/hostile.nf'
 
 workflow PREPROCESSING {
