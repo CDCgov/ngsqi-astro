@@ -92,11 +92,11 @@ nextflow run main.nf \
 
 ## Credits
 
-ATRO was originally written by the Next Generation Sequencing (NGS) Quality Initiative (QI) In silico Team.
+ASTRO was originally written by the Next Generation Sequencing (NGS) Quality Initiative (QI) In silico Team.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-Clinical and Environmental Microbiology Branch (CEMB)
+* Clinical and Environmental Microbiology Branch (CEMB)
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
