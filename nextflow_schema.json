@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/amr-metagenomics/master/nextflow_schema.json",
   "title": "amr-metagenomics pipeline parameters",
-  "description": "In Silico reference materials for bacterial HAI simulation",
+  "description": "Generating in silico reference materials for AMR metagenomics",
   "type": "object",
   "definitions": {
     "input_output_options": {
@@ -175,6 +175,13 @@
           "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
           "hidden": true
         },
+        "multiqc_config": {
+          "type": "string",
+          "format": "file-path",
+          "description": "Custom config file to supply to MultiQC.",
+          "fa_icon": "fas fa-cog",
+          "hidden": true
+        },
         "validate_params": {
           "type": "boolean",
           "description": "Boolean whether to validate parameters against the schema at runtime",
@@ -224,6 +231,12 @@
     "isolates": {
       "type": "string"
     },
+    "ncbi_email": {
+      "type": "string"
+    },
+    "ncbi_api_key": {
+      "type": "string"
+    },
     "amrfinderplus": {
       "type": "string"
     },
@@ -245,16 +258,7 @@
     "downloadgenome_script": {
       "type": "string"
     },
-    "multiqc_config": {
-      "type": "string"
-    },
     "custom_multiqc_config": {
-      "type": "string"
-    },
-    "ncbi_email": {
-      "type": "string"
-    },
-    "ncbi_api_key": {
       "type": "string"
     }
   },
