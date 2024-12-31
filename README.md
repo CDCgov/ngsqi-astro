@@ -18,6 +18,8 @@ The three primary objectives of the ASTRO workflow entail:
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
+This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) and utilizes docker and singularity containers to modularize the workflow for optimal maintenance and reproducibility.
+
 1.	Input paired-end metagenomics reads (.fastq) and isolate data (.fna) with samplesheets
 2.	Perform pre-processing on metagenomics reads (FastQC, FastP, PHIX, Hostile)
 3.	Screen metagenomes for antimicrobial resistance genes (AMRFinderPlus, ABRICATE, RGI)
