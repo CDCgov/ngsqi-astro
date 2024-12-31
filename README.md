@@ -1,3 +1,5 @@
+#ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization
+
 ## Introduction
 
 **ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization** is a bioinformatics pipeline that performs taxonomic profiling, screens metagenomes and isolate genomes for determinants of antimicrobial resistance, simulates reads, and generates a bacterial metagenomic in silico reference dataset.
