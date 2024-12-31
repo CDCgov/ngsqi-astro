@@ -1,6 +1,6 @@
 ## Introduction
 
-**amr-metagenomics** is a bioinformatics pipeline that performs taxonomic profiling, screens metagenomes and isolate genomes for determinants of antimicrobial resistance, simulates reads, and generates a bacterial HAI in silico reference dataset.
+**ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization** is a bioinformatics pipeline that performs taxonomic profiling, screens metagenomes and isolate genomes for determinants of antimicrobial resistance, simulates reads, and generates a bacterial metagenomic in silico reference dataset.
 
 
 
@@ -15,7 +15,7 @@
 6.	Simulate sequencing reads (NEAT, RAGTAG)
 7.	Integrate in silico reads with empirical metagenomes
 8.	Perform taxonomic profiling on in silico dataset (MetaPhlAn v4.1)
-9.   Perform ARG detection on in silico dataset 
+9.   Perform antimicrobial resistance gene detection on in silico dataset 
 9.	Generate summary, visualizations and other output files (AMR: HARMONIZATION, TAXONOMY: Hclust2, etc.)
 
 ## Usage
@@ -57,11 +57,9 @@ file_path: Path to isolate genome file (.fna)
 
 species_name: Name of isolate species
 
--->
 ### Running ASTRO:
 Now, you can run the pipeline using:
 
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
 nextflow run main.nf \
@@ -81,9 +79,10 @@ nextflow run main.nf \
 
 ## Credits
 
-amr-metagenomics was originally written by NGSQI In Silico team.
+ATRO was originally written by the Next Generation Sequencing (NGS) Quality Initiative (QI) In silico Team.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
+Clinical and Environmental Microbiology Branch (CEMB)
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
