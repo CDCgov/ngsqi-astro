@@ -11,7 +11,7 @@ process RGI_MAIN {
     input:
     tuple val(meta), path(fasta)
     path(card)
-    path(wildcard)
+    //path(wildcard)
 
     output:
     tuple val(meta), path("*.json"), emit: json
@@ -28,18 +28,18 @@ process RGI_MAIN {
     def args = task.ext.args ?: '' // This customizes the command: rgi load
     def args2 = task.ext.args ?: '' // This customizes the command: rgi main
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def load_wildcard = ""
+    //def load_wildcard = ""
 
-    if (wildcard) {
-        load_wildcard = """ \\
-            --wildcard_annotation ${wildcard}/wildcard_database_v\$DB_VERSION.fasta \\
-            --wildcard_annotation_all_models ${wildcard}/wildcard_database_v\$DB_VERSION\\_all.fasta \\
-            --wildcard_index ${wildcard}/wildcard/index-for-model-sequences.txt \\
-            --amr_kmers ${wildcard}/wildcard/all_amr_61mers.txt \\
-            --kmer_database ${wildcard}/wildcard/61_kmer_db.json \\
-            --kmer_size 61
-        """
-    }
+    //if (wildcard) {
+     //   load_wildcard = """ \\
+     //       --wildcard_annotation ${wildcard}/wildcard_database_v\$DB_VERSION.fasta \\
+     //       --wildcard_annotation_all_models ${wildcard}/wildcard_database_v\$DB_VERSION\\_all.fasta \\
+     //       --wildcard_index ${wildcard}/wildcard/index-for-model-sequences.txt \\
+     //       --amr_kmers ${wildcard}/wildcard/all_amr_61mers.txt \\
+     //       --kmer_database ${wildcard}/wildcard/61_kmer_db.json \\
+     //       --kmer_size 61
+     //   """
+   // }
 
     """
     DB_VERSION=\$(ls ${card}/card_database_*_all.fasta | sed "s/${card}\\/card_database_v\\([0-9].*[0-9]\\).*/\\1/")
@@ -51,7 +51,7 @@ process RGI_MAIN {
         --debug --local \\
         --card_annotation ${card}/card_database_v\$DB_VERSION.fasta \\
         --card_annotation_all_models ${card}/card_database_v\$DB_VERSION\\_all.fasta \\
-        $load_wildcard
+
 
     rgi \\
         main \\
