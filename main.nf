@@ -83,9 +83,9 @@ workflow {
     ================================================================================
     */
 
-    //databases = ["card", "plasmidfinder", "resfinder"]
-    //AMR(CONTIGS.out.contigs, databases)
-    //ch_versions = ch_versions.mix(AMR.out.versions)
+    databases = ["card", "plasmidfinder", "resfinder"]
+    AMR(CONTIGS.out.contigs, databases)
+    ch_versions = ch_versions.mix(AMR.out.versions)
 
     /*
     ================================================================================
