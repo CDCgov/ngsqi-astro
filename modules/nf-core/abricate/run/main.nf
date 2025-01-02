@@ -14,7 +14,8 @@ process ABRICATE_RUN {
 
     output:
     tuple val(meta), val(db), path("${meta.id}_${db}_abricate.txt"), emit: report
-
+    path "versions.yml"                             , emit: versions
+    
     when:
     task.ext.when == null || task.ext.when
 
@@ -29,6 +30,7 @@ process ABRICATE_RUN {
         --threads $task.cpus \\
         > ${prefix}_${db}_abricate.txt
   
+    """
     """
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
