@@ -21,14 +21,17 @@ workflow AMR {
     ch_hamronization_summarize = Channel.empty()
 
     /*Abricate & Harmonization Modules */
-    ch_abricate_report1 = Channel.empty()
-    ch_abricate_report2 = Channel.empty()
-    ch_abricate_report3 = Channel.empty()
+    ch_abricate_reports = Channel.empty()
 
-    ABRICATE(contigs, databases)
-    ch_abricate_report1 = ABRICATE.out.report1
-    ch_abricate_report2 = ABRICATE.out.report2
-    ch_abricate_report3 = ABRICATE.out.report3
+    databases
+     .flatMap { db ->
+      contigs.map { contig ->
+       tuple(contig, db)
+        }
+         }
+          .set { contigs_with_dbs }
+    ABRICATE(contigs_with_dbs)
+    ch_abricate_reports = ABRICATE.out.report
     ch_versions = ch_versions.mix(ABRICATE.out.versions)
 
     HAMRONIZATION_ABRICATE (ch_abricate_report1, ch_abricate_report2, ch_abricate_report3, databases, 'json', '1.0.0', '3.2.5')
