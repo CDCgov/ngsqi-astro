@@ -1,9 +1,5 @@
 process AMRFINDERPLUS_RUN {
-<<<<<<< HEAD
     tag "$meta.id"
-=======
-  //  tag "$meta.id"
->>>>>>> 8175113e9b2f107a1d90a8971db27233d9577fd3
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
