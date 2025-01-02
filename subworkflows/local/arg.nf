@@ -35,13 +35,6 @@ workflow AMR {
     ch_versions = ch_versions.mix(HAMRONIZATION_ABRICATE.out.versions)
     ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_ABRICATE.out.report)
  
-  /*AMRFinderPlus & Harmonization Modules */
-    ch_amrfinderplus_db = Channel.empty()
-    ch_amrfinderplus_report = Channel.empty()
-
-    AMRFINDERPLUS_RUN(ch_samples)
-    ch_amrfinderplus_report = AMRFINDERPLUS_RUN.out.report
-    ch_versions = ch_versions.mix(AMRFINDERPLUS_RUN.out.versions)
 
  /*AMRFinderPlus & Harmonization Modules */
     ch_amrfinderplus_db = Channel.empty()
