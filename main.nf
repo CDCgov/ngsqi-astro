@@ -23,6 +23,7 @@ params.custom_multiqc_config = "$projectDir/assets/custom_multiqc_config.yml"
 params.ncbi_email = null
 params.ncbi_api_key = null
 params.amrfinderplus = "${baseDir}/assets/AMR_CDS.fasta" 
+params.databases = ["card", "plasmidfinder", "resfinder"]
 
 Channel
     .fromPath(params.samplesheet)
