@@ -1,21 +1,12 @@
-//Depreciating custom mods
-//include {ABRICATE} from '../../modules/local/abricatemod.nf'
-//include {HARMABRICATE} from '../../modules/local/harm_abricate.nf'
-//include {AMRFINDERPLUS_UPDATE} from '../../modules/local/amr_db_update.nf'
-//include {AMRFinder} from '../../modules/local/amrfinderplus.nf'
-//include {CONCATENATE_REPORTS} from '../../modules/local/concatenate_reports.nf'
-//include {HARMAmrfinder} from '../../modules/local/harm_amrfinder.nf'
-//include {HARMRGI} from '../../modules/local/harm_rgi.nf'
-//include {RGI} from '../../modules/local/rgimod.nf'
-//include {HARMSUMMARY} from '../../modules/local/harm_summary.nf'
-
-//Integrating nf-core mods
 include {ABRICATE_RUN as ABRICATE} from '../../modules/nf-core/abricate/run/main'
 include {ABRICATE_SUMMARY} from '../../modules/nf-core/abricate/summary/main'
 include {RGI_MAIN as RGI} from '../../nf-core/rgi/main'
 include {AMRFINDERPLUS_RUN as AMRFINDERPLUS} from '../../modules/nf-core/amrfinderplus/run/main'
+include {HAMRONIZATION_ABRICATE} from '../../modules/nf-core/hamronization/abricate/main.nf'
+include {HAMRONIZATION_AMRFINDERPLUS } from '../../modules/nf-core/hamronization/amrfinderplus'
+include {HAMRONIZATION_RGI } from '../../modules/nf-core/hamronization/rgi'
+include {HAMRONIZATION_SUMMARIZE } from '../../modules/nf-core/hamronization/summarize.nf'
 
-   
 workflow AMR {
    
     take: 
@@ -30,7 +21,6 @@ workflow AMR {
     ch_hamronization_summarize = Channel.empty()
 
     /*Abricate & Harmonization Modules */
-    if ( params.execute_ABRICATE) {
     ch_abricate_report1 = Channel.empty()
     ch_abricate_report2 = Channel.empty()
     ch_abricate_report3 = Channel.empty()
@@ -44,11 +34,16 @@ workflow AMR {
     HAMRONIZATION_ABRICATE (ch_abricate_report1, ch_abricate_report2, ch_abricate_report3, databases, 'json', '1.0.0', '3.2.5')
     ch_versions = ch_versions.mix(HAMRONIZATION_ABRICATE.out.versions)
     ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_ABRICATE.out.report)
+ 
+  /*AMRFinderPlus & Harmonization Modules */
+    ch_amrfinderplus_db = Channel.empty()
+    ch_amrfinderplus_report = Channel.empty()
 
-     }
+    AMRFINDERPLUS_RUN(ch_samples)
+    ch_amrfinderplus_report = AMRFINDERPLUS_RUN.out.report
+    ch_versions = ch_versions.mix(AMRFINDERPLUS_RUN.out.versions)
 
  /*AMRFinderPlus & Harmonization Modules */
-    if ( params.execute_AMRFinder) {
     ch_amrfinderplus_db = Channel.empty()
     ch_amrfinderplus_report = Channel.empty()
 
@@ -61,12 +56,7 @@ workflow AMR {
    ch_versions = ch_versions.mix(HAMRONIZATION_AMRFINDERPLUS.out.versions)
    ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_AMRFINDERPLUS.out.json)
 
-    }
-
  /* RGI & Harmonization Modules */
-    
-    if (params.execute_RGI) 
-    {
     ch_rgi_report = Channel.empty()
 
     RGI(contigs)
@@ -76,9 +66,8 @@ workflow AMR {
     HAMRONIZATION_RGI(ch_rgi_report, 'json')
     ch_versions = ch_versions.mix(HAMRONIZATION_RGI.out.versions)
     ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_RGI.out.json)
-    }
 
-  if (params.execute_ABRICATE || params.execute_AMRFinder || params.execute_RGI) {
+/*Harmonization Summary */
     ch_hamronization_input
         .map{
             it[1]
