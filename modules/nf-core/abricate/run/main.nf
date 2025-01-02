@@ -13,7 +13,14 @@ process ABRICATE_RUN {
 
     output:
     tuple val(meta), path("*.txt"), emit: report
-    path "versions.yml"           , emit: versions
+    tuple val(sample), path(fna)
+	val dbs
+
+   // output:
+   // tuple val(sample), path("${sample}.${dbs[0]}.abricate.txt"), emit: report1
+//	tuple val(sample), path("${sample}.${dbs[1]}.abricate.txt"), emit: report2
+	//tuple val(sample), path("${sample}.${dbs[2]}.abricate.txt"), emit: report3
+   // path "versions.yml"           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -29,6 +36,12 @@ process ABRICATE_RUN {
         $datadir \\
         --threads $task.cpus \\
         > ${prefix}.txt
+   // def prefix = task.ext.prefix ?: "${meta.id}"
+  
+    """
+  //  abricate --db ${dbs[0]} ${fna} > ${sample}.${dbs[0]}.abricate.txt
+//	abricate --db ${dbs[1]} ${fna} > ${sample}.${dbs[1]}.abricate.txt
+//	abricate --db ${dbs[2]} ${fna} > ${sample}.${dbs[2]}.abricate.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
