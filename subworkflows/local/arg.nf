@@ -1,4 +1,4 @@
-include { ABRICATE_RUN as ABRICATE } from '../../modules/nf-core/abricate/run/main'
+//include { ABRICATE_RUN as ABRICATE } from '../../modules/nf-core/abricate/run/main'
 include { ABRICATE_SUMMARY } from '../../modules/nf-core/abricate/summary/main'
 include { RGI_MAIN as RGI } from '../../modules/nf-core/rgi/main'
 include { AMRFINDERPLUS_RUN as AMRFINDERPLUS } from '../../modules/nf-core/amrfinderplus/run/main'
@@ -21,24 +21,24 @@ workflow AMR {
     ch_hamronization_summarize = Channel.empty()
 
     /* Abricate & Harmonization Modules */
-    ch_abricate_reports = Channel.empty()
+    //ch_abricate_reports = Channel.empty()
 
-    // Combine contigs and databases
-    contigs_with_dbs = contigs
-        .map { contig ->
-            databases.collect { db ->
-                tuple(contigs, db)
-            }
-        }
-        .flatten()
+    //Combine contigs and databases
+    //contigs_with_dbs = contigs
+      //  .map { contig ->
+      //      databases.collect { db ->
+       //         tuple(contigs, db)
+       //     }
+      //  }
+      //  .flatten()
 
-    ABRICATE(contigs_with_dbs, databases)
-    ch_abricate_reports = ABRICATE.out.report
-    ch_versions = ch_versions.mix(ABRICATE.out.versions)
+   // ABRICATE(contigs_with_dbs, databases)
+   // ch_abricate_reports = ABRICATE.out.report
+   // ch_versions = ch_versions.mix(ABRICATE.out.versions)
 
-    HAMRONIZATION_ABRICATE(ch_abricate_reports, 'json', '1.0.0', '3.2.5')
-    ch_versions = ch_versions.mix(HAMRONIZATION_ABRICATE.out.versions)
-    ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_ABRICATE.out.json)
+  //  HAMRONIZATION_ABRICATE(ch_abricate_reports, 'json', '1.0.0', '3.2.5')
+  //  ch_versions = ch_versions.mix(HAMRONIZATION_ABRICATE.out.versions)
+  //  ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_ABRICATE.out.json)
 
 
     /* AMRFinderPlus & Harmonization Modules */
