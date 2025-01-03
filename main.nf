@@ -16,14 +16,16 @@ params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria
 params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
 params.samplesheet = "$projectDir/samplesheet.csv"  // default samplesheet
-params.input_isolates = "/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate_test.csv"
+params.input_isolates = "/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate_test_2.csv"
 params.downloadref_script = "$projectDir/scripts/download_ref.py"
 params.downloadgenome_script = "$projectDir/scripts/download_genome.py"
 params.multiqc_config = "$projectDir/assets/multiqc_config.yml"
 params.custom_multiqc_config = "$projectDir/assets/custom_multiqc_config.yml"
 params.ncbi_email = null
 params.ncbi_api_key = null
-params.amrfinderplus = "${baseDir}/assets/AMR_CDS.fasta" 
+params.amrfinderplus = "${baseDir}/assets/AMR_CDS.fasta"
+params.mode = 'download' // Default to download mode
+
 
 Channel
     .fromPath(params.samplesheet)
@@ -43,7 +45,14 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 Channel
     .fromPath(params.input_isolates)
     .splitCsv(header: true, sep: ',')
-    .map { row -> tuple(row.sample_id, row.added_copy_number, file(row.file_path), row.species_name) }
+    .map { row -> 
+        tuple(
+            row.sample_id,
+            row.added_copy_number,
+            row.file_path,
+            row.species_name
+        ) 
+    }
     .set { input_data }
 
 // Validate input parameters
@@ -84,9 +93,9 @@ workflow {
     ================================================================================
     */
 
-    //databases = ["card", "plasmidfinder", "resfinder"]
-    //AMR(CONTIGS.out.contigs, databases)
-    //ch_versions = ch_versions.mix(AMR.out.versions)
+    databases = ["card", "plasmidfinder", "resfinder"]
+    AMR(CONTIGS.out.contigs, databases)
+    ch_versions = ch_versions.mix(AMR.out.versions)
 
     /*
     ================================================================================
@@ -101,8 +110,8 @@ workflow {
                                 Simulation & QC
     ================================================================================
     */
-    REFERENCE(input_data, params.downloadref_script, params.downloadgenome_script, params.ncbi_email, params.ncbi_api_key)
-    SIMULATION(REFERENCE.out.ch_ref, PREPROCESSING.out.ch_readlength)
+    REFERENCE(input_data, params.downloadref_script,params.downloadgenome_script, params.ncbi_email, params.ncbi_api_key)
+    SIMULATION(REFERENCE.out.isolate_data, REFERENCE.out.ref_data, PREPROCESSING.out.ch_readlength)
     ch_versions = ch_versions.mix(SIMULATION.out.versions)
     INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
 
@@ -114,7 +123,7 @@ workflow {
     // Generate versions report
     ch_versions_unique = ch_versions.unique()
     CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions_unique.collectFile(name: 'collated_versions.yml'))
-        //CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: 'collated_versions.yml'))
+        CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: 'collated_versions.yml'))
     
     /*
     ================================================================================
