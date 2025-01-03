@@ -22,8 +22,8 @@ params.multiqc_config = "$projectDir/assets/multiqc_config.yml"
 params.custom_multiqc_config = "$projectDir/assets/custom_multiqc_config.yml"
 params.ncbi_email = null
 params.ncbi_api_key = null
-params.amrfinderdb = "${baseDir}/assets/2024-07-22.1/"
-params.card = "${baseDir}/assets/card_database_v3.1.4.fasta"
+params.amrfinderdb = "${baseDir}/assets/2024-07-22.1/" 
+params.card = "${baseDir}/assets/card.json"
 params.databases = ["card", "plasmidfinder", "resfinder"]
 
 Channel
