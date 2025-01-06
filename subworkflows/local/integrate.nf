@@ -1,4 +1,3 @@
-// Modules for integration
 include { CATCOPYNUMBER } from '../../modules/local/catcopynumber.nf'
 include { CATISOLATES } from '../../modules/local/catisolates.nf'
 include { CATMETAGENOMICS } from '../../modules/local/catmetagenomics.nf'

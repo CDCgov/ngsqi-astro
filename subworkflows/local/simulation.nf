@@ -1,7 +1,5 @@
- // Modules for RagTag genome assembly
 include { RAGTAGSCAFFOLD } from '../../modules/local/ragtag_scaffold.nf'
 include { RAGTAGPATCH } from '../../modules/local/ragtag_patch.nf'
-// Module for read simulation
 include { NEATPAIRED } from '../../modules/local/neat-genreads.nf'
 
 workflow SIMULATION {
@@ -23,7 +21,7 @@ workflow SIMULATION {
     //ch_versions = ch_versions.mix(RAGTAGPATCH.out.versions)
     
     NEATPAIRED(RAGTAGPATCH.out.ragtag_patch_dirs, ch_readlength.first().view())
-    ch_simreads= NEATPAIRED.out.neat_reads
+    ch_simreads = NEATPAIRED.out.neat_reads
     ch_versions = ch_versions.mix(NEATPAIRED.out.versions)
 
     emit:
