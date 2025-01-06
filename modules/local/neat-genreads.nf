@@ -1,8 +1,6 @@
-process  NEATPAIRED {
-
+process NEATPAIRED {
     publishDir "${params.outdir}", mode: 'copy'
     
-
     input:
     tuple val(sample_id), val(added_copy_number), path(patch_dir), val(species_name), val(ref_accession), path(ref_genome)
     val ch_readlength
@@ -19,8 +17,5 @@ process  NEATPAIRED {
     "${task.process}":
         NEAT: 3.0.0
     END_VERSIONS
-
-    
     """
- 
 }
