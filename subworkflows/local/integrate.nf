@@ -14,9 +14,12 @@ workflow INTEGRATE {
 
     CATCOPYNUMBER(ch_simreads)
 
-    CATISOLATES(CATCOPYNUMBER.out.copynumber_read1.collect(),CATCOPYNUMBER.out.copynumber_read2.collect())
+    CATISOLATES(
+        CATCOPYNUMBER.out.copynumber_read1.groupTuple(),
+        CATCOPYNUMBER.out.copynumber_read2.groupTuple()
+    )
 
-    CATMETAGENOMICS(reads,CATISOLATES.out.isolates_read1,CATISOLATES.out.isolates_read2)
+    CATMETAGENOMICS(reads, CATISOLATES.out.isolates_read1, CATISOLATES.out.isolates_read2)
     integrated_reads = CATMETAGENOMICS.out.integrated_reads
 
     FASTQC_SIM(
