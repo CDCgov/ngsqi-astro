@@ -15,7 +15,7 @@ process RGI_MAIN {
 
     output:
     tuple val(meta), path("*.json"), emit: json
-    tuple val(meta), path("*.txt") , emit: tsv
+    tuple val(meta), path("*.txt") , emit: txt
     tuple val(meta), path("temp/") , emit: tmp
     env RGI_VERSION                , emit: tool_version
     env DB_VERSION                 , emit: db_version
@@ -42,15 +42,13 @@ process RGI_MAIN {
    // }
 
     """
-    DB_VERSION=\$(ls ${card}/card_database_*_all.fasta | sed "s/${card}\\/card_database_v\\([0-9].*[0-9]\\).*/\\1/")
+    DB_VERSION=\$(rgi database --version --local)
 
     rgi \\
         load \\
         $args \\
-        --card_json ${card}/card.json \\
+        --card_json ${card} \\
         --debug --local \\
-        --card_annotation ${card}/card_database_v\$DB_VERSION.fasta \\
-        --card_annotation_all_models ${card}/card_database_v\$DB_VERSION\\_all.fasta \\
 
 
     rgi \\

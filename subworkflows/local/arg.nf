@@ -57,7 +57,7 @@ workflow AMR {
     ch_rgi_report = Channel.empty()
 
     RGI(contigs, card)
-    ch_rgi_report = RGI.out.tsv
+    ch_rgi_report = RGI.out.txt
     ch_versions = ch_versions.mix(RGI.out.versions)
 
     HAMRONIZATION_RGI(ch_rgi_report, 'json', RGI.out.tool_version, RGI.out.db_version)
