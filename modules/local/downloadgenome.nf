@@ -1,3 +1,5 @@
+#!/usr/bin/env nextflow
+
 process DOWNLOADGENOME {
     tag "$accession"
     publishDir "${params.outdir}/references", mode: 'copy'
