@@ -43,7 +43,7 @@ ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 Channel
-    .fromPath(params.input_isolates)
+    .fromPath(params.isolates)
     .splitCsv(header: true, sep: ',')
     .map { row -> 
         tuple(
@@ -113,17 +113,17 @@ workflow {
     REFERENCE(input_data, params.downloadref_script,params.downloadgenome_script, params.ncbi_email, params.ncbi_api_key)
     SIMULATION(REFERENCE.out.isolate_data, REFERENCE.out.ref_data, PREPROCESSING.out.ch_readlength)
     ch_versions = ch_versions.mix(SIMULATION.out.versions)
+    
     INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
+    ch_versions = ch_versions.mix(INTEGRATE.out.versions)
 
     /*
     ================================================================================
                                 Versions Reports
     ================================================================================
     */
-    // Generate versions report
     ch_versions_unique = ch_versions.unique()
     CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions_unique.collectFile(name: 'collated_versions.yml'))
-        CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: 'collated_versions.yml'))
     
     /*
     ================================================================================
@@ -131,7 +131,7 @@ workflow {
     ================================================================================
     */
 
-    // Run MultiQC
+    //Still debugging Multiqc
     //workflow_summary = paramsSummaryLog(workflow)
     //ch_workflow_summary = Channel.value(workflow_summary)
     
