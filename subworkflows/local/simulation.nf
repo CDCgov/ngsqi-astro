@@ -12,7 +12,7 @@ workflow SIMULATION {
     main:
     ch_versions = Channel.empty()
 
-    RAGTAGSCAFFOLD(isolate_data, ref_data)
+    RAGTAGSCAFFOLD(isolate_data.view(), ref_data.view())
 
     //RAGTAGSCAFFOLD(references,isolates)
     ch_versions = ch_versions.mix(RAGTAGSCAFFOLD.out.versions)
