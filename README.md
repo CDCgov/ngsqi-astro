@@ -1,22 +1,35 @@
+# :rocket: ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization
+
 ## Introduction
 
-**amr-metagenomics** is a bioinformatics pipeline that performs taxonomic profiling, screens metagenomes and isolate genomes for determinants of antimicrobial resistance, simulates reads, and generates a bacterial HAI in silico reference dataset.
+**ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization** is a bioinformatics pipeline that performs taxonomic profiling, screens metagenomes and isolate genomes for determinants of antimicrobial resistance, simulates reads, and generates a bacterial metagenomic in silico reference dataset.
 
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.6-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
+[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
+[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 
+The three primary objectives of the ASTRO workflow entail:
+
+* Simulate sequencing reads with identified species and phyla of interest
+* Perform taxonomic profiling and antimicrobial resistance gene (ARG) detection on empirical metagenomes and simulated reads
+* Verify quality of simulated datasets mimic empirical datasets
 
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1.	Input paired-end metagenomics reads (.fastq) and isolate data (.fna) with samplesheet
-2.	Perform pre-processing on metagenomics reads (FastQC, FastP, PHIX, Hostile*)
-3.	Screen metagenomes and isolate data for ARGs (AMRFinderPlus, Ariba, ABRICATE, RGI*)
+This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) and utilizes docker and singularity containers to modularize the workflow for optimal maintenance and reproducibility.
+
+Pipeline Summary:
+1.	Input paired-end metagenomics reads (.fastq) and isolate data (.fna) with samplesheets
+2.	Perform pre-processing on metagenomics reads (FastQC, FastP, PHIX, Hostile)
+3.	Screen metagenomes for antimicrobial resistance genes (AMRFinderPlus, ABRICATE, RGI)
 4.	Perform taxonomic profiling on metagenomics reads to identify microbial community composition (MetaPhlAn v4.1)
-5.	Integrate isolate data with taxonomic profiling results to link specific bacterial strains with their abundance in the metagenomics dataset
-6.	Simulate sequencing reads (NEAT)
-7.	Integrate in silico reads into empirical dataset
-8.	Perform taxonomic profiling on in silico dataset as quality control (MetaPhlAn v4.1)
-9.	Generate summary, visualizations and other output files (AMR: HARMONIZATION, TAXONOMY: Hclust2, etc.*)
+6.	Simulate sequencing reads (NEAT, RAGTAG)
+7.	Integrate in silico reads with empirical metagenomes
+8.	Perform taxonomic profiling on in silico dataset (MetaPhlAn v4.1)
+9.   Perform antimicrobial resistance gene detection on in silico dataset 
+9.	Generate summary, visualizations and other output files (AMR: HARMONIZATION, TAXONOMY: Hclust2, etc.)
 
 ## Usage
 
@@ -25,10 +38,9 @@
 > to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
 > with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
+### Set Up:
 
-First, prepare a samplesheet with your input data that looks as follows:
+First, prepare a samplesheet with your input metagenomic data that looks as follows:
 
 `samplesheet.csv`:
 
@@ -40,15 +52,34 @@ Sample2,amr-metagenomics/assets/data/ERR4678563_1.fastq.gz,amr-metagenomics/asse
 
 Each row represents a pair of fastq files (paired end metagenomics reads).
 
--->
+You will need to also prepare a samplesheet for isolate genomes to be used in simulation. 
 
+`isolate_samplesheet.csv`:
+```csv
+sample_id,added_copy_number,file_path,species_name
+GCA_018454105.3,1,/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate-genomes/GCA_018454105.3/GCA_018454105.3_PDT001044797.3_genomic.fna,Acinetobacter baumannii
+GCA_016490125.3,1,/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate-genomes/GCA_016490125.3/GCA_016490125.3_PDT000725303.3_genomic.fna,Acinetobacter baumannii
+```
+Each row corresponds to the following information:
+
+* sample_id: Sample ID or name
+
+* added_copy_number: Option to include a given number of copies of simulated genomes. If copy number variation is not desired, input '0'
+
+* file_path: Path to isolate genome file (.fna)
+
+* species_name: Name of isolate species
+
+### Running ASTRO:
 Now, you can run the pipeline using:
 
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
 nextflow run main.nf \
 --input samplesheet.csv \
+--isolates isolate_samplesheet.csv \
+--ncbi_email <USER NCBI EMAIL> \
+--ncbi_api_key <API KEY> \
 -profile singularity \
 --outdir <OUTDIR>
 
@@ -61,9 +92,11 @@ nextflow run main.nf \
 
 ## Credits
 
-amr-metagenomics was originally written by NGSQI In Silico team.
+ASTRO was originally written by the Next Generation Sequencing (NGS) Quality Initiative (QI) In silico Team.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
+
+* Clinical and Environmental Microbiology Branch (CEMB)
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 

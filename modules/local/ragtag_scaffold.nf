@@ -1,5 +1,8 @@
+#!/usr/bin/env nextflow
+
 process RAGTAGSCAFFOLD {
     publishDir "${params.outdir}", mode: 'copy'
+
     container "${baseDir}/third_party/ragtag.sif"
 
     input:
