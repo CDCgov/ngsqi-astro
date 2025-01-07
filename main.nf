@@ -7,9 +7,9 @@ include {AMR} from './subworkflows/local/arg.nf'
 include { TAXONOMY } from './subworkflows/local/taxonomy.nf'
 //include { MULTIQC } from './modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
-include { REFERENCE } from './subworkflows/local/reference.nf'
-include { SIMULATION } from './subworkflows/local/simulation.nf'
-include { INTEGRATE } from './subworkflows/local/integrate.nf'
+//include { REFERENCE } from './subworkflows/local/reference.nf'
+//include { SIMULATION } from './subworkflows/local/simulation.nf'
+//include { INTEGRATE } from './subworkflows/local/integrate.nf'
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 
 params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
@@ -23,9 +23,10 @@ params.multiqc_config = "$projectDir/assets/multiqc_config.yml"
 params.custom_multiqc_config = "$projectDir/assets/custom_multiqc_config.yml"
 params.ncbi_email = null
 params.ncbi_api_key = null
-params.amrfinderplus = "${baseDir}/assets/AMR_CDS.fasta"
 params.mode = 'download' // Default to download mode
-
+params.amrfinderdb = "${baseDir}/assets/2024-07-22.1/" 
+params.card = "${baseDir}/assets/card/"
+params.databases = ["card", "plasmidfinder", "resfinder"]
 
 Channel
     .fromPath(params.samplesheet)
@@ -41,6 +42,8 @@ ch_ref = params.ref
 ch_hclust2 = params.hclust2
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+amrfinderdb = params.amrfinderdb
+card = params.card
 
 Channel
     .fromPath(params.isolates)
@@ -93,7 +96,7 @@ workflow {
     */
 
     databases = ["card", "plasmidfinder", "resfinder"]
-    AMR(CONTIGS.out.contigs, databases)
+    AMR(CONTIGS.out.contigs, databases, amrfinderdb, card)
     ch_versions = ch_versions.mix(AMR.out.versions)
 
     /*
@@ -101,8 +104,8 @@ workflow {
                                Taxonomic Classification
     ================================================================================
     */
-    TAXONOMY(PREPROCESSING.out.reads, ch_hclust2)
-    ch_versions = ch_versions.mix(TAXONOMY.out.versions)
+    //TAXONOMY(PREPROCESSING.out.reads, ch_hclust2)
+    //ch_versions = ch_versions.mix(TAXONOMY.out.versions)
     
        /*
     ================================================================================
@@ -113,9 +116,19 @@ workflow {
     SIMULATION(REFERENCE.out.isolate_data, REFERENCE.out.ref_data, PREPROCESSING.out.ch_readlength)
     ch_versions = ch_versions.mix(SIMULATION.out.versions)
     
-    INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
-    ch_versions = ch_versions.mix(INTEGRATE.out.versions)
+   // INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
+  //  ch_versions = ch_versions.mix(INTEGRATE.out.versions)
 
+    /*
+    ================================================================================
+                                Simulation - Taxonomic Classification
+    ================================================================================
+    */
+        /*
+    ================================================================================
+                                Simulation - ARG Detection
+    ================================================================================
+    */
     /*
     ================================================================================
                                 Versions Reports
