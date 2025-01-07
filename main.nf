@@ -3,19 +3,22 @@ nextflow.enable.dsl=2
 
 include { PREPROCESSING } from './subworkflows/local/preprocessing.nf'
 include { CONTIGS } from './subworkflows/local/assembly.nf'
-//include {AMR} from './subworkflows/local/arg.nf'
+include {AMR} from './subworkflows/local/arg.nf'
 include { TAXONOMY } from './subworkflows/local/taxonomy.nf'
 //include { MULTIQC } from './modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
 include { REFERENCE } from './subworkflows/local/reference.nf'
 include { SIMULATION } from './subworkflows/local/simulation.nf'
 include { INTEGRATE } from './subworkflows/local/integrate.nf'
+include { TAXONOMY as TAXASIM} from './subworkflows/local/taxonomy.nf'
+include { CONTIGS as CONTIGSIM } from './subworkflows/local/assembly.nf'
+include {AMR as AMRSIM} from './subworkflows/local/arg.nf'
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 
 params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
 params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
-params.samplesheet = "$projectDir/samplesheet.csv"  // default samplesheet
+params.input = null
 params.input_isolates = "/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate_test_2.csv"
 params.downloadref_script = "$projectDir/scripts/download_ref.py"
 params.downloadgenome_script = "$projectDir/scripts/download_genome.py"
@@ -23,9 +26,10 @@ params.multiqc_config = "$projectDir/assets/multiqc_config.yml"
 params.custom_multiqc_config = "$projectDir/assets/custom_multiqc_config.yml"
 params.ncbi_email = null
 params.ncbi_api_key = null
-params.amrfinderplus = "${baseDir}/assets/AMR_CDS.fasta"
 params.mode = 'download' // Default to download mode
-
+params.amrfinderdb = "${baseDir}/assets/2024-07-22.1/" 
+params.card = "${baseDir}/assets/card/"
+params.databases = ["card", "plasmidfinder", "resfinder"]
 
 Channel
     .fromPath(params.samplesheet)
@@ -41,6 +45,8 @@ ch_ref = params.ref
 ch_hclust2 = params.hclust2
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+amrfinderdb = params.amrfinderdb
+card = params.card
 
 Channel
     .fromPath(params.isolates)
@@ -61,12 +67,10 @@ validateParameters()
 // Print summary of supplied parameters
 log.info paramsSummaryLog(workflow)
 
-// Create a new channel of metadata from a sample sheet passed to the pipeline through the --input parameter
-ch_input = Channel.fromList(samplesheetToList(params.input, "assets/schema_input.json"))
-
 def multiqc_report = []
 
 workflow {
+    
     ch_versions = Channel.empty()
 
 /*
@@ -94,7 +98,7 @@ workflow {
     */
 
     databases = ["card", "plasmidfinder", "resfinder"]
-    AMR(CONTIGS.out.contigs, databases)
+    AMR(CONTIGS.out.contigs, databases, amrfinderdb, card)
     ch_versions = ch_versions.mix(AMR.out.versions)
 
     /*
@@ -116,6 +120,32 @@ workflow {
     
     INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
     ch_versions = ch_versions.mix(INTEGRATE.out.versions)
+
+    /*
+    ================================================================================
+                                Simulation - Taxonomic Classification
+    ================================================================================
+    */
+    TAXASIM(INTEGRATE.out.integrated_reads, ch_hclust2)
+    ch_versions = ch_versions.mix(TAXASIM.out.versions)
+    
+        /*
+    ================================================================================
+                                Simulation - Assembly & QC
+    ================================================================================
+    */
+    CONTIGSIM(INTEGRATE.out.integrated_reads)
+    ch_versions = ch_versions.mix(CONTIGSIM.out.versions)
+
+    /*
+    ================================================================================
+                                Simulation - ARG Detection
+    ================================================================================
+    */
+
+    databases = ["card", "plasmidfinder", "resfinder"]
+    AMRSIM(CONTIGSIM.out.contigs, databases, amrfinderdb, card)
+    ch_versions = ch_versions.mix(AMRSIM.out.versions)
 
     /*
     ================================================================================
