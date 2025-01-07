@@ -7,8 +7,8 @@ process CATISOLATES {
     tuple val(sample_id), path(copynumber_read2)
 
     output:
-    tuple val(sample_id), path("combined_isolates_read1.fq.gz"), emit:isolates_read1
-    tuple val(sample_id), path("combined_isolates_read2.fq.gz"), emit:isolates_read2
+    path "combined_isolates_read1.fq.gz", emit: isolates_read1
+    path "combined_isolates_read2.fq.gz", emit: isolates_read2
 
     script:
     """
