@@ -1,120 +1,72 @@
-#!/usr/bin/env nextflow
+include { ABRICATE_RUN as ABRICATE } from '../../modules/nf-core/abricate/run/main'
+include { RGI_MAIN as RGI } from '../../modules/nf-core/rgi/main'
+include { AMRFINDERPLUS_RUN as AMRFINDERPLUS } from '../../modules/nf-core/amrfinderplus/run/main'
+include { HAMRONIZATION_ABRICATE } from '../../modules/nf-core/hamronization/abricate/main.nf'
+include { HAMRONIZATION_AMRFINDERPLUS } from '../../modules/nf-core/hamronization/amrfinderplus'
+include { HAMRONIZATION_RGI } from '../../modules/nf-core/hamronization/rgi'
+include { HAMRONIZATION_SUMMARIZE } from '../../modules/nf-core/hamronization/summarize.nf'
 
-/*
-================================================================================
- In Silico  amr.nf subworkflow:
- Detection of Antimicrobial Resistance Genes (ARGs) in isolate data
-================================================================================
-*/
-
- 
-include {ABRICATE} from '../../modules/local/abricatemod.nf'
-include {HARMABRICATE} from '../../modules/local/harm_abricate.nf'
-include {AMRFINDERPLUS_UPDATE} from '../../modules/local/amr_db_update.nf'
-include {AMRFinder} from '../../modules/local/amrfinderplus.nf'
-include {CONCATENATE_REPORTS} from '../../modules/local/concatenate_reports.nf'
-include {HARMAmrfinder} from '../../modules/local/harm_amrfinder.nf'
-include {HARMRGI} from '../../modules/local/harm_rgi.nf'
-include {RGI} from '../../modules/local/rgimod.nf'
-include {HARMSUMMARY} from '../../modules/local/harm_summary.nf'
-
- 
-   
 workflow AMR {
-   
-    take: 
+
+    take:
     contigs
-    databases 
- 
- 
+    databases
+    amrfinderdb
+    card
+
     main:
+    ch_versions = Channel.empty()
+    ch_hamronization_input = Channel.empty()
+    ch_hamronization_summarize = Channel.empty()
+    
+    /* Abricate & Harmonization Modules */
+    ch_abricate_reports = Channel.empty()
 
     ABRICATE(contigs, databases)
-    HARMABRICATE(ABRICATE.out.report1, ABRICATE.out.report2, ABRICATE.out.report3, databases)
-    AMRFINDERPLUS_UPDATE()
-    amrfinderplus_db = AMRFINDERPLUS_UPDATE.out.db
-    AMRFinder(contigs, amrfinderplus_db)
-    HARMAmrfinder(AMRFinder.out)
-    RGI(contigs)
-    HARMRGI(RGI.out)
-    HARMSUMMARY( HARMABRICATE.out.harmabr_report1, HARMAmrfinder.out.hamr_amrfinder, HARMRGI.out.harmrgi_report)
+    ch_abricate_card = ABRICATE.out.report_card
+    ch_abricate_resfinder = ABRICATE.out.report_resfinder
+    ch_abricate_plasmid = ABRICATE.out.report_plasmid
 
-   // Run AMRfinderplus
-    if ( params.AMRFinder )
-    {
+    ch_versions = ch_versions.mix(ABRICATE.out.versions)
+
+    HAMRONIZATION_ABRICATE(ch_abricate_card, ch_abricate_resfinder, ch_abricate_plasmid, 'json', '1.0.0', '3.2.5')
+    ch_versions = ch_versions.mix(HAMRONIZATION_ABRICATE.out.versions)
+    ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_ABRICATE.out.json)
+
+    /* AMRFinderPlus & Harmonization Modules */
     ch_amrfinderplus_db = Channel.empty()
-    ch_amrfinderplus_results = Channel.empty()
+    ch_amrfinderplus_report = Channel.empty()
 
-    AMRFINDERPLUS_UPDATE ()
-    ch_amrfinderplus_db_update = AMRFINDERPLUS_UPDATE.out.db
+    AMRFINDERPLUS(contigs, amrfinderdb)
+    ch_amrfinderplus_report = AMRFINDERPLUS.out.report
+    ch_versions = ch_versions.mix(AMRFINDERPLUS.out.versions)
 
-    AMRFinder (ch_samples, ch_amrfinderplus_db)
-    ch_amrfinderplus_results = AMRFinder.out.amrfinder_results
-    }
+    HAMRONIZATION_AMRFINDERPLUS(ch_amrfinderplus_report, 'json', AMRFINDERPLUS.out.db_version, AMRFINDERPLUS.out.tool_version)
+    ch_versions = ch_versions.mix(HAMRONIZATION_AMRFINDERPLUS.out.versions)
+    ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_AMRFINDERPLUS.out.json)
 
-    // Run RGI
-    if ( params.run_rgi ) 
-    {
-    ch_rgi_results = Channel.empty()
+    /* RGI & Harmonization Modules */
+    ch_rgi_report = Channel.empty()
 
-    RGI (ch_samples)
-    ch_rgi_report = RGI.out.RGI_results
+    RGI(contigs, card)
+    ch_rgi_report = RGI.out.txt
+    ch_versions = ch_versions.mix(RGI.out.versions)
 
-    }
+    HAMRONIZATION_RGI(ch_rgi_report, 'json', RGI.out.tool_version, RGI.out.db_version)
+    ch_versions = ch_versions.mix(HAMRONIZATION_RGI.out.versions)
+    ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_RGI.out.json)
 
+    /* Harmonization Summary */
+    ch_hamronization_input
+        .map {
+            it[1]
+        }
+        .collect()
+        .set { ch_hamronization_summarize }
 
-
-   // Run AMRfinderplus
-    if ( params.AMRFinder )
-     {
-    ch_amrfinderplus_db = Channel.empty()
-    ch_amrfinderplus_results = Channel.empty()
-
-    AMRFINDERPLUS_UPDATE ()
-    ch_amrfinderplus_db_update = AMRFINDERPLUS_UPDATE.out.db
-
-    AMRFinder (ch_samples, ch_amrfinderplus_db)
-    ch_amrfinderplus_results = AMRFinder.out.amrfinder_results
-     }
-
-    // Run RGI
-    if ( params.run_rgi ) 
-    {
-    ch_rgi_results = Channel.empty()
-
-    RGI (ch_samples)
-    ch_rgi_report = RGI.out.RGI_results
-
-    }
-
-
-
-    // Collect all output TSV files into a single channel
-    collectedReports = HARMSUMMARY.out.reports.collectFile(name: 'final_combined_report.tsv')
-
-    CONCATENATE_REPORTS(collectedReports)
-
+    HAMRONIZATION_SUMMARIZE(ch_hamronization_summarize, 'tsv')
+    ch_versions = ch_versions.mix(HAMRONIZATION_SUMMARIZE.out.versions)
 
     emit:
-    ABRICATE.out.report1
-    ABRICATE.out.report2
-    ABRICATE.out.report3
-    HARMABRICATE.out.harmabr_report1
-    amrfinderplus_db
-    AMRFinder.out
-    HARMAmrfinder.out.hamr_amrfinder
-    RGI.out
-    HARMRGI.out.harmrgi_report
-    HARMSUMMARY.out.reports
-    CONCATENATE_REPORTS.out
-    
-
+    versions = ch_versions
 }
-
-
-
-
-
-
-
-
