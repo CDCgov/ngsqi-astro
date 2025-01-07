@@ -4,19 +4,23 @@ include { NEATPAIRED } from '../../modules/local/neat-genreads.nf'
 
 workflow SIMULATION {
     take:
-    ch_ref
+    isolate_data
+    ref_data
     ch_readlength
+    
 
     main:
     ch_versions = Channel.empty()
 
-    RAGTAGSCAFFOLD(ch_ref)
+    RAGTAGSCAFFOLD(isolate_data, ref_data.view())
+
+    //RAGTAGSCAFFOLD(references,isolates)
     ch_versions = ch_versions.mix(RAGTAGSCAFFOLD.out.versions)
 
-    RAGTAGPATCH(RAGTAGSCAFFOLD.out.ragtag_scaff_dirs)
-    ch_versions = ch_versions.mix(RAGTAGPATCH.out.versions)
+    RAGTAGPATCH(RAGTAGSCAFFOLD.out.ragtag_scaff_dirs.collect(),ref_data)
+    //ch_versions = ch_versions.mix(RAGTAGPATCH.out.versions)
     
-    NEATPAIRED(RAGTAGPATCH.out.ragtag_patch_dirs, ch_readlength.first().view())
+    NEATPAIRED(RAGTAGPATCH.out.ragtag_patch_dirs, ch_readlength.first())
     ch_simreads = NEATPAIRED.out.neat_reads
     ch_versions = ch_versions.mix(NEATPAIRED.out.versions)
 
