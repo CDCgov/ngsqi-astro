@@ -12,15 +12,15 @@ workflow SIMULATION {
     main:
     ch_versions = Channel.empty()
 
-    RAGTAGSCAFFOLD(isolate_data.view(), ref_data.view())
+    RAGTAGSCAFFOLD(isolate_data, ref_data.view())
 
     //RAGTAGSCAFFOLD(references,isolates)
     ch_versions = ch_versions.mix(RAGTAGSCAFFOLD.out.versions)
 
-    RAGTAGPATCH(RAGTAGSCAFFOLD.out.ragtag_scaff_dirs,ref_data)
+    RAGTAGPATCH(RAGTAGSCAFFOLD.out.ragtag_scaff_dirs.collect(),ref_data)
     //ch_versions = ch_versions.mix(RAGTAGPATCH.out.versions)
     
-    NEATPAIRED(RAGTAGPATCH.out.ragtag_patch_dirs, ch_readlength.first().view())
+    NEATPAIRED(RAGTAGPATCH.out.ragtag_patch_dirs, ch_readlength.first())
     ch_simreads = NEATPAIRED.out.neat_reads
     ch_versions = ch_versions.mix(NEATPAIRED.out.versions)
 
