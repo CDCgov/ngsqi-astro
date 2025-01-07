@@ -35,7 +35,7 @@ def find_reference_genome_accession(species_name):
         
     Entrez.email = email
     Entrez.api_key = api_key
-    cutoff_date = datetime.strptime('2024/12/31', '%Y/%m/%d')
+    cutoff_date = datetime.strptime('2024/11/01', '%Y/%m/%d')
     
     max_attempts = 5
     for attempt in range(max_attempts):

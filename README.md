@@ -81,7 +81,8 @@ nextflow run main.nf \
 --ncbi_email <USER NCBI EMAIL> \
 --ncbi_api_key <API KEY> \
 -profile singularity \
---outdir <OUTDIR>
+--outdir <OUTDIR> \
+--mode <local> or <download> \
 
 ```
 
