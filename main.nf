@@ -3,7 +3,7 @@ nextflow.enable.dsl=2
 
 include { PREPROCESSING } from './subworkflows/local/preprocessing.nf'
 include { CONTIGS } from './subworkflows/local/assembly.nf'
-//include {AMR} from './subworkflows/local/arg.nf'
+include {AMR} from './subworkflows/local/arg.nf'
 include { TAXONOMY } from './subworkflows/local/taxonomy.nf'
 //include { MULTIQC } from './modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
@@ -61,7 +61,6 @@ validateParameters()
 // Print summary of supplied parameters
 log.info paramsSummaryLog(workflow)
 
-// Create a new channel of metadata from a sample sheet passed to the pipeline through the --input parameter
 ch_input = Channel.fromList(samplesheetToList(params.input, "assets/schema_input.json"))
 
 def multiqc_report = []
