@@ -10,10 +10,11 @@ process ABRICATE_RUN {
     input:
     tuple val(meta), path(assembly)
     val db
-    //   path databasedir
 
     output:
-    tuple val(meta), val(db), path("${meta.id}_${db}_abricate.txt"), emit: report
+    tuple val(meta), path("${meta.id}_${db[0]}_abricate.txt"), emit: report_card
+    tuple val(meta), path("${meta.id}_${db[1]}_abricate.txt"), emit: report_resfinder
+    tuple val(meta), path("${meta.id}_${db[2]}_abricate.txt"), emit: report_plasmid
     path "versions.yml"                             , emit: versions
     
     when:
@@ -22,16 +23,26 @@ process ABRICATE_RUN {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    // def datadir = databasedir ? "--datadir ${databasedir}" : ''
+
     """
-    abricate --db ${db} \\
+    abricate --db ${db[0]} \\
         $assembly \\
         $args \\
         --threads $task.cpus \\
-        > ${prefix}_${db}_abricate.txt
-  
-    """
-    """
+        > ${prefix}_${db[0]}_abricate.txt
+
+    abricate --db ${db[1]} \\
+        $assembly \\
+        $args \\
+        --threads $task.cpus \\
+        > ${prefix}_${db[1]}_abricate.txt
+
+    abricate --db ${db[2]} \\
+        $assembly \\
+        $args \\
+        --threads $task.cpus \\
+        > ${prefix}_${db[2]}_abricate.txt
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         abricate: \$(echo \$(abricate --version 2>&1) | sed 's/^.*abricate //' )
