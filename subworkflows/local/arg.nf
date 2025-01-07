@@ -1,5 +1,4 @@
 include { ABRICATE_RUN as ABRICATE } from '../../modules/nf-core/abricate/run/main'
-include { ABRICATE_SUMMARY } from '../../modules/nf-core/abricate/summary/main'
 include { RGI_MAIN as RGI } from '../../modules/nf-core/rgi/main'
 include { AMRFINDERPLUS_RUN as AMRFINDERPLUS } from '../../modules/nf-core/amrfinderplus/run/main'
 include { HAMRONIZATION_ABRICATE } from '../../modules/nf-core/hamronization/abricate/main.nf'
