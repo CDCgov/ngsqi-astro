@@ -7,15 +7,18 @@ include {AMR} from './subworkflows/local/arg.nf'
 include { TAXONOMY } from './subworkflows/local/taxonomy.nf'
 //include { MULTIQC } from './modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
-//include { REFERENCE } from './subworkflows/local/reference.nf'
-//include { SIMULATION } from './subworkflows/local/simulation.nf'
-//include { INTEGRATE } from './subworkflows/local/integrate.nf'
+include { REFERENCE } from './subworkflows/local/reference.nf'
+include { SIMULATION } from './subworkflows/local/simulation.nf'
+include { INTEGRATE } from './subworkflows/local/integrate.nf'
+include { TAXONOMY as TAXASIM} from './subworkflows/local/taxonomy.nf'
+include { CONTIGS as CONTIGSIM } from './subworkflows/local/assembly.nf'
+include {AMR as AMRSIM} from './subworkflows/local/arg.nf'
 include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin/nf-schema'
 
 params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
 params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
-params.samplesheet = "$projectDir/samplesheet.csv"  // default samplesheet
+params.input = null
 params.input_isolates = "/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate_test_2.csv"
 params.downloadref_script = "$projectDir/scripts/download_ref.py"
 params.downloadgenome_script = "$projectDir/scripts/download_genome.py"
@@ -64,11 +67,10 @@ validateParameters()
 // Print summary of supplied parameters
 log.info paramsSummaryLog(workflow)
 
-ch_input = Channel.fromList(samplesheetToList(params.input, "assets/schema_input.json"))
-
 def multiqc_report = []
 
 workflow {
+    
     ch_versions = Channel.empty()
 
 /*
@@ -104,8 +106,8 @@ workflow {
                                Taxonomic Classification
     ================================================================================
     */
-    //TAXONOMY(PREPROCESSING.out.reads, ch_hclust2)
-    //ch_versions = ch_versions.mix(TAXONOMY.out.versions)
+    TAXONOMY(PREPROCESSING.out.reads, ch_hclust2)
+    ch_versions = ch_versions.mix(TAXONOMY.out.versions)
     
        /*
     ================================================================================
@@ -116,19 +118,35 @@ workflow {
     SIMULATION(REFERENCE.out.isolate_data, REFERENCE.out.ref_data, PREPROCESSING.out.ch_readlength)
     ch_versions = ch_versions.mix(SIMULATION.out.versions)
     
-   // INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
-  //  ch_versions = ch_versions.mix(INTEGRATE.out.versions)
+    INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
+    ch_versions = ch_versions.mix(INTEGRATE.out.versions)
 
     /*
     ================================================================================
                                 Simulation - Taxonomic Classification
     ================================================================================
     */
+    TAXASIM(INTEGRATE.out.integrated_reads, ch_hclust2)
+    ch_versions = ch_versions.mix(TAXASIM.out.versions)
+    
         /*
+    ================================================================================
+                                Simulation - Assembly & QC
+    ================================================================================
+    */
+    CONTIGSIM(INTEGRATE.out.integrated_reads)
+    ch_versions = ch_versions.mix(CONTIGSIM.out.versions)
+
+    /*
     ================================================================================
                                 Simulation - ARG Detection
     ================================================================================
     */
+
+    databases = ["card", "plasmidfinder", "resfinder"]
+    AMRSIM(CONTIGSIM.out.contigs, databases, amrfinderdb, card)
+    ch_versions = ch_versions.mix(AMRSIM.out.versions)
+
     /*
     ================================================================================
                                 Versions Reports
