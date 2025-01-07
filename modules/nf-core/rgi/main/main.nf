@@ -42,7 +42,7 @@ process RGI_MAIN {
    // }
 
     """
-    DB_VERSION=\$(rgi database --version --local)
+    DB_VERSION=\$(ls ${card}/card_database_*_all.fasta | sed "s/${card}\\/card_database_v\\([0-9].*[0-9]\\).*/\\1/")
 
     rgi \\
         load \\
