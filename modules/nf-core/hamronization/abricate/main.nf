@@ -8,7 +8,9 @@ process HAMRONIZATION_ABRICATE {
         'biocontainers/hamronization:1.1.4--pyhdfd78af_0' }"
 
     input:
-    tuple val(meta), path(report)
+    tuple val(meta), path(report_card)
+    tuple val(meta), path(report_resfinder)
+    tuple val(meta), path(report_plasmid)
     val(format)
     val(software_version)
     val(reference_db_version)
@@ -27,19 +29,20 @@ process HAMRONIZATION_ABRICATE {
     """
     hamronize \\
         abricate \\
-        ${report} \\
+        ${report_card} \\
+        ${report_resfinder} \\
+        ${report_plasmid} \\
         $args \\
         --format ${format} \\
         --analysis_software_version ${software_version} \\
         --reference_database_version ${reference_db_version} \\
-        > ${prefix}.${format}
+        > ${meta.id}.${format}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         hamronization: \$(echo \$(hamronize --version 2>&1) | cut -f 2 -d ' ' )
     END_VERSIONS
     """
-
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
