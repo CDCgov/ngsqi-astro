@@ -9,26 +9,39 @@ process ABRICATE_RUN {
 
     input:
     tuple val(meta), path(assembly)
-    path databasedir
+    val db
 
     output:
-    tuple val(meta), path("*.txt"), emit: report
-    path "versions.yml"           , emit: versions
-
+    tuple val(meta), path("${meta.id}_${db[0]}_abricate.txt"), emit: report_card
+    tuple val(meta), path("${meta.id}_${db[1]}_abricate.txt"), emit: report_resfinder
+    tuple val(meta), path("${meta.id}_${db[2]}_abricate.txt"), emit: report_plasmid
+    path "versions.yml"                             , emit: versions
+    
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def datadir = databasedir ? "--datadir ${databasedir}" : ''
+
     """
-    abricate \\
+    abricate --db ${db[0]} \\
         $assembly \\
         $args \\
-        $datadir \\
         --threads $task.cpus \\
-        > ${prefix}.txt
+        > ${prefix}_${db[0]}_abricate.txt
+
+    abricate --db ${db[1]} \\
+        $assembly \\
+        $args \\
+        --threads $task.cpus \\
+        > ${prefix}_${db[1]}_abricate.txt
+
+    abricate --db ${db[2]} \\
+        $assembly \\
+        $args \\
+        --threads $task.cpus \\
+        > ${prefix}_${db[2]}_abricate.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -39,7 +52,6 @@ process ABRICATE_RUN {
     stub:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def datadir = databasedir ? '--datadir ${databasedir}' : ''
     """
     touch ${prefix}.txt
 
