@@ -1,4 +1,3 @@
-// modules/local_isolate.nf
 process LOCALISOLATE {
     tag "$sample_id"
 
