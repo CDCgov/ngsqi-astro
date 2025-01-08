@@ -30,6 +30,7 @@ params.mode = 'download' // Default to download mode
 params.amrfinderdb = "${baseDir}/assets/2024-07-22.1/" 
 params.card = "${baseDir}/assets/card/"
 params.databases = ["card", "plasmidfinder", "resfinder"]
+params.postsim = false //Boolean param for running assembly, taxonomy and ARG wfs on simulated data. Runs if true.
 
 Channel
     .fromPath(params.samplesheet)
@@ -126,6 +127,7 @@ workflow {
                                 Simulation - Taxonomic Classification
     ================================================================================
     */
+    if (params.postsim) {
     TAXASIM(INTEGRATE.out.integrated_reads, ch_hclust2)
     ch_versions = ch_versions.mix(TAXASIM.out.versions)
     
@@ -146,7 +148,7 @@ workflow {
     databases = ["card", "plasmidfinder", "resfinder"]
     AMRSIM(CONTIGSIM.out.contigs, databases, amrfinderdb, card)
     ch_versions = ch_versions.mix(AMRSIM.out.versions)
-
+    }
     /*
     ================================================================================
                                 Versions Reports
