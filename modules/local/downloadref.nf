@@ -1,5 +1,3 @@
-#!/usr/bin/env nextflow
-
 process DOWNLOADREF {
    tag "$species_name"
 
