@@ -18,8 +18,8 @@ include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin
 params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
 params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
-params.input = null
-params.input_isolates = "/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate_test_2.csv"
+params.samplesheet = "samplesheet.csv"
+params.isolates = null
 params.downloadref_script = "$projectDir/scripts/download_ref.py"
 params.downloadgenome_script = "$projectDir/scripts/download_genome.py"
 params.multiqc_config = "$projectDir/assets/multiqc_config.yml"
