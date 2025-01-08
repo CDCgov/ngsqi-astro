@@ -1,7 +1,5 @@
 process CATISOLATES {
-
-    publishDir "${params.outdir}", mode: 'copy'
-
+    
     input:
     tuple val(sample_id), path(copynumber_read1)
     tuple val(sample_id), path(copynumber_read2)
