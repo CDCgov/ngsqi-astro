@@ -1,4 +1,3 @@
-// modules/process_isolate.nf
 process PROCESSISOLATE {
     tag "$sample_id"
     publishDir "${params.outdir}/processed_isolates", mode: 'copy'
