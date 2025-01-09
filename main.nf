@@ -49,7 +49,7 @@ amrfinderdb = params.amrfinderdb
 card = params.card
 
 Channel
-    .fromPath(params.isolates)
+    .fromPath(params.input_isolates)
     .splitCsv(header: true, sep: ',')
     .map { row -> 
         tuple(
@@ -88,8 +88,8 @@ workflow {
     ================================================================================
     */
     
-    CONTIGS(PREPROCESSING.out.reads)
-    ch_versions = ch_versions.mix(CONTIGS.out.versions)
+    //CONTIGS(PREPROCESSING.out.reads)
+    //ch_versions = ch_versions.mix(CONTIGS.out.versions)
     
         /*
     ================================================================================
@@ -97,6 +97,9 @@ workflow {
     ================================================================================
     */
 
+    //databases = ["card", "plasmidfinder", "resfinder"]
+    //AMR(CONTIGS.out.contigs, databases)
+    //ch_versions = ch_versions.mix(AMR.out.versions)
     databases = ["card", "plasmidfinder", "resfinder"]
     AMR(CONTIGS.out.contigs, databases, amrfinderdb, card)
     ch_versions = ch_versions.mix(AMR.out.versions)
@@ -106,8 +109,8 @@ workflow {
                                Taxonomic Classification
     ================================================================================
     */
-    TAXONOMY(PREPROCESSING.out.reads, ch_hclust2)
-    ch_versions = ch_versions.mix(TAXONOMY.out.versions)
+    //TAXONOMY(PREPROCESSING.out.reads, ch_hclust2)
+    //ch_versions = ch_versions.mix(TAXONOMY.out.versions)
     
        /*
     ================================================================================
@@ -115,8 +118,8 @@ workflow {
     ================================================================================
     */
     REFERENCE(input_data, params.downloadref_script,params.downloadgenome_script, params.ncbi_email, params.ncbi_api_key)
-    SIMULATION(REFERENCE.out.isolate_data, REFERENCE.out.ref_data, PREPROCESSING.out.ch_readlength)
-    ch_versions = ch_versions.mix(SIMULATION.out.versions)
+    SIMULATION(REFERENCE.out.paired_data, PREPROCESSING.out.ch_readlength)
+    //ch_versions = ch_versions.mix(SIMULATION.out.versions)
     
     INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
     ch_versions = ch_versions.mix(INTEGRATE.out.versions)

@@ -33,13 +33,26 @@ def download_genome(accession):
                 print(f"No FTP path found for accession: {accession}", file=sys.stderr)
                 return None
 
-            # Construct the full URL for the genomic FASTA file
-            file_url = f"{ftp_path}/{os.path.basename(ftp_path)}_genomic.fna.gz"
+            # Convert FTP URL to HTTPS
+            if ftp_path.startswith('ftp://'):
+                file_url = ftp_path.replace('ftp://', 'https://')
+            else:
+                file_url = ftp_path
 
-            # Download the file
+            # Construct the full URL for the genomic FASTA file
+            file_url = f"{file_url}/{os.path.basename(file_url)}_genomic.fna.gz"
+
+            # Download the file with proper binary handling
             time.sleep(1)  # Delay to respect NCBI's rate limits
             local_filename = f"{accession}_genomic.fna.gz"
-            urllib.request.urlretrieve(file_url, local_filename)
+            
+            with urllib.request.urlopen(file_url) as response:
+                with open(local_filename, 'wb') as out_file:
+                    while True:
+                        chunk = response.read(8192)
+                        if not chunk:
+                            break
+                        out_file.write(chunk)
 
             print(f"Successfully downloaded: {local_filename}", file=sys.stderr)
             return local_filename
