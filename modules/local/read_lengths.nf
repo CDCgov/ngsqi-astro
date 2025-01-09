@@ -1,5 +1,3 @@
-#!/usr/bin/env nextflow
-
 process EXTRACT_READ_LENGTH {
     publishDir "${params.outdir}", mode: 'copy'
 
