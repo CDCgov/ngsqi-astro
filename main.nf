@@ -18,8 +18,8 @@ include { validateParameters; paramsSummaryLog; samplesheetToList } from 'plugin
 params.hostile_ref = "$projectDir/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
 params.ref = "$projectDir/assets/references/phiX.fasta"
 params.hclust2 = "$projectDir/third_party/hclust2.py"
-params.input = null
-params.input_isolates = "/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate_test_2.csv"
+params.samplesheet = "samplesheet.csv"
+params.isolates = null
 params.downloadref_script = "$projectDir/scripts/download_ref.py"
 params.downloadgenome_script = "$projectDir/scripts/download_genome.py"
 params.multiqc_config = "$projectDir/assets/multiqc_config.yml"
@@ -30,6 +30,7 @@ params.mode = 'download' // Default to download mode
 params.amrfinderdb = "${baseDir}/assets/2024-07-22.1/" 
 params.card = "${baseDir}/assets/card/"
 params.databases = ["card", "plasmidfinder", "resfinder"]
+params.postsim = false //Boolean param for running assembly, taxonomy and ARG wfs on simulated data. Runs if true.
 
 Channel
     .fromPath(params.samplesheet)
@@ -129,6 +130,7 @@ workflow {
                                 Simulation - Taxonomic Classification
     ================================================================================
     */
+    if (params.postsim) {
     TAXASIM(INTEGRATE.out.integrated_reads, ch_hclust2)
     ch_versions = ch_versions.mix(TAXASIM.out.versions)
     
@@ -149,7 +151,7 @@ workflow {
     databases = ["card", "plasmidfinder", "resfinder"]
     AMRSIM(CONTIGSIM.out.contigs, databases, amrfinderdb, card)
     ch_versions = ch_versions.mix(AMRSIM.out.versions)
-
+    }
     /*
     ================================================================================
                                 Versions Reports

@@ -1,5 +1,3 @@
-#!/usr/bin/env nextflow
-
 process RAGTAGSCAFFOLD {
     publishDir "${params.outdir}", mode: 'copy'
 

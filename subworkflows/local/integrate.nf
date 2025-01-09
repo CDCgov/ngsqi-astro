@@ -22,11 +22,8 @@ workflow INTEGRATE {
     CATMETAGENOMICS(reads, CATISOLATES.out.isolates_read1, CATISOLATES.out.isolates_read2)
     integrated_reads = CATMETAGENOMICS.out.integrated_reads
 
-    FASTQC_SIM(
-    CATMETAGENOMICS.out.integrated_reads.map { id, read1, read2 -> 
-        [ [id: id], [read1, read2] ] 
-    }
-    )
+    FASTQC_SIM(integrated_reads)
+
     ch_versions = ch_versions.mix(FASTQC_SIM.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_SIM.out.zip)
 
