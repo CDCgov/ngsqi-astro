@@ -1,4 +1,5 @@
-prefix: tb
+name: astro
+prefix: ngsiqi
 skip:
 - github
 - ci
