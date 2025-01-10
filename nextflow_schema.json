@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/amr-metagenomics/master/nextflow_schema.json",
-  "title": "amr-metagenomics pipeline parameters",
+  "title": "astro pipeline parameters",
   "description": "Generating in silico reference materials for AMR metagenomics",
   "type": "object",
   "definitions": {
@@ -175,13 +175,6 @@
           "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
           "hidden": true
         },
-        "multiqc_config": {
-          "type": "string",
-          "format": "file-path",
-          "description": "Custom config file to supply to MultiQC.",
-          "fa_icon": "fas fa-cog",
-          "hidden": true
-        },
         "validate_params": {
           "type": "boolean",
           "description": "Boolean whether to validate parameters against the schema at runtime",
@@ -237,30 +230,48 @@
     "ncbi_api_key": {
       "type": "string"
     },
-    "amrfinderplus": {
-      "type": "string"
-    },
     "hostile_ref": {
-      "type": "string"
+      "type": "string",
+      "default": "/scicomp/home-pure/tkq5/amr-metagenomics/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401",
+      "hidden": true
     },
     "ref": {
-      "type": "string"
+      "type": "string",
+      "default": "/scicomp/home-pure/tkq5/amr-metagenomics/assets/references/phiX.fasta",
+      "hidden": true
     },
     "hclust2": {
-      "type": "string"
-    },
-    "samplesheet": {
-      "type": "string"
+      "type": "string",
+      "default": "/scicomp/home-pure/tkq5/amr-metagenomics/third_party/hclust2.py",
+      "hidden": true
     },
     "downloadref_script": {
-      "type": "string"
+      "type": "string",
+      "default": "/scicomp/home-pure/tkq5/amr-metagenomics/scripts/download_ref.py",
+      "hidden": true
     },
     "downloadgenome_script": {
-      "type": "string"
+      "type": "string",
+      "default": "/scicomp/home-pure/tkq5/amr-metagenomics/scripts/download_genome.py",
+      "hidden": true
     },
-    "custom_multiqc_config": {
-      "type": "string"
+    "amrfinderdb": {
+      "type": "string",
+      "default": "/scicomp/home-pure/tkq5/amr-metagenomics/assets/2024-7-22.1/",
+      "hidden": true
+    },
+    "card": {
+      "type": "string",
+      "default": "/scicomp/home-pure/tkq5/amr-metagenomics/assets/card/",
+      "hidden": true
+    },
+    "mode": {
+      "type": "string",
+      "default": "download"
+    },
+    "postsim": {
+      "type": "boolean"
     }
   },
-  "required": ["isolates", "ncbi_email", "ncbi_api_key"]
+  "required": ["isolates", "ncbi_email", "ncbi_api_key", "mode", "postsim"]
 }
