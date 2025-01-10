@@ -9,14 +9,19 @@ process DOWNLOADGENOME {
     val ncbi_api_key
 
     output:
-    tuple val(sample_id), val(added_copy_number), val(file_path), val(species_name), val(accession), path("*_genomic.fna"), emit: genome_data
-    path "*_genomic.fna.gz"
+    tuple val(sample_id), val(added_copy_number), val(file_path), val(species_name), val(accession), path("${accession}_genomic.fna"), emit: genome_data
+    path "${accession}_genomic.fna"  // More specific path pattern
 
     script:
     """
     export NCBI_API_KEY=${ncbi_api_key}
     export NCBI_EMAIL=${ncbi_email}
     python ${downloadgenome_script} ${accession}
-    gunzip -c *_genomic.fna.gz > \$(basename *_genomic.fna.gz .gz)
+    if [ -f "${accession}_genomic.fna.gz" ]; then
+       gunzip -c "${accession}_genomic.fna.gz" > "${accession}_genomic.fna"
+    else
+       echo "Download failed for ${accession}"
+       exit 1
+    fi
     """
 }
