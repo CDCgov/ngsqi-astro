@@ -1,5 +1,5 @@
 {
-  "name": "amr-metagenomics",
+  "name": "astro",
   "homePage": "https://github.com/amr-metagenomics",
   "repos": {
     "https://github.com/nf-core/modules.git": {
