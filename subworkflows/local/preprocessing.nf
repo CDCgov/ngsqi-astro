@@ -8,8 +8,8 @@ include { HOSTILE } from '../../modules/local/hostile.nf'
 workflow PREPROCESSING {
     take:
     ch_reads // channel: [ val(sampleID), [reads] ]
-    ch_ref // channel: PHIX.fasta
-    ch_hostile_ref // channel: hostile reference
+    ref // channel: PHIX.fasta
+    hostile_ref // channel: hostile reference
 
     main:
     ch_versions = Channel.empty()
@@ -24,12 +24,12 @@ workflow PREPROCESSING {
     ch_versions = ch_versions.mix(FASTP.out.versions)
     //ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.log)
 
-    BBDUK(ch_trimmed, ch_ref)
+    BBDUK(ch_trimmed, ref)
     ch_decon = BBDUK.out.reads
     ch_versions = ch_versions.mix(BBDUK.out.versions)
     //ch_multiqc_files = ch_multiqc_files.mix(BBDUK.out.log)
 
-    HOSTILE(ch_decon, ch_hostile_ref)
+    HOSTILE(ch_decon, hostile_ref)
     ch_clean = HOSTILE.out.clean_reads
     ch_versions = ch_versions.mix(HOSTILE.out.versions)
     //ch_multiqc_files = ch_multiqc_files.mix(HOSTILE.out.log)
