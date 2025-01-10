@@ -1,18 +1,21 @@
 process RAGTAGPATCH {
    publishDir "${params.outdir}", mode: 'copy'
-   container "${baseDir}/third_party/ragtag.sif"
+   errorStrategy 'ignore'
+   tag "sample: ${sample_id}"
 
    input:
-   tuple val(sample_id), val(added_copy_number), path(scaff_dir)
-   tuple val(sample_id), val(added_copy_number), val(file_path), val(species_name), val(ref_accession), path(ref_genome)
-
-
+   tuple val(sample_id), val(added_copy_number), val(iso_file_path), val(species_name), val(ref_accession), path(ref_genome), path(scaff_dir)
 
    output:
-   tuple val(sample_id), val(added_copy_number), path("patched_${sample_id}"), val(species_name), val(ref_accession), path(ref_genome), emit: ragtag_patch_dirs
+   tuple val(sample_id), val(added_copy_number), path("patched_${sample_id}"), val(species_name), val(ref_accession), path(ref_genome), emit: ragtag_patch_dirs optional true
 
    script:
    """
+   if [ ! -f "${scaff_dir}/ragtag.scaffold.fasta" ]; then
+      echo "Assembly unsuccessful for ${sample_id}: ragtag.scaffold.fasta not found in ${scaff_dir}" >&2
+      exit 1
+   fi
+
    ragtag.py patch ${ref_genome} ${scaff_dir}/ragtag.scaffold.fasta -o "patched_${sample_id}"
    """
 }
