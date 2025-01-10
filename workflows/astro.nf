@@ -138,7 +138,7 @@ workflow ASTRO {
     ================================================================================
     */
     REFERENCE(input_data, params.downloadref_script, params.downloadgenome_script, params.ncbi_email, params.ncbi_api_key)
-    SIMULATION(REFERENCE.out.isolate_data, REFERENCE.out.ref_data, PREPROCESSING.out.ch_readlength)
+    SIMULATION(REFERENCE.out.paired_data, PREPROCESSING.out.ch_readlength)
     ch_versions = ch_versions.mix(SIMULATION.out.versions)
     
     INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
