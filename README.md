@@ -46,8 +46,8 @@ First, prepare a samplesheet with your input metagenomic data that looks as foll
 
 ```csv
 sample,fastq_1,fastq_2
-Sample1,amr-metagenomics/assets/data/ERR4678562_1.fastq.gz,amr-metagenomics/assets/data/ERR4678562_2.fastq.gz
-Sample2,amr-metagenomics/assets/data/ERR4678563_1.fastq.gz,amr-metagenomics/assets/data/ERR4678563_2.fastq.gz
+Sample1,assets/data/ERR4678562_1.fastq.gz,assets/data/ERR4678562_2.fastq.gz
+Sample2,assets/data/ERR4678563_1.fastq.gz,assets/data/ERR4678563_2.fastq.gz
 ```
 
 Each row represents a pair of fastq files (paired end metagenomics reads).
@@ -57,8 +57,8 @@ You will need to also prepare a samplesheet for isolate genomes to be used in si
 `isolate_samplesheet.csv`:
 ```csv
 sample_id,added_copy_number,file_path,species_name
-GCA_018454105.3,1,/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate-genomes/GCA_018454105.3/GCA_018454105.3_PDT001044797.3_genomic.fna,Acinetobacter baumannii
-GCA_016490125.3,1,/scicomp/groups-pure/Projects/CSELS_NGSQI_insillico/amr-metagenomics/isolate-genomes/GCA_016490125.3/GCA_016490125.3_PDT000725303.3_genomic.fna,Acinetobacter baumannii
+GCA_018454105.3,1,isolate-genomes/GCA_018454105.3/GCA_018454105.3_PDT001044797.3_genomic.fna,Acinetobacter baumannii
+GCA_016490125.3,1,isolate-genomes/GCA_016490125.3/GCA_016490125.3_PDT000725303.3_genomic.fna,Acinetobacter baumannii
 ```
 Each row corresponds to the following information:
 
@@ -80,11 +80,13 @@ nextflow run main.nf \
 --isolates isolate_samplesheet.csv \
 --ncbi_email <USER NCBI EMAIL> \
 --ncbi_api_key <API KEY> \
+--postsim \
 -profile singularity \
 --outdir <OUTDIR> \
 --mode <local> or <download> \
 
 ```
+Note that --postsim is an optional parameter. If used, simulated data will be processed for ARG detection and taxonomic classification. 
 
 > **Warning:**
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
