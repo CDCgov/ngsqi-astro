@@ -6,6 +6,7 @@ nextflow.enable.dsl=2
     ================================================================================
         */
 include { INPUT_CHECK } from '../subworkflows/local/input_check.nf'
+include { ISOLATES_CHECK } from '../subworkflows/local/isolates_check.nf'
 include { PREPROCESSING } from '../subworkflows/local/preprocessing.nf'
 include { CONTIGS } from '../subworkflows/local/assembly.nf'
 include { AMR } from '../subworkflows/local/arg.nf'
@@ -47,21 +48,8 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.isolates) { isolates = file(params.isolates) } else { exit 1, 'Isolate samplesheet not specified!' }
-//TO DO -- add other mandatory parameters here (api key, email)
-
-//move lines 53-63 to validation subwf
-Channel
-    .fromPath(params.isolates)
-    .splitCsv(header: true, sep: ',')
-    .map { row -> 
-        tuple(
-            row.sample_id,
-            row.added_copy_number,
-            row.file_path,
-            row.species_name
-        ) 
-    }
-    .set { input_data }
+if (params.ncbi_api_key) { ncbi_api_key = params.ncbi_api_key } else { exit 1, 'NCBI API key not specified!' }
+if (params.ncbi_email) { ncbi_email = params.ncbi_email } else { exit 1, 'NCBI email not specified!' }
 
 /*
     ================================================================================
@@ -96,6 +84,8 @@ workflow ASTRO {
     INPUT_CHECK(ch_input)
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
+    ISOLATES_CHECK(isolates)
+    ch_versions = ch_versions.mix(ISOLATES_CHECK.out.versions)
 /*
     ================================================================================
                                 Preprocessing & QC
@@ -111,8 +101,8 @@ workflow ASTRO {
     ================================================================================
     */
     
-    CONTIGS(PREPROCESSING.out.reads)
-    ch_versions = ch_versions.mix(CONTIGS.out.versions)
+   // CONTIGS(PREPROCESSING.out.reads)
+   // ch_versions = ch_versions.mix(CONTIGS.out.versions)
     
     /*
     ================================================================================
@@ -120,46 +110,46 @@ workflow ASTRO {
     ================================================================================
     */
 
-    databases = ["card", "plasmidfinder", "resfinder"]
-    AMR(CONTIGS.out.contigs, databases, params.amrfinderdb, params.card)
-    ch_versions = ch_versions.mix(AMR.out.versions)
+   // databases = ["card", "plasmidfinder", "resfinder"]
+   // AMR(CONTIGS.out.contigs, databases, params.amrfinderdb, params.card)
+  //  ch_versions = ch_versions.mix(AMR.out.versions)
 
     /*
     ================================================================================
                                Taxonomic Classification
     ================================================================================
     */
-    TAXONOMY(PREPROCESSING.out.reads, params.hclust2)
-    ch_versions = ch_versions.mix(TAXONOMY.out.versions)
+  //  TAXONOMY(PREPROCESSING.out.reads, params.hclust2)
+   // ch_versions = ch_versions.mix(TAXONOMY.out.versions)
     
     /*
     ================================================================================
                                 Simulation & QC
     ================================================================================
     */
-    REFERENCE(input_data, params.downloadref_script, params.downloadgenome_script, params.ncbi_email, params.ncbi_api_key)
-    SIMULATION(REFERENCE.out.paired_data, PREPROCESSING.out.ch_readlength)
-    ch_versions = ch_versions.mix(SIMULATION.out.versions)
+   // REFERENCE(input_data, params.downloadref_script, params.downloadgenome_script, params.ncbi_email, params.ncbi_api_key)
+  //  SIMULATION(REFERENCE.out.paired_data, PREPROCESSING.out.ch_readlength)
+  //  ch_versions = ch_versions.mix(SIMULATION.out.versions)
     
-    INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
-    ch_versions = ch_versions.mix(INTEGRATE.out.versions)
+  //  INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
+  //  ch_versions = ch_versions.mix(INTEGRATE.out.versions)
 
     /*
     ================================================================================
                                 Simulation - Taxonomic Classification
     ================================================================================
     */
-    if (params.postsim) {
-    TAXASIM(INTEGRATE.out.integrated_reads, params.hclust2)
-    ch_versions = ch_versions.mix(TAXASIM.out.versions)
+  //  if (params.postsim) {
+   // TAXASIM(INTEGRATE.out.integrated_reads, params.hclust2)
+   // ch_versions = ch_versions.mix(TAXASIM.out.versions)
     
     /*
     ================================================================================
                                 Simulation - Assembly & QC
     ================================================================================
     */
-    CONTIGSIM(INTEGRATE.out.integrated_reads)
-    ch_versions = ch_versions.mix(CONTIGSIM.out.versions)
+    //CONTIGSIM(INTEGRATE.out.integrated_reads)
+    //ch_versions = ch_versions.mix(CONTIGSIM.out.versions)
 
     /*
     ================================================================================
@@ -167,10 +157,10 @@ workflow ASTRO {
     ================================================================================
     */
 
-    databases = ["card", "plasmidfinder", "resfinder"]
-    AMRSIM(CONTIGSIM.out.contigs, databases, params.amrfinderdb, params.card)
-    ch_versions = ch_versions.mix(AMRSIM.out.versions)
-    }
+  //  databases = ["card", "plasmidfinder", "resfinder"]
+  //  AMRSIM(CONTIGSIM.out.contigs, databases, params.amrfinderdb, params.card)
+  //  ch_versions = ch_versions.mix(AMRSIM.out.versions)
+  //  }
     /*
     ================================================================================
                                 Versions Reports
