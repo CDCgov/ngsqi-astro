@@ -31,9 +31,9 @@ def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def summary_params = paramsSummaryMap(workflow)
 
 // Print parameter summary log to screen
-//log.info logo + paramsSummaryLog(workflow) + citation
+log.info logo + paramsSummaryLog(workflow)
 
- //WorkflowAstro.initialise(params, log)
+WorkflowAstro.initialise(params, log)
 
 /*
     ================================================================================
@@ -73,7 +73,6 @@ def multiqc_report = []
 workflow ASTRO {
     
     ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
 
 /*
     ================================================================================
@@ -94,7 +93,7 @@ workflow ASTRO {
 
     PREPROCESSING(INPUT_CHECK.out.reads, params.ref, params.hostile_ref)
     ch_versions = ch_versions.mix(PREPROCESSING.out.versions)
-    //ch_multiqc_files = ch_multiqc.mix(PREPROCESSING.out.log)
+
 /*
     ================================================================================
                                 ASSEMBLY & QC
@@ -168,7 +167,7 @@ workflow ASTRO {
     */
     ch_versions_unique = ch_versions.unique()
     CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions_unique.collectFile(name: 'collated_versions.yml'))
-    
+
     /*
     ================================================================================
                                 MultiQC
@@ -177,24 +176,22 @@ workflow ASTRO {
 
     //Still debugging Multiqc
      // MODULE: MultiQC
-   // workflow_summary    = WorkflowASTRO.paramsSummaryMultiqc(workflow, summary_params)
-   // ch_workflow_summary = Channel.value(workflow_summary)
+    workflow_summary    = WorkflowAstro.paramsSummaryMultiqc(workflow, summary_params)
+    ch_workflow_summary = Channel.value(workflow_summary)
 
-  //  methods_description    = WorkflowASTRO.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-  //  ch_methods_description = Channel.value(methods_description)
+    ch_multiqc_files = Channel.empty()
+    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
+    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESSING.out.multiqc.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(CONTIGS.out.multiqc.collect{it[1]}.ifEmpty([]))
 
-  //  ch_multiqc_files = Channel.empty()
-  //  ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-   // ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-   // ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-  //  ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
+    MULTIQC (
+        ch_multiqc_files.collect()
+    )
 
- //   MULTIQC (
- //       ch_multiqc_files.collect(),
- //       ch_multiqc_config.toList(),
- //       ch_multiqc_custom_config.toList(),
- //       ch_multiqc_logo.toList()
- //   )
- //   multiqc_report = MULTIQC.out.report.toList()
- //   ch_versions = ch_versions.mix(MULTIQC.out.versions)
+    multiqc_report = MULTIQC.out.report.toList()
+    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
+
 }
