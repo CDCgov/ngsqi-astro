@@ -20,23 +20,24 @@ report_header_info:
 run_modules:
   - custom_content
   - fastqc
-  - fastp
-  - bbduk
   - quast
 
 module_order:
   - fastqc:
-    name: "FastQC: raw reads"
-    info: "This section of the report shows FastQC results for the raw reads before adapter trimming and decontamination"
-    path_filters_exclude:
-      - "*trimmed*"
-  - fastp:
-    name: "fastp"
-    info: "This section of the report shows fastp results for reads after adapter and quality trimming"
-  - bbduk:
-    name: "BBmap: BBduk"
-    info: "This section of the report shows BBduk results for reads that have passed decontamination checks"
+      name: "FastQC: raw reads"
+      info: "This section of the report shows FastQC results for the raw reads before adapter trimming and decontamination"
+      path_filters:
+        - "*_raw_*"
   - fastqc:
-    name: "FastQC: clean reads"
-    info: "This section of the report shows FastQC results for the clean reads after adapter trimming and decontamination"
-
+      name: "FastQC: clean reads"
+      info: "This section of the report shows FastQC results for the clean reads after adapter trimming and decontamination"
+      path_filters:
+        - "*_clean_*"
+  - quast:
+      name: "QUAST: assembly QC"
+      info: "This section of the report shows QUAST results after contig assembly"
+  - fastqc:
+      name: "FastQC: simulated reads"
+      info: "This section of the report shows FastQC results for the simulated reads"
+      path_filters:
+        - "*_sim_*"
