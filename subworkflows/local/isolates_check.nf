@@ -18,9 +18,9 @@ workflow ISOLATES_CHECK {
                 row.species_name
             ) 
         }
-        .set { isolates }
+        .set { ch_isolates }
 
     emit:
-    isolates                                // channel: [ val(ID), [ isolates ] ]
+    ch_isolates                                // channel: [ val(ID), [ isolates ] ]
     versions = ISOLATE_CHECK.out.versions        // channel: [ versions.yml ]
 }
