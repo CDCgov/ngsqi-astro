@@ -70,6 +70,8 @@ Each row corresponds to the following information:
 
 * species_name: Name of isolate species
 
+For instructions on creating an NCBI account and obtaining an API key, please visit the [National Library of Medicine Support Center](https://support.nlm.nih.gov/kbArticle/?pn=KA-05317).
+
 ### Running ASTRO:
 Now, you can run the pipeline using:
 
