@@ -20,16 +20,16 @@ The three primary objectives of the ASTRO workflow entail:
 
 This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) and utilizes docker and singularity containers to modularize the workflow for optimal maintenance and reproducibility.
 
-Pipeline Summary:
-1.	Input paired-end metagenomics reads (.fastq) and isolate data (.fna) with samplesheets
-2.	Perform pre-processing on metagenomics reads (FastQC, FastP, PHIX, Hostile)
-3.	Screen metagenomes for antimicrobial resistance genes (AMRFinderPlus, ABRICATE, RGI)
-4.	Perform taxonomic profiling on metagenomics reads to identify microbial community composition (MetaPhlAn v4.1)
-6.	Simulate sequencing reads (NEAT, RAGTAG)
-7.	Integrate in silico reads with empirical metagenomes
-8.	Perform taxonomic profiling on in silico dataset (MetaPhlAn v4.1)
-9.   Perform antimicrobial resistance gene detection on in silico dataset 
-9.	Generate summary, visualizations and other output files (AMR: HARMONIZATION, TAXONOMY: Hclust2, etc.)
+# Pipeline Summary
+1.	Input paired-end metagenomic reads (.fastq) and isolate data (.fna)
+2.	Perform preprocessing on metagenomic reads (`FastQC`, `FastP`, `BBDuk`, `Hostile`)
+3.	Assemble the preprocessed reads into contigs and assess the quality of the assembled contigs
+4.	Screen metagenomes for ARGs (`AMRFinderPlus`, `ABRICATE`, `RGI`)
+5.	Perform taxonomic profiling on metagenomic reads to identify microbial community composition
+6.	Simulate next generation sequencing reads and spike into cleaned, empirical metagenomic dataset (`NEAT`, `RAGTAG`)
+7.	Perform quality control (QC) on simulated dataset (`FastQC`)
+8.	Optionally perform taxonomic profiling and ARG detection on in silico dataset
+9.	Generate versions and MultiQC reports
 
 ## Usage
 
@@ -57,18 +57,18 @@ You will need to also prepare a samplesheet for isolate genomes to be used in si
 `isolate_samplesheet.csv`:
 ```csv
 sample_id,added_copy_number,file_path,species_name
-GCA_018454105.3,1,isolate-genomes/GCA_018454105.3/GCA_018454105.3_PDT001044797.3_genomic.fna,Acinetobacter baumannii
-GCA_016490125.3,1,isolate-genomes/GCA_016490125.3/GCA_016490125.3_PDT000725303.3_genomic.fna,Acinetobacter baumannii
+GCA_018454105.3,1,assets/data/GCA_018454105.3_PDT001044797.3_genomic.fna,Acinetobacter baumannii
+GCA_016490125.3,1,assets/data/GCA_016490125.3_PDT000725303.3_genomic.fna,Acinetobacter baumannii
 ```
 Each row corresponds to the following information:
 
-* sample_id: Sample ID or name
+- **sample_id**: Sample ID or name
 
-* added_copy_number: Option to include a given number of copies of simulated genomes. If copy number variation is not desired, input '0'
+- **added_copy_number**: Option to include a given number of copies of simulated genomes. If copy number variation is not desired, input '0'
 
-* file_path: Path to isolate genome file (.fna)
+- **file_path**: Path to isolate genome file (.fna)
 
-* species_name: Name of isolate species
+- **species_name**: Name of isolate species
 
 For instructions on creating an NCBI account and obtaining an API key, please visit the [National Library of Medicine Support Center](https://support.nlm.nih.gov/kbArticle/?pn=KA-05317).
 
@@ -88,9 +88,9 @@ nextflow run main.nf \
 --mode <local> or <download> \
 
 ```
-Note that --postsim is an optional parameter. If used, simulated data will be processed for ARG detection and taxonomic classification. 
+Note that _**--postsim**_ is an optional parameter. If used, simulated data will be processed for ARG detection and taxonomic classification. 
 
-> **Warning:**
+> **Warning:****
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
 > provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
 > see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
@@ -99,22 +99,19 @@ Note that --postsim is an optional parameter. If used, simulated data will be pr
 
 ASTRO was originally written by the Next Generation Sequencing (NGS) Quality Initiative (QI) In silico Team.
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+We thank the following partners for their extensive assistance in the development of this pipeline:
 
-* Clinical and Environmental Microbiology Branch (CEMB)
+- CDC Clinical and Environmental Microbiology Branch (CEMB)
+- CDC Office of Advanced Molecular Detection (OAMD)
+- CDC Office of Laboratory Science and Safety (OLSS)
+- CDC Division of Laboratory Systems (DLS)
 
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
 ## Citations
-
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use  tb/prototype for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
-
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
