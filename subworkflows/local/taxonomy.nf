@@ -13,11 +13,12 @@ workflow TAXONOMY {
     ch_hclust2
 
     main:
+    ch_versions = Channel.empty()
+
     METAPHLAN_DB()
     ch_versions = ch_versions.mix(METAPHLAN_DB.out.versions)
     ch_metaphlan_db = METAPHLAN_DB.out.db
 
-    ch_versions = Channel.empty()
     METAPHLAN(ch_clean, ch_metaphlan_db)
     ch_versions = ch_versions.mix(METAPHLAN.out.versions)
     ch_profiles = METAPHLAN.out.profiles
