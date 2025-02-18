@@ -1,11 +1,10 @@
-#!/usr/bin/env nextflow
-
 process METAPHLAN {
     label 'process_high'
-    container "./third_party/metaphlan.sif"
+    container 'staphb/metaphlan:4.1.1'
 
     input:
     tuple val(meta), path(reads)
+    path metaphlan_db_latest
 
     output:
     tuple val(meta), path("*.txt"), emit: profiles
@@ -21,7 +20,7 @@ process METAPHLAN {
         --nproc 12 \\
         --input_type fastq \\
         -o ${prefix}.txt \\
-        --bowtie2db ./assets/databases/metaphlan_databases/latest
+        --bowtie2db ${metaphlan_db_latest}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
