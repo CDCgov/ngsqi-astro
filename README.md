@@ -25,7 +25,7 @@ This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/l
 2.	Perform preprocessing on metagenomic reads (`FastQC`, `FastP`, `BBDuk`, `Hostile`)
 3.	Assemble the preprocessed reads into contigs and assess the quality of the assembled contigs (`MEGAHIT`, `QUAST`)
 4.	Screen metagenomes for ARGs (`AMRFinderPlus`, `ABRICATE`, `RGI`)
-5.	Perform taxonomic profiling on metagenomic reads to identify microbial community composition (`METAPHLAN`))
+5.	Perform taxonomic profiling on metagenomic reads to identify microbial community composition (`METAPHLAN`)
 6.	Simulate next generation sequencing reads and spike into cleaned, empirical metagenomic dataset (`NEAT`, `RAGTAG`)
 7.	Perform quality control (QC) on simulated dataset (`FastQC`)
 8.	Optionally perform taxonomic profiling and ARG detection on in silico dataset
