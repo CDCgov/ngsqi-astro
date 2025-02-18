@@ -2,6 +2,7 @@
 nextflow.enable.dsl=2
 
 include { METAPHLAN } from '../../modules/local/metaphlan.nf'
+include { METAPHLAN_DB } from '../../modules/local/metaphlan_db.nf'
 include { MERGE_ABUNDANCE } from '../../modules/local/merge_abundance.nf'
 include { FILTER_ABUNDANCE } from '../../modules/local/filter_abundance.nf'
 include { HEATMAPS } from '../../modules/local/heatmaps.nf'
@@ -12,8 +13,12 @@ workflow TAXONOMY {
     ch_hclust2
 
     main:
+    METAPHLAN_DB()
+    ch_versions = ch_versions.mix(METAPHLAN_DB.out.versions)
+    ch_metaphlan_db = METAPHLAN_DB.out.db
+
     ch_versions = Channel.empty()
-    METAPHLAN(ch_clean)
+    METAPHLAN(ch_clean, ch_metaphlan_db)
     ch_versions = ch_versions.mix(METAPHLAN.out.versions)
     ch_profiles = METAPHLAN.out.profiles
     
