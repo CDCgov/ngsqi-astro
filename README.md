@@ -20,16 +20,16 @@ The three primary objectives of the ASTRO workflow entail:
 
 This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) and utilizes docker and singularity containers to modularize the workflow for optimal maintenance and reproducibility.
 
-Pipeline Summary:
-1.	Input paired-end metagenomics reads (.fastq) and isolate data (.fna) with samplesheets
-2.	Perform pre-processing on metagenomics reads (FastQC, FastP, PHIX, Hostile)
-3.	Screen metagenomes for antimicrobial resistance genes (AMRFinderPlus, ABRICATE, RGI)
-4.	Perform taxonomic profiling on metagenomics reads to identify microbial community composition (MetaPhlAn v4.1)
-6.	Simulate sequencing reads (NEAT, RAGTAG)
-7.	Integrate in silico reads with empirical metagenomes
-8.	Perform taxonomic profiling on in silico dataset (MetaPhlAn v4.1)
-9.   Perform antimicrobial resistance gene detection on in silico dataset 
-9.	Generate summary, visualizations and other output files (AMR: HARMONIZATION, TAXONOMY: Hclust2, etc.)
+# Pipeline Summary
+1.	Input paired-end metagenomic reads (.fastq) and isolate data (.fna)
+2.	Perform preprocessing on metagenomic reads (`FastQC`, `FastP`, `BBDuk`, `Hostile`)
+3.	Assemble the preprocessed reads into contigs and assess the quality of the assembled contigs
+4.	Screen metagenomes for ARGs (`AMRFinderPlus`, `ABRICATE`, `RGI`)
+5.	Perform taxonomic profiling on metagenomic reads to identify microbial community composition
+6.	Simulate next generation sequencing reads and spike into cleaned, empirical metagenomic dataset (`NEAT`, `RAGTAG`)
+7.	Perform quality control (QC) on simulated dataset (`FastQC`)
+8.	Optionally perform taxonomic profiling and ARG detection on in silico dataset
+9.	Generate versions and MultiQC reports
 
 ## Usage
 
