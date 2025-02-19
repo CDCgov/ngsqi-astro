@@ -1,4 +1,4 @@
-# tb/prototype: Output
+# astro: Output
 
 ## Introduction
 
