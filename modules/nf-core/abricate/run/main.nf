@@ -16,6 +16,9 @@ process ABRICATE_RUN {
     tuple val(meta), path("${meta.id}_${db[1]}_abricate.txt"), emit: report_resfinder
     tuple val(meta), path("${meta.id}_${db[2]}_abricate.txt"), emit: report_plasmid
     path "versions.yml"                             , emit: versions
+    env card_DBVER, emit: db_card
+    env plasmidfinder_DBVER, emit: db_plasmid
+    env resfinder_DBVER, emit: db_resfinder
     
     when:
     task.ext.when == null || task.ext.when
@@ -43,9 +46,18 @@ process ABRICATE_RUN {
         --threads $task.cpus \\
         > ${prefix}_${db[2]}_abricate.txt
 
+
+    card_DBVER=\$(echo \$(amrfinder --database ${baseDir}/assets/2024-07-22.1/ --database_version 2> stdout) | rev | cut -f 1 -d ' ' | rev)
+    plasmidfinder_DBVER=\$(echo \$(amrfinder --database ${baseDir}/assets/2024-07-22.1/ --database_version 2> stdout) | rev | cut -f 1 -d ' ' | rev)
+    resfinder_DBVER=\$(echo \$(amrfinder --database ${baseDir}/assets/2024-07-22.1/ --database_version 2> stdout) | rev | cut -f 1 -d ' ' | rev)
+
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         abricate: \$(echo \$(abricate --version 2>&1) | sed 's/^.*abricate //' )
+        card-database: \$card_DBVER
+        resfinder-database: \$resfinder_DBVER
+        plasmidfinder-database: \$plasmidfinder_DBVER
     END_VERSIONS
     """
 
