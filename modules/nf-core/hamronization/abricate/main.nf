@@ -13,7 +13,9 @@ process HAMRONIZATION_ABRICATE {
     tuple val(meta), path(report_plasmid)
     val(format)
     val(software_version)
-    val(reference_db_version)
+    val(db_version1)
+    val(db_version2)
+    val(db_version3)
 
     output:
     tuple val(meta), path("*.json"), optional: true, emit: json
@@ -35,7 +37,27 @@ process HAMRONIZATION_ABRICATE {
         $args \\
         --format ${format} \\
         --analysis_software_version ${software_version} \\
-        --reference_database_version ${reference_db_version} \\
+        --reference_database_version ${db_version1} \\
+        > ${meta.id}.${format}
+
+      hamronize \\
+        abricate \\
+        ${report_card} \\
+        ${report_resfinder} \\
+        ${report_plasmid} \\
+        $args \\
+        --format ${format} \\
+        --analysis_software_version ${software_version} \\
+        --reference_database_version ${db_version2} \\
+        > ${meta.id}.${format}
+
+      hamronize \\
+        abricate \\
+        ${report_plasmid} \\
+        $args \\
+        --format ${format} \\
+        --analysis_software_version ${software_version} \\
+        --reference_database_version ${db_version3} \\
         > ${meta.id}.${format}
 
     cat <<-END_VERSIONS > versions.yml
