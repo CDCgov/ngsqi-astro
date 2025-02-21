@@ -29,7 +29,7 @@ workflow AMR {
 
     ch_versions = ch_versions.mix(ABRICATE.out.versions)
 
-    HAMRONIZATION_ABRICATE(ch_abricate_card, ch_abricate_resfinder, ch_abricate_plasmid, 'json', '1.0.0', '3.2.5')
+    HAMRONIZATION_ABRICATE(ch_abricate_card, ch_abricate_resfinder, ch_abricate_plasmid, 'json', '1.0.1',  AMRFINDERPLUS.out.db_version1, AMRFINDERPLUS.out.db_version2, AMRFINDERPLUS.out.db_version3)
     ch_versions = ch_versions.mix(HAMRONIZATION_ABRICATE.out.versions)
     ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_ABRICATE.out.json)
 
