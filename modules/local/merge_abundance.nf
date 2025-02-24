@@ -1,7 +1,6 @@
 #!/usr/bin/env nextflow
 
 process MERGE_ABUNDANCE {
-    container "./third_party/metaphlan.sif"
 
     input:
     path(profiles)

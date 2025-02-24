@@ -270,8 +270,9 @@
       "default": "download"
     },
     "postsim": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     }
   },
-  "required": ["isolates", "ncbi_email", "ncbi_api_key", "mode", "postsim"]
+  "required": ["isolates", "ncbi_email", "ncbi_api_key", "mode"]
 }
