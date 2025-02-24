@@ -7,7 +7,6 @@ process HOSTILE {
 
     output:
     tuple val(meta), path('*clean.fastq.gz'), emit: clean_reads
-    //tuple val(sample), path("*_clean.fastq.gz"), emit: clean_reads
     tuple val(meta), path("*.hostile.log"), emit: log
     path "versions.yml", emit: versions
     
