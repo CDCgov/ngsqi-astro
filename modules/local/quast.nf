@@ -6,9 +6,7 @@ process QUAST {
 
     output:
     tuple val(meta), path("*.tsv"), emit: tsv
-    //tuple val(sample), path("${sample}.tsv"), emit: quast_report
     path "versions.yml", emit: versions
-    //tuple val(sample), path("${sample}.contigs"), emit: quast_outputs
 
     script:
     def args = task.ext.args ?: ''
