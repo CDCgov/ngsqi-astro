@@ -58,7 +58,7 @@ if (params.ncbi_email) { ncbi_email = params.ncbi_email } else { exit 1, 'NCBI e
     */
 
 ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-//ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
 ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
 ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
@@ -109,8 +109,7 @@ workflow ASTRO {
     ================================================================================
     */
 
-    databases = ["card", "plasmidfinder", "resfinder"]
-    AMR(CONTIGS.out.contigs, databases, params.amrfinderdb, params.card)
+    AMR(CONTIGS.out.contigs, params.resfinder_db_path, params.plasmidfinder_db_path, params.megares_db_path, params.amrfinderdb, params.card)
     ch_versions = ch_versions.mix(AMR.out.versions)
 
     /*
@@ -156,10 +155,10 @@ workflow ASTRO {
     ================================================================================
     */
 
-    databases = ["card", "plasmidfinder", "resfinder"]
-    AMRSIM(CONTIGSIM.out.contigs, databases, params.amrfinderdb, params.card)
+    AMRSIM(CONTIGSIM.out.contigs, params.resfinder_db_path, params.plasmidfinder_db_path, params.megares_db_path, params.amrfinderdb, params.card)
     ch_versions = ch_versions.mix(AMRSIM.out.versions)
     }
+    
     /*
     ================================================================================
                                 Versions Reports

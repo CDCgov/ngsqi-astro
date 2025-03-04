@@ -10,7 +10,9 @@ workflow AMR {
 
     take:
     contigs
-    databases
+    megares_db_path
+    plasmidfinder_db_path
+    resfinder_db_path
     amrfinderdb
     card
 
@@ -20,16 +22,18 @@ workflow AMR {
     ch_hamronization_summarize = Channel.empty()
     
     /* Abricate & Harmonization Modules */
+    ch_abricate_megares = Channel.empty()
+    ch_abricate_resfinder = Channel.empty()
+    ch_abricate_plasmid = Channel.empty()
     ch_abricate_reports = Channel.empty()
 
-    ABRICATE(contigs, databases)
-    ch_abricate_card = ABRICATE.out.report_card
+    ABRICATE(contigs, megares_db_path, plasmidfinder_db_path, resfinder_db_path)
+    ch_abricate_megares = ABRICATE.out.report_megares
     ch_abricate_resfinder = ABRICATE.out.report_resfinder
     ch_abricate_plasmid = ABRICATE.out.report_plasmid
-
     ch_versions = ch_versions.mix(ABRICATE.out.versions)
 
-    HAMRONIZATION_ABRICATE(ch_abricate_card, ch_abricate_resfinder, ch_abricate_plasmid, 'json', '1.0.1',  AMRFINDERPLUS.out.db_version1, AMRFINDERPLUS.out.db_version2, AMRFINDERPLUS.out.db_version3)
+    HAMRONIZATION_ABRICATE(ch_abricate_megares, ch_abricate_resfinder, ch_abricate_plasmid, 'json', '1.0.1',  ABRICATE.out.db_megares, ABRICATE.out.db_plasmid, ABRICATE.out.db_resfinder)
     ch_versions = ch_versions.mix(HAMRONIZATION_ABRICATE.out.versions)
     ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_ABRICATE.out.json)
 
