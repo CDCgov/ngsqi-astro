@@ -3,23 +3,25 @@ process ABRICATE_RUN {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/abricate%3A1.0.1--ha8f3691_1':
-        'biocontainers/abricate:1.0.1--ha8f3691_1' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/abricate%3A1.0.1--ha8f3691_1' :
+        'biocontainers/abricate:1.0.1--ha8f3691_1'}"
 
     input:
     tuple val(meta), path(assembly)
-    val db
+    path megares_db_path
+    path plasmidfinder_db_path
+    path resfinder_db_path
 
     output:
-    tuple val(meta), path("${meta.id}_${db[0]}_abricate.txt"), emit: report_card
-    tuple val(meta), path("${meta.id}_${db[1]}_abricate.txt"), emit: report_resfinder
-    tuple val(meta), path("${meta.id}_${db[2]}_abricate.txt"), emit: report_plasmid
-    path "versions.yml"                             , emit: versions
-    env card_DBVER, emit: db_card
+    tuple val(meta), path("${meta.id}_megares_abricate.txt"), emit: report_megares
+    tuple val(meta), path("${meta.id}_plasmidfinder_abricate.txt"), emit: report_resfinder
+    tuple val(meta), path("${meta.id}_resfinder_abricate.txt"), emit: report_plasmid
+    path "versions.yml", emit: versions
+    env megares_DBVER, emit: db_megares
     env plasmidfinder_DBVER, emit: db_plasmid
     env resfinder_DBVER, emit: db_resfinder
-    
+
     when:
     task.ext.when == null || task.ext.when
 
@@ -27,37 +29,39 @@ process ABRICATE_RUN {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
+
     """
-    abricate --db ${db[0]} \\
+    abricate  \\
         $assembly \\
         $args \\
+        --db ${megares_db_path} \\
         --threads $task.cpus \\
-        > ${prefix}_${db[0]}_abricate.txt
+        > ${prefix}_megares_abricate.txt
 
-    abricate --db ${db[1]} \\
+    abricate \\
         $assembly \\
         $args \\
+        --db ${plasmidfinder_db_path} \\
         --threads $task.cpus \\
-        > ${prefix}_${db[1]}_abricate.txt
+        > ${prefix}_plasmidfinder_abricate.txt
 
-    abricate --db ${db[2]} \\
+    abricate \\
         $assembly \\
         $args \\
+        --db ${resfinder_db_path} \\
         --threads $task.cpus \\
-        > ${prefix}_${db[2]}_abricate.txt
+        > ${prefix}_resfinder_abricate.txt
 
-
-    card_DBVER=\$(echo \$(amrfinder --database ${baseDir}/assets/2024-07-22.1/ --database_version 2> stdout) | rev | cut -f 1 -d ' ' | rev)
-    plasmidfinder_DBVER=\$(echo \$(amrfinder --database ${baseDir}/assets/2024-07-22.1/ --database_version 2> stdout) | rev | cut -f 1 -d ' ' | rev)
-    resfinder_DBVER=\$(echo \$(amrfinder --database ${baseDir}/assets/2024-07-22.1/ --database_version 2> stdout) | rev | cut -f 1 -d ' ' | rev)
-
+    megares_DBVER=\$(cat ${megares_db_path}/VERSION.TXT)
+    plasmidfinder_DBVER=\$(cat ${plasmidfinder_db_path}/VERSION.txt)
+    resfinder_DBVER=\$(cat ${resfinder_db_path}/VERSION)
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         abricate: \$(echo \$(abricate --version 2>&1) | sed 's/^.*abricate //' )
-        card-database: \$card_DBVER
-        resfinder-database: \$resfinder_DBVER
+        megares-database: \$megares_DBVER
         plasmidfinder-database: \$plasmidfinder_DBVER
+        resfinder-database: \$resfinder_DBVER
     END_VERSIONS
     """
 
