@@ -27,10 +27,8 @@ include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-schema'
     */
 
 def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-//def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
 def summary_params = paramsSummaryMap(workflow)
 
-// Print parameter summary log to screen
 log.info logo + paramsSummaryLog(workflow)
 
 WorkflowAstro.initialise(params, log)
@@ -58,7 +56,6 @@ if (params.ncbi_email) { ncbi_email = params.ncbi_email } else { exit 1, 'NCBI e
     */
 
 ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
 ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
 ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
@@ -109,7 +106,7 @@ workflow ASTRO {
     ================================================================================
     */
 
-    AMR(CONTIGS.out.contigs, params.resfinder_db_path, params.plasmidfinder_db_path, params.megares_db_path, params.amrfinderdb, params.card)
+    AMR(CONTIGS.out.contigs, params.megares, params.plasmidfinder, params.resfinder, params.card, params.amrfinderdb)
     ch_versions = ch_versions.mix(AMR.out.versions)
 
     /*
@@ -173,13 +170,10 @@ workflow ASTRO {
     ================================================================================
     */
 
-     // MODULE: MultiQC
     workflow_summary    = WorkflowAstro.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
     ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
-    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESSING.out.multiqc.collect{it[1]}.ifEmpty([]))
@@ -189,6 +183,7 @@ workflow ASTRO {
     MULTIQC (
         ch_multiqc_files.collect(), ch_multiqc_config
     )
+
 
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)

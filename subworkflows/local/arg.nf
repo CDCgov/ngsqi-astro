@@ -10,11 +10,11 @@ workflow AMR {
 
     take:
     contigs
-    megares_db_path
-    plasmidfinder_db_path
-    resfinder_db_path
-    amrfinderdb
+    megares
+    resfinder
+    plasmidfinder
     card
+    amrfinderdb
 
     main:
     ch_versions = Channel.empty()
@@ -27,7 +27,7 @@ workflow AMR {
     ch_abricate_plasmid = Channel.empty()
     ch_abricate_reports = Channel.empty()
 
-    ABRICATE(contigs, megares_db_path, plasmidfinder_db_path, resfinder_db_path)
+    ABRICATE(contigs, megares, plasmidfinder, resfinder)
     ch_abricate_megares = ABRICATE.out.report_megares
     ch_abricate_resfinder = ABRICATE.out.report_resfinder
     ch_abricate_plasmid = ABRICATE.out.report_plasmid
