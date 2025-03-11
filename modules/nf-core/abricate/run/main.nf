@@ -9,9 +9,9 @@ process ABRICATE_RUN {
 
     input:
     tuple val(meta), path(assembly)
-    path megares_db_path
-    path plasmidfinder_db_path
-    path resfinder_db_path
+    path megares
+    path plasmidfinder
+    path resfinder
 
     output:
     tuple val(meta), path("${meta.id}_megares_abricate.txt"), emit: report_megares
@@ -34,27 +34,27 @@ process ABRICATE_RUN {
     abricate  \\
         $assembly \\
         $args \\
-        --db ${megares_db_path} \\
+        --db ${megares} \\
         --threads $task.cpus \\
         > ${prefix}_megares_abricate.txt
 
     abricate \\
         $assembly \\
         $args \\
-        --db ${plasmidfinder_db_path} \\
+        --db ${plasmidfinder} \\
         --threads $task.cpus \\
         > ${prefix}_plasmidfinder_abricate.txt
 
     abricate \\
         $assembly \\
         $args \\
-        --db ${resfinder_db_path} \\
+        --db ${resfinder} \\
         --threads $task.cpus \\
         > ${prefix}_resfinder_abricate.txt
 
-    megares_DBVER=\$(cat ${megares_db_path}/VERSION.TXT)
-    plasmidfinder_DBVER=\$(cat ${plasmidfinder_db_path}/VERSION.txt)
-    resfinder_DBVER=\$(cat ${resfinder_db_path}/VERSION)
+    megares_DBVER=\$(cat ${megares}/VERSION.TXT)
+    plasmidfinder_DBVER=\$(cat ${plasmidfinder}/VERSION.txt)
+    resfinder_DBVER=\$(cat ${resfinder}/VERSION.txt)
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
