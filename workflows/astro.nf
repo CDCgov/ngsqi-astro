@@ -152,7 +152,7 @@ workflow ASTRO {
     ================================================================================
     */
 
-    AMRSIM(CONTIGSIM.out.contigs, params.resfinder_db_path, params.plasmidfinder_db_path, params.megares_db_path, params.amrfinderdb, params.card)
+    AMRSIM(CONTIGSIM.out.contigs, params.megares, params.plasmidfinder, params.resfinder, params.card, params.amrfinderdb)
     ch_versions = ch_versions.mix(AMRSIM.out.versions)
     }
     
