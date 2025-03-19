@@ -34,8 +34,11 @@ workflow AMR {
     ch_versions = ch_versions.mix(ABRICATE.out.versions)
 
     HAMRONIZATION_ABRICATE(ch_abricate_megares, ch_abricate_resfinder, ch_abricate_plasmid, 'json', '1.0.1',  ABRICATE.out.db_megares, ABRICATE.out.db_plasmid, ABRICATE.out.db_resfinder)
+    ch_hamr_megares = HAMRONIZATION_ABRICATE.out.megares_json
+    ch_hamr_resfinder = HAMRONIZATION_ABRICATE.out.resfinder_json
+    ch_hamr_plasmid = HAMRONIZATION_ABRICATE.out.plasmid_json
     ch_versions = ch_versions.mix(HAMRONIZATION_ABRICATE.out.versions)
-    ch_hamronization_input = ch_hamronization_input.mix(HAMRONIZATION_ABRICATE.out.json)
+    ch_hamronization_input = ch_hamronization_input.mix(ch_hamr_megares, ch_hamr_plasmid, ch_hamr_resfinder)
 
     /* AMRFinderPlus & Harmonization Modules */
     ch_amrfinderplus_db = Channel.empty()
