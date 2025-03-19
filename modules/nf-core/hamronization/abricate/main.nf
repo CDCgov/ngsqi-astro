@@ -8,17 +8,19 @@ process HAMRONIZATION_ABRICATE {
         'biocontainers/hamronization:1.1.4--pyhdfd78af_0' }"
 
     input:
-    tuple val(meta), path(report_card)
+    tuple val(meta), path(report_megares)
     tuple val(meta), path(report_resfinder)
     tuple val(meta), path(report_plasmid)
     val(format)
     val(software_version)
-    val(db_version1)
-    val(db_version2)
-    val(db_version3)
+    val(db_megares)
+    val(db_resfinder)
+    val(db_plasmid)
 
     output:
-    tuple val(meta), path("*.json"), optional: true, emit: json
+    tuple val(meta), path("${meta.id}_megares.json"), emit: megares_json
+    tuple val(meta), path("${meta.id}_plasmidfinder.json"), emit: resfinder_json
+    tuple val(meta), path("${meta.id}_resfinder.json"), emit: plasmid_json
     tuple val(meta), path("*.tsv") , optional: true, emit: tsv
     path "versions.yml"            , emit: versions
 
@@ -31,25 +33,21 @@ process HAMRONIZATION_ABRICATE {
     """
     hamronize \\
         abricate \\
-        ${report_card} \\
-        ${report_resfinder} \\
-        ${report_plasmid} \\
+        ${report_megares} \\
         $args \\
         --format ${format} \\
         --analysis_software_version ${software_version} \\
-        --reference_database_version ${db_version1} \\
-        > ${meta.id}.${format}
+        --reference_database_version ${db_megares} \\
+        > ${meta.id}_megares.${format}
 
       hamronize \\
         abricate \\
-        ${report_card} \\
         ${report_resfinder} \\
-        ${report_plasmid} \\
         $args \\
         --format ${format} \\
         --analysis_software_version ${software_version} \\
-        --reference_database_version ${db_version2} \\
-        > ${meta.id}.${format}
+        --reference_database_version ${db_resfinder} \\
+        > ${meta.id}_resfinder.${format}
 
       hamronize \\
         abricate \\
@@ -57,8 +55,8 @@ process HAMRONIZATION_ABRICATE {
         $args \\
         --format ${format} \\
         --analysis_software_version ${software_version} \\
-        --reference_database_version ${db_version3} \\
-        > ${meta.id}.${format}
+        --reference_database_version ${db_plasmid} \\
+        > ${meta.id}_plasmidfinder.${format}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
