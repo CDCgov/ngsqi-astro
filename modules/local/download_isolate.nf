@@ -1,4 +1,5 @@
 process DOWNLOADISOLATE {
+
    input:
    tuple val(sample_id), val(added_copy_number), val(file_path), val(species_name)
    path downloadgenome_script
