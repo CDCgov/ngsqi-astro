@@ -24,7 +24,6 @@ class RowChecker:
         self.mode = None
 
     def determine_mode(self, rows):
-        # If all file_path values are empty, it's 'download'; otherwise, 'local'
         file_paths = [row[self._file_col] for row in rows]
         if all(len(fp.strip()) == 0 for fp in file_paths):
             self.mode = "download"
@@ -92,7 +91,7 @@ def check_isolate_samplesheet(file_in, file_out):
             sys.exit(1)
         rows = list(reader)
         checker = RowChecker()
-        mode = checker.determine_mode(rows)  # Detect mode
+        mode = checker.determine_mode(rows) 
         logger.info(f"Detected mode: {mode}")
         for i, row in enumerate(rows):
             try:
