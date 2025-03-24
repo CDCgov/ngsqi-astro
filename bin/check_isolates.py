@@ -21,13 +21,24 @@ class RowChecker:
         self._species_col = species_col
         self._seen = set()
         self.modified = []
+        self.mode = None
+
+    def determine_mode(self, rows):
+        # If all file_path values are empty, it's 'download'; otherwise, 'local'
+        file_paths = [row[self._file_col] for row in rows]
+        if all(len(fp.strip()) == 0 for fp in file_paths):
+            self.mode = "download"
+        else:
+            self.mode = "local"
+        return self.mode
 
     def validate_and_transform(self, row):
         self._validate_sample(row)
         self._validate_copy_number(row)
-        self._validate_file(row)
+        if self.mode == "local":
+            self._validate_file(row)
         self._validate_species(row)
-        self._seen.add((row[self._sample_col], row[self._file_col]))
+        self._seen.add((row[self._sample_col], row.get(self._file_col, None)))
         self.modified.append(row)
 
     def _validate_sample(self, row):
@@ -79,8 +90,11 @@ def check_isolate_samplesheet(file_in, file_out):
             req_cols = ", ".join(required_columns)
             logger.critical(f"The sample sheet **must** contain these column headers: {req_cols}.")
             sys.exit(1)
+        rows = list(reader)
         checker = RowChecker()
-        for i, row in enumerate(reader):
+        mode = checker.determine_mode(rows)  # Detect mode
+        logger.info(f"Detected mode: {mode}")
+        for i, row in enumerate(rows):
             try:
                 checker.validate_and_transform(row)
             except AssertionError as error:
