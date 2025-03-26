@@ -40,6 +40,7 @@ This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/l
 
 > To run the astro pipeline minimal test, you will need to add your user-specific credentials for the --ncbi_email and 
 > --ncbi_api_key parameters to the profile script located at conf/test.config. 
+
 > Once complete, you can run the minimal test
 > with the following command:
 > `nextflow run main.nf -profile test,singularity --outdir <OUTDIR>`
