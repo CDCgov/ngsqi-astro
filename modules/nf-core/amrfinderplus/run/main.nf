@@ -14,7 +14,6 @@ process AMRFINDERPLUS_RUN {
 
     output:
     tuple val(meta), path("${meta.id}.tsv"), emit: report
-    tuple val(meta), path("${meta.id}-mutations.tsv"), emit: mutation_report, optional: true
     path "versions.yml", emit: versions
     env VER, emit: tool_version
     env DBVER, emit: db_version
