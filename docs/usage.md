@@ -6,6 +6,7 @@
 
 <!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
 
+<!-- TODO nf-core: Update with astro samplesheet information -->
 ## Samplesheet input
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
@@ -59,7 +60,7 @@ The typical command for running the pipeline is as follows:
 nextflow run main.nf \
   --input samplesheet.csv \
   --isolates isolate_samplesheet.csv \
-  --ncbi_email example@emai.com \
+  --ncbi_email example@email.com \
   --ncbi_api_key exampleapikey \
   --postsim \
   -profile singularity \
