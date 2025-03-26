@@ -1,3 +1,3 @@
 sample_id,added_copy_number,file_path,species_name
-GCA_031150685.2,2,/scicomp/home-pure/tkq5/amr-metagenomics/assets/data/GCA_031150685.2_genomic.fna,Acinetobacter baumannii
-GCF_021868735.1,1,/scicomp/home-pure/tkq5/amr-metagenomics/assets/data/GCF_021868735.1_genomic.fna,Providencia rettgeri
+GCA_031150685.2,2,./assets/data/GCA_031150685.2_genomic.fna,Acinetobacter baumannii
+GCF_021868735.1,1,./assets/data/GCF_021868735.1_genomic.fna,Providencia rettgeri
