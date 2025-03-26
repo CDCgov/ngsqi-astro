@@ -1,13 +1,16 @@
 # :rocket: ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization
 
+### :rocket: **Pipeline Under Development** :rocket:
+
+![Pipeline Status](https://img.shields.io/badge/status-in%20development-blue?style=flat&logo=rocket)
+
+
 ## Introduction
 
 **ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization** is a bioinformatics pipeline that performs taxonomic profiling, screens metagenomes and isolate genomes for determinants of antimicrobial resistance, simulates reads, and generates a bacterial metagenomic in silico reference dataset.
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.6-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
-[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![In Development](https://img.shields.io/badge/status-in%20development-yellow.svg)]
 
 
 The three primary objectives of the ASTRO workflow entail:
