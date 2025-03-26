@@ -1,3 +1,3 @@
 sample,fastq_1,fastq_2
-ERR4678559,/scicomp/home-pure/tkq5/amr-metagenomics/assets/data/subsampled_ERR4678559_1.fastq.gz,/scicomp/home-pure/tkq5/amr-metagenomics/assets/data/subsampled_ERR4678559_2.fastq.gz
-ERR4678567,/scicomp/home-pure/tkq5/amr-metagenomics/assets/data/subsampled_ERR4678567_1.fastq.gz,/scicomp/home-pure/tkq5/amr-metagenomics/assets/data/subsampled_ERR4678567_2.fastq.gz
+ERR4678559,./assets/data/subsampled_ERR4678559_1.fastq.gz,./assets/data/subsampled_ERR4678559_2.fastq.gz
+ERR4678567,./assets/data/subsampled_ERR4678567_1.fastq.gz,./assets/data/subsampled_ERR4678567_2.fastq.gz
