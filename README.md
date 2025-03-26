@@ -29,14 +29,21 @@ This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/l
 6.	Simulate next generation sequencing reads and spike into cleaned, empirical metagenomic dataset (`NEAT`, `RAGTAG`)
 7.	Perform quality control (QC) on simulated dataset (`FastQC`)
 8.	Optionally perform taxonomic profiling and ARG detection on in silico dataset
-9.	Generate versions and MultiQC reports
+9.	Generate versions and `MultiQC` reports
 
 ## Usage
 
 > **Note**
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
 > to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
-> with `-profile test` before running the workflow on actual data.
+> with `-profile test` before running the workflow on actual data. 
+
+> To run the astro pipeline minimal test, you will need to add your user-specific credentials for the --ncbi_email and 
+> --ncbi_api_key parameters to the profile script located at conf/test.config. 
+
+> Once complete, you can run the minimal test
+> with the following command:
+> `nextflow run main.nf -profile test,singularity --outdir <OUTDIR>`
 
 ### Set Up:
 
