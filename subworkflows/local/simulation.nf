@@ -15,7 +15,7 @@ workflow SIMULATION {
 
     ch_versions = ch_versions.mix(RAGTAGSCAFFOLD.out.versions)
 
-    RAGTAGPATCH(RAGTAGSCAFFOLD.out.ragtag_scaff_dirs.view())
+    RAGTAGPATCH(RAGTAGSCAFFOLD.out.ragtag_scaff_dirs)
     ch_versions = ch_versions.mix(RAGTAGPATCH.out.versions)
     
     NEATPAIRED(RAGTAGPATCH.out.ragtag_patch_dirs, ch_readlength.first())
