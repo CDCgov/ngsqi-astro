@@ -115,6 +115,7 @@ workflow ASTRO {
     ================================================================================
     */
     TAXONOMY(PREPROCESSING.out.reads, params.hclust2)
+    ch_metaphlan_db = TAXONOMY.out.ch_metaphlan_db
     ch_versions = ch_versions.mix(TAXONOMY.out.versions)
     
     /*
@@ -127,6 +128,7 @@ workflow ASTRO {
     ch_versions = ch_versions.mix(SIMULATION.out.versions)
     
     INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
+    sim_reads = INTEGRATE.out.integrated_reads
     ch_versions = ch_versions.mix(INTEGRATE.out.versions)
 
     /*
@@ -135,7 +137,7 @@ workflow ASTRO {
     ================================================================================
     */
     if (params.postsim) {
-    TAXASIM(INTEGRATE.out.integrated_reads, TAXONOMY.out.metaphlan_db, params.hclust2)
+    TAXASIM(sim_reads, TAXONOMY.out.ch_metaphlan_db, params.hclust2)
     ch_versions = ch_versions.mix(TAXASIM.out.versions)
     
     /*
