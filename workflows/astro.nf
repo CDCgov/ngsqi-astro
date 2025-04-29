@@ -16,7 +16,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 include { REFERENCE } from '../subworkflows/local/reference.nf'
 include { SIMULATION } from '../subworkflows/local/simulation.nf'
 include { INTEGRATE } from '../subworkflows/local/integrate.nf'
-include { TAXONOMY as TAXASIM } from '../subworkflows/local/taxonomy.nf'
+include { TAXASIM } from '../subworkflows/local/taxasim.nf'
 include { CONTIGS as CONTIGSIM } from '../subworkflows/local/assembly.nf'
 include { AMR as AMRSIM } from '../subworkflows/local/arg.nf'
 include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-schema'
