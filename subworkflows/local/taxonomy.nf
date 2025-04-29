@@ -31,12 +31,6 @@ workflow TAXONOMY {
     ch_versions = ch_versions.mix(HEATMAPS.out.versions)
     
     emit:
-    METAPHLAN.out.profiles  // Fix: Correct output channel name from profiles
-    MERGE_ABUNDANCE.out.merged_output
-    FILTER_ABUNDANCE.out.phylum_output
-    FILTER_ABUNDANCE.out.species_output
-    HEATMAPS.out.species_visual
-    HEATMAPS.out.phylum_visual
     versions = ch_versions
 }
 
