@@ -135,7 +135,7 @@ workflow ASTRO {
     ================================================================================
     */
     if (params.postsim) {
-    TAXASIM(INTEGRATE.out.integrated_reads, params.hclust2)
+    TAXASIM(INTEGRATE.out.integrated_reads, TAXONOMY.out.metaphlan_db, params.hclust2)
     ch_versions = ch_versions.mix(TAXASIM.out.versions)
     
     /*
