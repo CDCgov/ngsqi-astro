@@ -5,14 +5,14 @@ include { HEATMAPS } from '../../modules/local/heatmaps.nf'
 
 workflow TAXASIM {
     take:
-    INTEGRATE.out.integrated_reads
+    sim_reads
     ch_metaphlan_db
     ch_hclust2
 
     main:
     ch_versions = Channel.empty()
 
-    METAPHLAN(INTEGRATE.out.integrated_reads, ch_metaphlan_db)
+    METAPHLAN(sim_reads, ch_metaphlan_db)
     ch_versions = ch_versions.mix(METAPHLAN.out.versions)
     ch_profiles = METAPHLAN.out.profiles
 
