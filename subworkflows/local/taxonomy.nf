@@ -31,6 +31,7 @@ workflow TAXONOMY {
     ch_versions = ch_versions.mix(HEATMAPS.out.versions)
     
     emit:
+    ch_metaphlan_db
     versions = ch_versions
 }
 
