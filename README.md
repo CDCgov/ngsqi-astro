@@ -36,6 +36,8 @@ This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/l
 8.	Optionally perform taxonomic profiling and ARG detection on in silico dataset
 9.	Generate versions and `MultiQC` reports
 
+![ASTRO Diagram](assets/ASTRO_v1.0.0.png)
+
 ## Usage
 
 > **Note**
