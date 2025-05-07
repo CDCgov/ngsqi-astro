@@ -1,5 +1,4 @@
 process METAPHLAN_DB {
-    label 'process_single'
 
     container 'staphb/metaphlan:4.1.1'
 
