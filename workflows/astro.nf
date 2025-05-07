@@ -16,7 +16,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 include { REFERENCE } from '../subworkflows/local/reference.nf'
 include { SIMULATION } from '../subworkflows/local/simulation.nf'
 include { INTEGRATE } from '../subworkflows/local/integrate.nf'
-include { TAXONOMY as TAXASIM } from '../subworkflows/local/taxonomy.nf'
+include { TAXASIM } from '../subworkflows/local/taxasim.nf'
 include { CONTIGS as CONTIGSIM } from '../subworkflows/local/assembly.nf'
 include { AMR as AMRSIM } from '../subworkflows/local/arg.nf'
 include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-schema'
@@ -115,6 +115,7 @@ workflow ASTRO {
     ================================================================================
     */
     TAXONOMY(PREPROCESSING.out.reads, params.hclust2)
+    ch_metaphlan_db = TAXONOMY.out.ch_metaphlan_db
     ch_versions = ch_versions.mix(TAXONOMY.out.versions)
     
     /*
@@ -127,6 +128,7 @@ workflow ASTRO {
     ch_versions = ch_versions.mix(SIMULATION.out.versions)
     
     INTEGRATE(SIMULATION.out.ch_simreads, PREPROCESSING.out.reads)
+    sim_reads = INTEGRATE.out.integrated_reads
     ch_versions = ch_versions.mix(INTEGRATE.out.versions)
 
     /*
@@ -135,7 +137,7 @@ workflow ASTRO {
     ================================================================================
     */
     if (params.postsim) {
-    TAXASIM(INTEGRATE.out.integrated_reads, params.hclust2)
+    TAXASIM(sim_reads, TAXONOMY.out.ch_metaphlan_db, params.hclust2)
     ch_versions = ch_versions.mix(TAXASIM.out.versions)
     
     /*
