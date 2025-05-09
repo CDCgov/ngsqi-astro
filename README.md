@@ -45,8 +45,8 @@ This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/l
 > to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
 > with `-profile test` before running the workflow on actual data. 
 
-> To run the astro pipeline minimal test, you will need to add your user-specific credentials for the --ncbi_email and 
-> --ncbi_api_key parameters to the profile script located at conf/test.config. 
+> To run the astro pipeline minimal test, you will need to add your user-specific credentials for the --ncbi_email, 
+> --ncbi_api_key, and --metaphlan parameters to the profile script located at conf/test.config. 
 
 > Once complete, you can run the minimal test
 > with the following command:
@@ -100,6 +100,7 @@ nextflow run main.nf \
 -profile singularity \
 --outdir <OUTDIR> \
 --mode <local> or <download> \
+--metaphlan $PATH_TO_DB \
 
 ```
 Note that _**--postsim**_ is an optional parameter. If used, simulated data will be processed for ARG detection and taxonomic classification. 
