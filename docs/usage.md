@@ -163,13 +163,17 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 
 ### `-resume`
 
-Specify this when restarting a pipeline. Nextflow will use cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously. For input to be considered the same, not only the names must be identical but the files' contents as well. For more info about this parameter, see [this blog post](https://www.nextflow.io/blog/2019/demystifying-nextflow-resume.html).
+Specify this when restarting a pipeline. Nextflow will use cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously. For input to be considered the same, not only the names must be identical but the files' contents as well. Resumability is useful for long-running pipelines and recovering from errors, allowing users to save time and computational resources. For more info about this parameter, see [this blog post](https://www.nextflow.io/blog/2019/demystifying-nextflow-resume.html).
 
 You can also supply a run name to resume a specific run: `-resume [run-name]`. Use the `nextflow log` command to show previous run names.
 
 ### `-c`
 
-Specify the path to a specific config file (this is a core Nextflow command). See the [nf-core website documentation](https://nf-co.re/usage/configuration) for more information.
+Specify the path to a specific config file (this is a core Nextflow command).The -c option is used to specify a custom configuration file, allowing users to append a new configuration to the default configuration. This is an effective way to increase the flexibility and adaptability of Nextflow workflows, resulting in enhanced resource management and configuration control. This option can be useful for adjusting to different platforms (e.g. local, cloud, or cluster), switching between environment specific settings, and parameter management. See the [nf-core website documentation](https://nf-co.re/usage/configuration) for more information.
+
+### `-h`
+
+Access the help documentation by using the `-h` or `-help` command. The help Nextflow option serves as a shorthand for accessing the help documentation and enumerates the top-level options and commands. This is an efficient option to quickly familiarize users with Nextflow’s capabilities and ensure that users are effectively utilizing the tool for workflows. 
 
 ## Custom configuration
 
@@ -211,7 +215,7 @@ For a thorough list, please refer the [Azure Sizes for virtual machines in Azure
 
 Nextflow handles job submissions and supervises the running jobs. The Nextflow process must run until the pipeline is finished.
 
-The Nextflow `-bg` flag launches Nextflow in the background, detached from your terminal so that the workflow does not stop if you log out of your session. The logs are saved to a file.
+The Nextflow `-bg` flag launches Nextflow in the background, detached from your terminal so that the workflow does not stop if you log out of your session. The logs are saved to a file. This option enables users to start a workflow and then continue interacting with the terminal while the workflow completes.
 
 Alternatively, you can use `screen` / `tmux` or similar tool to create a detached session which you can log back into at a later time.
 Some HPC setups also allow you to run nextflow within a cluster job submitted your job scheduler (from where it submits more jobs).
