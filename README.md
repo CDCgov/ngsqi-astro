@@ -94,15 +94,15 @@ For ASTRO >= 1.0.0, you are required to install the MetaPhlAn 4 database. You ca
 
 - `--isolates`: Input isolate samplesheet
 
-- `ncbi_email`: User's NCBI email
+- `--ncbi_email`: User's NCBI email
 
-- `ncbi_api_key`: User's NCBI API key
+- `--ncbi_api_key`: User's NCBI API key
 
-- `postsim`: Optionally run assembly, AMR and taxonomic classification on simulated reads
+- `--postsim`: Optionally run assembly, AMR and taxonomic classification on simulated reads
 
-- `mode`: Select 'local' if providing local paths to isolate genomes, otherwise select 'download'
+- `--mode`: Select 'local' if providing local paths to isolate genomes, otherwise select 'download'
 
-- `taxadb`: Path to MetaPhlAn database
+- `--taxadb`: Path to MetaPhlAn database
 
 ### Running ASTRO:
 Now, you can run the pipeline using:
