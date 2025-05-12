@@ -48,7 +48,7 @@ if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input sample
 if (params.isolates) { isolates = file(params.isolates) } else { exit 1, 'Isolate samplesheet not specified!' }
 if (params.ncbi_api_key) { ncbi_api_key = params.ncbi_api_key } else { exit 1, 'NCBI API key not specified!' }
 if (params.ncbi_email) { ncbi_email = params.ncbi_email } else { exit 1, 'NCBI email not specified!' }
-if (params.taxadb) { taxadb = params.taxadb } else { exit 1, 'MetaPhlAn Database not specified!' }
+if (params.taxadb) { ch_metaphlan_db = params.taxadb } else { exit 1, 'MetaPhlAn Database not specified!' }
 /*
     ================================================================================
                                 Config Files
@@ -114,8 +114,7 @@ workflow ASTRO {
                                Taxonomic Classification
     ================================================================================
     */
-    TAXONOMY(PREPROCESSING.out.reads, params.hclust2)
-    ch_metaphlan_db = TAXONOMY.out.ch_metaphlan_db
+    TAXONOMY(PREPROCESSING.out.reads, params.hclust2, ch_metaphlan_db)
     ch_versions = ch_versions.mix(TAXONOMY.out.versions)
     
     /*
@@ -137,7 +136,7 @@ workflow ASTRO {
     ================================================================================
     */
     if (params.postsim) {
-    TAXASIM(sim_reads, TAXONOMY.out.ch_metaphlan_db, params.hclust2)
+    TAXASIM(sim_reads, ch_metaphlan_db, params.hclust2)
     ch_versions = ch_versions.mix(TAXASIM.out.versions)
     
     /*
