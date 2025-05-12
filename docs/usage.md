@@ -66,6 +66,7 @@ nextflow run main.nf \
   -profile singularity \
   --outdir results \
   --mode local
+  --taxadb $path_to_db
 
 ```
 
@@ -97,7 +98,7 @@ with `params.yaml` containing:
 ```yaml
 input: './samplesheet.csv'
 isolates: 'isolate_samplesheet.csv'
-ncbi_email: 'example@emai.com'
+ncbi_email: 'example@email.com'
 outdir: 'results'
 <...>
 ```
