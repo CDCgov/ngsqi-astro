@@ -100,7 +100,7 @@ nextflow run main.nf \
 -profile singularity \
 --outdir <OUTDIR> \
 --mode <local> or <download> \
---taxaDB $PATH_TO_DB \
+--taxadb $PATH_TO_DB \
 
 ```
 Note that _**--postsim**_ is an optional parameter. If used, simulated data will be processed for ARG detection and taxonomic classification. 
