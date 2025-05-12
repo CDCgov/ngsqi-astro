@@ -86,6 +86,24 @@ Each row corresponds to the following information:
 
 For instructions on creating an NCBI account and obtaining an API key, please visit the [National Library of Medicine Support Center](https://support.nlm.nih.gov/kbArticle/?pn=KA-05317).
 
+### Taxonomic Classification Set Up
+For ASTRO >= 1.0.0, you are required to install the MetaPhlAn 4 database. You can find guidance to do so on the [MetaPhlAn GitHub](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4) page. It is highly recommended to use the --index parameter to download a specific version of the database for use in the ASTRO pipeline.
+
+### ASTRO Pipeline Parameters:
+- `--input`: Input metagenomic samplesheet
+
+- `--isolates`: Input isolate samplesheet
+
+- `ncbi_email`: User's NCBI email
+
+- `ncbi_api_key`: User's NCBI API key
+
+- `postsim`: Optionally run assembly, AMR and taxonomic classification on simulated reads
+
+- `mode`: Select 'local' if providing local paths to isolate genomes, otherwise select 'download'
+
+- `taxadb`: Path to MetaPhlAn database
+
 ### Running ASTRO:
 Now, you can run the pipeline using:
 
