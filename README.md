@@ -19,7 +19,7 @@ The three primary objectives of the ASTRO workflow entail:
 
 * Simulate sequencing reads with identified species and phyla of interest
 * Perform taxonomic profiling and antimicrobial resistance gene (ARG) detection on empirical metagenomes and simulated reads
-* Verify quality of simulated datasets mimic empirical datasets
+* Verify that the quality of simulated datasets mimic empirical datasets
 
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
@@ -28,7 +28,7 @@ The three primary objectives of the ASTRO workflow entail:
 This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) and utilizes docker and singularity containers to modularize the workflow for optimal maintenance and reproducibility.
 
 # Pipeline Summary
-1.	Input paired-end metagenomic reads (.fastq) and isolate data (.fna)
+1.	Input paired-end metagenomic reads (.fastq) and isolate genomes (.fna)
 2.	Perform preprocessing on metagenomic reads (`FastQC`, `FastP`, `BBDuk`, `Hostile`)
 3.	Assemble the preprocessed reads into contigs and assess the quality of the assembled contigs (`MEGAHIT`, `QUAST`)
 4.	Screen metagenomes for ARGs (`AMRFinderPlus`, `ABRICATE`, `RGI`)
@@ -80,7 +80,7 @@ Each row corresponds to the following information:
 
 - `sample_id`: Sample ID or name
 
-- `added_copy_number`: Option to include a given number of copies of simulated genomes. If copy number variation is not desired, input '0'
+- `added_copy_number`: Option to include a given number of copies of simulated genomes. If copy number variation is not desired, input '1'
 
 - `file_path`: Path to isolate genome file (.fna)
 
@@ -89,7 +89,7 @@ Each row corresponds to the following information:
 For instructions on creating an NCBI account and obtaining an API key, please visit the [National Library of Medicine Support Center](https://support.nlm.nih.gov/kbArticle/?pn=KA-05317).
 
 ### Taxonomic Classification Set Up
-For ASTRO >= 1.0.0, you are required to install the MetaPhlAn 4 database. You can find guidance to do so on the [MetaPhlAn GitHub](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4) page. It is highly recommended to use the --index parameter to download a specific version of the database for use in the ASTRO pipeline.
+For ASTRO >= 1.0.0, you are required to install the MetaPhlAn 4 database. You can find guidance to do so on the [MetaPhlAn GitHub](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4) page. It is highly recommended to use the --index parameter to download a specific version of the database for use in the ASTRO pipeline. This version of ASTRO was tested using database version mpa_vJun23_CHOCOPhlAnSGB_202403.
 
 ### ASTRO Pipeline Parameters:
 - `--input`: Input metagenomic samplesheet
