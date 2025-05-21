@@ -4,9 +4,8 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+This document describes how to prepare input files and run the pipeline.
 
-<!-- TODO nf-core: Update with astro samplesheet information -->
 ## Metagenomic Samplesheet
 
 The metagenomic samplesheet should be formatted as follows:
