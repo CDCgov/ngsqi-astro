@@ -16,7 +16,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [AMR](#amr) - Screens metagenomes for determinants of antimicrobial resistance, namely ARGs
 - [Assembly](#assembly) - Assembles the preprocessed reads into contigs and assesses the quality of the assembled contigs 
 - [Taxonomy](#taxonomy) - Classifies relative taxonomic abundance from metagenomes and generates species and phyla abundance heatmaps 
-- [Reference, Simulation, Integrate](#reference-simulation-integrate) - Simulates in silico sequencing reads and spikes the reads into cleaned metagenomic dataset 
+- [Reference, Simulation, Integrate](#simulation) - Simulates in silico sequencing reads and spikes the reads into cleaned metagenomic dataset 
 - [PostSim](#postsim) - Executes optional functions: runs assembly, AMR, and taxonomy on simulated dataset 
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
