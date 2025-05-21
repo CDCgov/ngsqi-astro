@@ -13,11 +13,11 @@ The directories listed below will be created in the results directory after the 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 - [Preprocessing](#preprocessing) - Performs QC, trims, and decontaminates the reads 
-- [AMR](#AMR) - Screens metagenomes for determinants of antimicrobial resistance, namely ARGs
-- [Assembly](Assembly) - Assembles the preprocessed reads into contigs and assesses the quality of the assembled contigs 
-- [Taxonomy](#Taxonomy) - Classifies relative taxonomic abundance from metagenomes and generates species and phyla abundance heatmaps 
-- [Reference, Simulation, Integrate](#Reference, Simulation, Integrate) - Simulates in silico sequencing reads and spikes the reads into cleaned metagenomic dataset 
-- [PostSim](#PostSim) - Executes optional functions: runs assembly, AMR, and taxonomy on simulated dataset 
+- [AMR](#amr) - Screens metagenomes for determinants of antimicrobial resistance, namely ARGs
+- [Assembly](#assembly) - Assembles the preprocessed reads into contigs and assesses the quality of the assembled contigs 
+- [Taxonomy](#taxonomy) - Classifies relative taxonomic abundance from metagenomes and generates species and phyla abundance heatmaps 
+- [Reference, Simulation, Integrate](#reference-simulation-integrate) - Simulates in silico sequencing reads and spikes the reads into cleaned metagenomic dataset 
+- [PostSim](#postsim) - Executes optional functions: runs assembly, AMR, and taxonomy on simulated dataset 
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ## Preprocessing
@@ -107,11 +107,11 @@ Output files:
 
 ## Integrate
 
-[Copy Number] generates copies of sequencing reads per given copy number value
+**Copy Number** generates copies of sequencing reads per given copy number value
 
-[Combine Isolates] combine all datasets of simulated reads
+**Combine Isolates** combine all datasets of simulated reads
 
-[Combine Isolates with Metagenomics] combine simulated isolate read datasets with metagenomic read datasets
+**Combine Isolates with Metagenomics** combine simulated isolate read datasets with metagenomic read datasets
 
 Output files:
 * `simulation/catmeta`
