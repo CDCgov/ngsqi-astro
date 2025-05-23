@@ -7,7 +7,7 @@
 
 ## Introduction
 
-**ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization** is a bioinformatics pipeline that performs taxonomic profiling, screens metagenomes and isolate genomes for determinants of antimicrobial resistance, simulates reads, and generates a bacterial metagenomic in silico reference dataset.
+**ASTRO: AMR Metagenomics Detection, Simulation, Taxonomic Classification, and Read Optimization** is a bioinformatics pipeline that performs taxonomic profiling, screens metagenomes and isolate genomes for determinants of antimicrobial resistance, simulates reads, and generates a bacterial metagenomic _in silico_ reference dataset.
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.6-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
@@ -19,11 +19,11 @@ The three primary objectives of the ASTRO workflow entail:
 
 * Simulate sequencing reads with identified species and phyla of interest
 * Perform taxonomic profiling and antimicrobial resistance gene (ARG) detection on empirical metagenomes and simulated reads
-* Verify that the quality of simulated datasets mimic empirical datasets
+* Verify that the quality of simulated datasets mimics empirical datasets
 
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
+<!-- TODO nf-core: Fill in short, bullet-pointed list of the default steps in the pipeline -->
 
 This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) and utilizes docker and singularity containers to modularize the workflow for optimal maintenance and reproducibility.
 
@@ -35,7 +35,7 @@ This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/l
 5.	Perform taxonomic profiling on metagenomic reads to identify microbial community composition (`METAPHLAN`)
 6.	Simulate next generation sequencing reads and spike into cleaned, empirical metagenomic dataset (`NEAT`, `RAGTAG`)
 7.	Perform quality control (QC) on simulated dataset (`FastQC`)
-8.	Optionally perform taxonomic profiling and ARG detection on in silico dataset
+8.	Optionally perform taxonomic profiling and ARG detection on _in silico_ dataset
 9.	Generate versions and `MultiQC` reports
 
 ![ASTRO Diagram](assets/ASTRO_v1.0.0.png)
@@ -44,7 +44,7 @@ This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/l
 
 > **Note**
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
-> to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
+> to set up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
 > with `-profile test` before running the workflow on actual data. 
 
 > To run the astro pipeline minimal test, you will need to add your user-specific credentials for the --ncbi_email, 
@@ -56,7 +56,7 @@ This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/l
 
 ### Set Up:
 
-First, prepare a samplesheet with your input metagenomic data that looks as follows:
+First, input your metagenomic data into a  samplesheet so that it resembles the following:
 
 `samplesheet.csv`:
 
@@ -66,9 +66,9 @@ Sample1,assets/data/ERR4678562_1.fastq.gz,assets/data/ERR4678562_2.fastq.gz
 Sample2,assets/data/ERR4678563_1.fastq.gz,assets/data/ERR4678563_2.fastq.gz
 ```
 
-Each row represents a pair of fastq files (paired end metagenomics reads).
+Each row represents a pair of fastq files (paired-end metagenomics reads).
 
-You will need to also prepare a samplesheet for isolate genomes to be used in simulation. 
+You will also need to prepare a samplesheet for isolate genomes to be used in simulation: 
 
 `isolate_samplesheet.csv`:
 ```csv
@@ -100,9 +100,9 @@ For ASTRO >= 1.0.0, you are required to install the MetaPhlAn 4 database. You ca
 
 - `--ncbi_api_key`: User's NCBI API key
 
-- `--postsim`: Optionally run assembly, AMR and taxonomic classification on simulated reads
+- `--postsim`: Optionally run assembly, AMR, and taxonomic classification on simulated reads
 
-- `--mode`: Select 'local' if providing local paths to isolate genomes, otherwise select 'download'
+- `--mode`: Select 'local' if providing local paths to isolate genomes; otherwise, select 'download'
 
 - `--taxadb`: Path to MetaPhlAn database
 
@@ -123,16 +123,16 @@ nextflow run main.nf \
 --taxadb $PATH_TO_DB \
 
 ```
-Note that _**--postsim**_ is an optional parameter. If used, simulated data will be processed for ARG detection and taxonomic classification. 
+Note that _**--postsim**_ is an optional parameter. If used, simulated data will be processed for assembly, ARG detection, and taxonomic classification. 
 
 > **Warning:****
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
-> provided by the `-c` Nextflow option can be used to provide configuration;
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files, including those
+> provided by the `-c` Nextflow option, can be used to provide configuration;
 > see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 
 ## Credits
 
-ASTRO was originally written by the Next Generation Sequencing (NGS) Quality Initiative (QI) In silico Team.
+ASTRO was originally written by the Next Generation Sequencing (NGS) Quality Initiative (QI) _In Silico_ Team.
 
 We thank the following partners for their extensive assistance in the development of this pipeline:
 
