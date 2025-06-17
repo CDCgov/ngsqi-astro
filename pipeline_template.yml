@@ -1,0 +1,6 @@
+name: astro
+prefix: ngsqi
+skip:
+- github
+- ci
+- github_badges

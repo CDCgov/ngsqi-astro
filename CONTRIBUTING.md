@@ -35,4 +35,8 @@ to merge a pull request, it must:
      to give people the opportunity to assess it.
    * Receive a +1 from a majority of team members associated with the request.
      If there is significant dissent between the team, a meeting will be held to
+<<<<<<< HEAD
      discuss a plan of action for the pull request.
+=======
+     discuss a plan of action for the pull request.
+>>>>>>> master
