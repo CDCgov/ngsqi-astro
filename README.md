@@ -39,7 +39,25 @@ This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/l
 9.	Generate versions and `MultiQC` reports
 
 ![ASTRO Diagram](assets/ASTRO_v1.0.0.png)
+## Getting Started
 
+Before running the pipeline, ensure Git LFS is installed and set up.
+
+### 1. Install Git LFS
+Run the following command to install Git LFS:
+```sh
+git lfs install
+```
+### 2. Clone the repository
+Use:
+```sh
+git clone <repo-url>
+```
+### 3. Pull LFS tracked files
+After cloning, run:
+```sh
+git lfs pull
+```
 ## Usage
 
 > **Note**
