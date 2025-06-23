@@ -2,13 +2,3 @@
 *.nf.test linguist-language=nextflow
 modules/nf-core/** linguist-generated
 subworkflows/nf-core/** linguist-generated
-*.sif filter=lfs diff=lfs merge=lfs -text
-*.fasta filter=lfs diff=lfs merge=lfs -text
-*.fna filter=lfs diff=lfs merge=lfs -text
-*.fastq.gz filter=lfs diff=lfs merge=lfs -text
-*.bt2 filter=lfs diff=lfs merge=lfs -text
-*.nhd filter=lfs diff=lfs merge=lfs -text
-*.nhi filter=lfs diff=lfs merge=lfs -text
-*.LIB filter=lfs diff=lfs merge=lfs -text
-*.fa.gz filter=lfs diff=lfs merge=lfs -text
-assets/references/* filter=lfs diff=lfs merge=lfs -text
