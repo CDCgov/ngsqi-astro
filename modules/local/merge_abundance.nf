@@ -1,6 +1,9 @@
 #!/usr/bin/env nextflow
 
 process MERGE_ABUNDANCE {
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    'https://depot.galaxyproject.org/singularity/neat:4.2.8--pyhdfd78af_0' :
+    'biocontainers/neat:4.2.8--pyhdfd78af_0' }"
 
     input:
     path(profiles)

@@ -1,7 +1,9 @@
 process RAGTAGSCAFFOLD {
     publishDir "${params.outdir}", mode: 'copy'
 
-    container "${baseDir}/third_party/ragtag.sif"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    'https://depot.galaxyproject.org/singularity/ragtag:2.1.0--pyhb7b1952_0' :
+    'biocontainers/ragtag:2.1.0--pyhb7b1952_0' }"
 
     input:
     tuple val(sample_id), val(added_copy_number), val(iso_file_path), val(species_name), path(isolate_genome), val(ref_file_path), val(species_name),val(ref_accession), path(ref_genome)

@@ -1,4 +1,7 @@
 process DOWNLOADISOLATE {
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    'https://depot.galaxyproject.org/singularity/neat:4.2.8--pyhdfd78af_0' :
+    'biocontainers/neat:4.2.8--pyhdfd78af_0' }"
 
    input:
    tuple val(sample_id), val(added_copy_number), val(file_path), val(species_name)

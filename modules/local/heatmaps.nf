@@ -2,6 +2,9 @@
 
 process HEATMAPS {
     label 'process_single'
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    'https://depot.galaxyproject.org/singularity/hclust2:1.0.0--pyh864c0ab_1' :
+    'biocontainers/hclust2:1.0.0--pyh864c0ab_1' }"
 
     input:
     path(merged_species)
