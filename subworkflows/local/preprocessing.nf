@@ -9,7 +9,7 @@ workflow PREPROCESSING {
     take:
     ch_reads // channel: [ val(sampleID), [reads] ]
     ref // channel: PHIX.fasta
-    hostile_ref // channel: hostile reference
+    //hostile_ref // channel: hostile reference
 
     main:
     ch_versions = Channel.empty()
@@ -27,7 +27,7 @@ workflow PREPROCESSING {
     ch_decon = BBDUK.out.reads
     ch_versions = ch_versions.mix(BBDUK.out.versions)
 
-    HOSTILE(ch_decon, hostile_ref)
+    HOSTILE(ch_decon)
     ch_clean = HOSTILE.out.clean_reads
     ch_versions = ch_versions.mix(HOSTILE.out.versions)
 

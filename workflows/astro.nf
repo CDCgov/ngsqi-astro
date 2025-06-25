@@ -88,7 +88,7 @@ workflow ASTRO {
     ================================================================================
     */
 
-    PREPROCESSING(INPUT_CHECK.out.reads, params.ref, params.hostile_ref)
+    PREPROCESSING(INPUT_CHECK.out.reads, params.ref)
     ch_versions = ch_versions.mix(PREPROCESSING.out.versions)
 
 /*

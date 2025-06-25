@@ -9,7 +9,6 @@ process HOSTILE {
 
     input:
     tuple val(meta), path(reads)
-    path(hostile_ref)
 
     output:
     tuple val(meta), path('*clean.fastq.gz'), emit: clean_reads
@@ -23,7 +22,7 @@ process HOSTILE {
     def cleanName2 = "${prefix}_2_clean.fastq.gz"
 
     """
-    hostile clean --index ${hostile_ref} --fastq1 ${reads[0]} --fastq2 ${reads[1]} > ${prefix}.hostile.log
+    hostile clean --index human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401 --fastq1 ${reads[0]} --fastq2 ${reads[1]} > ${prefix}.hostile.log
 
     #Rename the output files
      mv ${prefix}_1.clean_1.fastq.gz ${cleanName1}
