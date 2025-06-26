@@ -48,7 +48,9 @@ This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/l
 > with `-profile test` before running the workflow on actual data. 
 
 > To run the astro pipeline minimal test, you will need to add your user-specific credentials for the --ncbi_email, 
-> --ncbi_api_key, and --metaphlan parameters to the profile script located at conf/test.config. 
+> --ncbi_api_key, and --metaphlan parameters to the profile script located at conf/test.config.
+
+> You can access the test data [here](https://centersfordiseasecontrol.sharefile.com/d-s3395f21ebf0e4fa6b06da087b966290c).
 
 > Once complete, you can run the minimal test
 > with the following command:
