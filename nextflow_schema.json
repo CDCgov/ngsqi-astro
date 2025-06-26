@@ -127,10 +127,6 @@
     "validationShowHiddenParams": {
       "type": "boolean"
     },
-    "hostile_ref": {
-      "type": "string",
-      "default": "/scicomp/home-pure/tkq5/astro/assets/references/human-t2t-hla.argos-bacteria-985_rs-viral-202401_ml-phage-202401"
-    },
     "ref": {
       "type": "string",
       "default": "/scicomp/home-pure/tkq5/astro/assets/references/phiX.fasta"
