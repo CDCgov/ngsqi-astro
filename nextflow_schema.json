@@ -129,45 +129,45 @@
     },
     "ref": {
       "type": "string",
-      "default": "/scicomp/home-pure/tkq5/astro/assets/references/phiX.fasta"
+      "default": "assets/references/phiX.fasta"
     },
     "hclust2": {
       "type": "string",
-      "default": "/scicomp/home-pure/tkq5/astro/third_party/hclust2.py"
+      "default": "third_party/hclust2.py"
     },
     "taxadb": {
       "type": "string"
     },
     "amrfinderdb": {
       "type": "string",
-      "default": "/scicomp/home-pure/tkq5/astro/assets/2024-7-22.1/"
+      "default": "assets/2024-7-22.1/"
     },
     "card": {
       "type": "string",
-      "default": "/scicomp/home-pure/tkq5/astro/assets/card/"
+      "default": "assets/card/"
     },
     "megares": {
       "type": "string",
-      "default": "/scicomp/home-pure/tkq5/astro/assets/abricate_db/megares/"
+      "default": "assets/abricate_db/megares/"
     },
     "plasmidfinder": {
       "type": "string",
-      "default": "/scicomp/home-pure/tkq5/astro/assets/abricate_db/plasmidfinder/"
+      "default": "assets/abricate_db/plasmidfinder/"
     },
     "resfinder": {
       "type": "string",
-      "default": "/scicomp/home-pure/tkq5/astro/assets/abricate_db/resfinder/"
+      "default": "assets/abricate_db/resfinder/"
     },
     "isolates": {
       "type": "string"
     },
     "downloadref_script": {
       "type": "string",
-      "default": "/scicomp/home-pure/tkq5/astro/scripts/download_ref.py"
+      "default": "scripts/download_ref.py"
     },
     "downloadgenome_script": {
       "type": "string",
-      "default": "/scicomp/home-pure/tkq5/astro/scripts/download_genome.py"
+      "default": "scripts/download_genome.py"
     },
     "ncbi_email": {
       "type": "string"
