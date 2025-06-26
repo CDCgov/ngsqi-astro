@@ -21,10 +21,6 @@ The three primary objectives of the ASTRO workflow entail:
 * Perform taxonomic profiling and antimicrobial resistance gene (ARG) detection on empirical metagenomes and simulated reads
 * Verify that the quality of simulated datasets mimics empirical datasets
 
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short, bullet-pointed list of the default steps in the pipeline -->
-
 This workflow is being built with [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) and utilizes docker and singularity containers to modularize the workflow for optimal maintenance and reproducibility.
 
 # Pipeline Summary
