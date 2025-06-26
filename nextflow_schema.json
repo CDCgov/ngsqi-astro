@@ -133,7 +133,7 @@
     },
     "hclust2": {
       "type": "string",
-      "default": "third_party/hclust2.py"
+      "default": "bin/hclust2.py"
     },
     "taxadb": {
       "type": "string"
@@ -163,11 +163,11 @@
     },
     "downloadref_script": {
       "type": "string",
-      "default": "scripts/download_ref.py"
+      "default": "bin/download_ref.py"
     },
     "downloadgenome_script": {
       "type": "string",
-      "default": "scripts/download_genome.py"
+      "default": "bin/download_genome.py"
     },
     "ncbi_email": {
       "type": "string"
